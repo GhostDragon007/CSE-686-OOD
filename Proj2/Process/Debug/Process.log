@@ -1,0 +1,4 @@
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(391,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (Convert.vcxproj, Process.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+  Process.cpp
+d:\little shen\syracuse\cse 687\cppparser\process\process.cpp(163): warning C4018: '<': signed/unsigned mismatch
+  Process.vcxproj -> D:\little shen\Syracuse\CSE 687\CppParser\Process\lib\Display.lib
