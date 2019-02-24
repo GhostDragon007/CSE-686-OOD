@@ -14,7 +14,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "Convert.h"
-
+using namespace Lexer;
 Convert::Convert(){}
 Convert::~Convert(){}
 
@@ -34,7 +34,7 @@ void Convert::doConvert(std::vector<std::vector<std::string>> input, std::vector
 		filename = vec_fileName[i];
 		std::ofstream fout(fpath);
 		std::fstream iout(fullPath);
-		std::fstream preOut("../sample.cpp.html");
+		std::fstream preOut("../sample.cpp.html");		
 
 		//Fail to open ifstream or ofstream
 		if (!fout || !iout || !preOut)
@@ -53,6 +53,7 @@ void Convert::doConvert(std::vector<std::vector<std::string>> input, std::vector
 			fout << "<pre>" << std::endl;
 			int rowCount = 1;
 			int beginCount = 0, endCount = 0;
+			int isSingleComment = 0;
 			while (!iout.eof()) {
 				if (beginCount < position[0].size()) {
 					if (rowCount == position[0][beginCount]) {
@@ -61,6 +62,7 @@ void Convert::doConvert(std::vector<std::vector<std::string>> input, std::vector
 					}
 				}
 				iout.getline(ch, sizeof(ch));
+			
 				char newCh[256];
 				int i = 0, j = 0;
 				while (ch[i] != '\0') {
@@ -94,6 +96,10 @@ void Convert::doConvert(std::vector<std::vector<std::string>> input, std::vector
 						fout << "</span>";
 						endCount++;
 					}
+				}
+				if (isSingleComment == 1) {
+					fout << "</span>";
+					isSingleComment = 0;
 				}
 				rowCount++;
 			}

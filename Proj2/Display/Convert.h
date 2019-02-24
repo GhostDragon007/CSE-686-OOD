@@ -20,6 +20,8 @@
 #include <string>
 #include "../DirExplorer-Naive/StringUtilities.h"
 #include "../DirExplorer-Naive/FileSystem.h"
+#include "../SemiExpression/Semi.h"
+
 
 class Convert
 {

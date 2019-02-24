@@ -107,6 +107,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>D:\Git\CSE-687-OOD\Proj2\Parser;D:\Git\CSE-687-OOD\Proj2\Process;D:\Git\CSE-687-OOD\Proj2\Display;D:\Git\CSE-687-OOD\Proj2\DirExplorer-Naive;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
