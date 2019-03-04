@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////////////////////////
 // Toker.cpp - Collects words from a stream                        //
-// ver 1.0                                                         //
+// ver 1.1                                                         //
 // Jim Fawcett, CSE687 - Object Oriented Design, Spring 2019       //
 /////////////////////////////////////////////////////////////////////
 
@@ -435,7 +435,7 @@ namespace Lexer
   }
   //----< return number of newlines encountered in file >----------
 
-  int Toker::lineCount() { return pContext_->pSrc_->lineCount(); }
+  int Toker::lineCount() { return int(pContext_->pSrc_->lineCount()); }
 
   //----< return set of oneCharTokens >----------------------------
 
@@ -650,6 +650,8 @@ int main()
 
   //std::cout << msg;
 
+  //DemoToker::testTokerWithComments("../TestFiles/DirExplorerN.h");
+  //DemoToker::testTokerWithoutComments("../TestFiles/DirExplorerN.h");
   DemoToker::testTokerWithComments("../Tokenizer/Toker.h");
   DemoToker::testTokerWithoutComments("../Tokenizer/Toker.cpp");
 

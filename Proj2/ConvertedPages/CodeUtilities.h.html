@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<!-- saved from url=(0113)https://ecs.syr.edu/faculty/fawcett/handouts/CSE687/code/Project2HelpS2019/OodProject2Helper/Proj2Helper.cpp.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+  <style>
+    body {
+      padding: 15px 40px;
+      font-family: Consolas;
+      font-size: 1.25em;
+      font-weight: normal;
+    }
+
+    span {
+      display: inline;
+    }
+
+    #funcButton {
+      position: fixed;
+      bottom: 50px;
+      right: 50px;
+    }
+	
+	#classButton {
+		position: fixed;
+      bottom: 70px;
+      right: 50px;
+	}
+	
+	#commentButton {
+		position: fixed;
+      bottom: 90px;
+      right: 50px;
+	}
+	
+    .toggleClassDisplay {
+    }
+
+    .toggleMethodDisplay {
+    }
+	
+	.toggleCommentDisplay {
+    }
+  </style>
+  <script>
+      function showHideClass(className) {
+        let elems = document.getElementsByClassName(className);
+        if (elems === null) {
+          return;
+        }
+        for (let i = 0; i < elems.length; ++i) {
+          let displayProp = elems[i].style.display;
+          if (displayProp === 'none')
+            elems[i].style['display'] = "inline";
+          else
+            elems[i].style['display'] = "none";
+        }
+      }
+  </script>
+</head>
+<body>
+<h3>CodeUtilities.h</h3>
+  <button onclick="showHideClass(&#39;toggleMethodDisplay&#39;)" id="funcButton">Show or Hide Method Contents</button>
+  <button onclick="showHideClass(&#39;toggleClassDisplay&#39;)" id="classButton">Show or Hide Class Contents</button>
+  <button onclick="showHideClass(&#39;toggleCommentDisplay&#39;)" id="commentButton">Show or Hide Comment Contents</button>
+<pre>
+<pre>
+#pragma once
+<span class = "toggleCommentDisplay">///////////////////////////////////////////////////////////////////////</span>
+<span class = "toggleCommentDisplay">// CodeUtilities.h - small, generally useful, helper classes         //</span>
+<span class = "toggleCommentDisplay">// ver 1.3                                                           //</span>
+<span class = "toggleCommentDisplay">// Language:    C++, Visual Studio 2017                              //</span>
+<span class = "toggleCommentDisplay">// Application: Most Projects, CSE687 - Object Oriented Design       //</span>
+<span class = "toggleCommentDisplay">// Author:      Jim Fawcett, Syracuse University, CST 4-187          //</span>
+<span class = "toggleCommentDisplay">//              jfawcett@twcny.rr.com                                //</span>
+<span class = "toggleCommentDisplay">///////////////////////////////////////////////////////////////////////</span>
+<span class = "toggleCommentDisplay">/*
+* Package Operations:
+* -------------------
+* This package provides classes:
+* - ProcessCmdLine    extracts path, options, patterns, and a number from command line
+* - Converter&lt;T&gt;      converts T to and from strings
+* - Box&lt;T&gt;            converts primitive type to instance of a class
+* - PersistFactory&lt;T&gt; adds toXml() method to T
+*
+* Build Process:
+* --------------
+* Required Files: 
+*   CodeUtilities.h
+*
+* Maintenance History:
+* --------------------
+* ver 1.3 : 16 Aug 2018
+* - added default usage text
+* ver 1.2 : 11 Aug 2018
+* - added ProcessCmdLine::hasOption method
+* - fixed bugs in ProcessCmdLine::showCmdLine
+*   and ProcessCmdLine::showOptions
+* ver 1.1 : 10 Aug 2018
+* - added ProcessCmdLine class
+* ver 1.0 : 12 Jan 2018
+* - first release
+* - refactored from earlier Utilities.h
+*
+* Notes:
+* ------
+* - Designed to provide all functionality in header file. 
+* - Implementation file only needed for test and demo.
+*
+* Planned Additions and Changes:
+* ------------------------------
+* - none yet
+*/</span>
+
+#include &lt;vector&gt;
+#include &lt;string&gt;
+#include &lt;sstream&gt;
+#include &lt;iostream&gt;
+
+namespace CodeUtilities
+{
+  <span class = "toggleCommentDisplay">/////////////////////////////////////////////////////////////////////</span>
+  <span class = "toggleCommentDisplay">// preface function</span>
+  <span class = "toggleCommentDisplay">// - used to add a string preface to an output, e.g., "\n  "</span>
+
+  inline void preface(const std::string& msg = "", bool doReturn = true, std::ostream& out = std::cout, const std::string& prefix = "  ")
+  <span class = "toggleMethodDisplay">{
+    if (doReturn) out &lt;&lt; "\n" &lt;&lt; prefix &lt;&lt; msg;
+  }</span>
+
+  inline std::string defaultUsage()
+  <span class = "toggleMethodDisplay">{
+    std::string usage;
+    usage += "\n  Command Line: path [/option]* [/pattern]* [integer]";
+    usage += "\n    path is relative or absolute path where processing begins";
+    usage += "\n    [/option]* are one or more options of the form /s, /r, etc.";
+    usage += "\n    [pattern]* are one or more pattern strings used for matching";
+    usage += "\n    [integer] is the maximum number of items to process";
+    usage += "\n";
+    return usage;
+  }</span>
+
+  <span class = "toggleCommentDisplay">/////////////////////////////////////////////////////////////////////</span>
+  <span class = "toggleCommentDisplay">// ProcessCmdLine class</span>
+  <span class = "toggleCommentDisplay">// - extracts path, patterns, options, number</span>
+
+  class ProcessCmdLine
+  <span class = "toggleClassDisplay">{
+  public:
+    using Usage = std::string;
+    using Path = std::string;
+    using Option = int;
+    using Options = std::vector&lt;Option&gt;;
+    using Pattern = std::string;
+    using Patterns = std::vector&lt;Pattern&gt;;
+    using Number = long int;
+
+    ProcessCmdLine(int argc, char** argv, std::ostream& out = std::cout);
+    ProcessCmdLine(const ProcessCmdLine&) = delete;
+    ProcessCmdLine& operator=(const ProcessCmdLine&) = delete;
+
+    bool parseError();
+    Path path();
+    void path(const Path& path);
+    Options options();
+    void option(Option op);
+    bool hasOption(Option op);
+    Patterns patterns();
+    void pattern(const Pattern& patt);
+    Number maxItems();
+    void maxItems(Number number);
+    void usage(const Usage& usage);
+    void usage();
+    void showCmdLine(int argc, char** argv);
+    void showCmdLine();
+    void showPath();
+    void showOptions();
+    void showPatterns();
+    void showMaxItems();
+  private:
+    Usage usage_;
+    Path path_;
+    Patterns patterns_;
+    Options options_;
+    int maxItems_ = 0;
+    bool parseError_ = false;
+    std::ostream& out_;
+  };</span>
+
+  <span class = "toggleCommentDisplay">/*----&lt; path operations &gt;------------------------------------------*/</span>
+
+  inline void ProcessCmdLine::path(const Path& path) 
+  <span class = "toggleMethodDisplay">{ 
+    path_ = path; 
+  }</span>
+
+  inline ProcessCmdLine::Path ProcessCmdLine::path()
+  <span class = "toggleMethodDisplay">{
+    return path_;
+  }</span>
+
+  inline void ProcessCmdLine::showPath()
+  <span class = "toggleMethodDisplay">{
+    out_ &lt;&lt; path_ &lt;&lt; " ";
+  }</span>
+
+  <span class = "toggleCommentDisplay">/*----&lt; options operations &gt;---------------------------------------*/</span>
+
+  inline void ProcessCmdLine::option(Option option)
+  <span class = "toggleMethodDisplay">{
+    options_.push_back(option);
+  }</span>
+
+  inline ProcessCmdLine::Options ProcessCmdLine::options()
+  <span class = "toggleMethodDisplay">{ 
+    return options_; 
+  }</span>
+
+  inline bool ProcessCmdLine::hasOption(Option op)
+  <span class = "toggleMethodDisplay">{
+    for (auto item : options_)
+    {
+      if (item == op)
+      {
+        return true;
+      }
+    }
+    return false;
+  }</span>
+
+  inline void ProcessCmdLine::showOptions()
+  <span class = "toggleMethodDisplay">{
+    for (auto opt : options_)
+    {
+      out_ &lt;&lt; '/' &lt;&lt; char(opt) &lt;&lt; " ";
+    }
+  }</span>
+
+  <span class = "toggleCommentDisplay">/*----&lt; patterns operations &gt;--------------------------------------*/</span>
+
+  inline void ProcessCmdLine::pattern(const Pattern& pattern)
+  <span class = "toggleMethodDisplay">{
+    patterns_.push_back(pattern);
+  }</span>
+
+  inline ProcessCmdLine::Patterns ProcessCmdLine::patterns()
+  <span class = "toggleMethodDisplay">{
+    return patterns_;
+  }</span>
+
+  inline void ProcessCmdLine::showPatterns()
+  <span class = "toggleMethodDisplay">{
+    for (auto patt : patterns_)
+    {
+      out_ &lt;&lt; patt &lt;&lt; " ";
+    }
+  }</span>
+
+  <span class = "toggleCommentDisplay">/*----&lt; maxItems operations &gt;--------------------------------------*/</span>
+
+  inline void ProcessCmdLine::maxItems(Number maxItems)
+  <span class = "toggleMethodDisplay">{
+    maxItems_ = maxItems;
+  }</span>
+
+  inline ProcessCmdLine::Number ProcessCmdLine::maxItems()
+  <span class = "toggleMethodDisplay">{
+    return maxItems_;
+  }</span>
+
+  inline void ProcessCmdLine::showMaxItems()
+  <span class = "toggleMethodDisplay">{
+    if(maxItems_ != 0)
+      out_ &lt;&lt; maxItems_ &lt;&lt; " ";
+  }</span>
+
+  <span class = "toggleCommentDisplay">/*----&lt; parseError operation &gt;-------------------------------------*/</span>
+
+  inline bool ProcessCmdLine::parseError()
+  <span class = "toggleMethodDisplay">{
+    return parseError_;
+  }</span>
+
+  <span class = "toggleCommentDisplay">/*----&lt; command line operations &gt;----------------------------------*/</span>
+
+  inline ProcessCmdLine::ProcessCmdLine(int argc, char** argv, std::ostream& out) : out_(out)
+  <span class = "toggleMethodDisplay">{
+    <span class = "toggleCommentDisplay">//usage_ = defaultUsage();</span>
+    if (argc &lt; 2)
+    {
+      out &lt;&lt; "\n  command line parse error";
+      <span class = "toggleCommentDisplay">//usage();</span>
+      parseError_ = true;
+      return;
+    }
+
+    path_ = argv[1];
+
+    for (int i = 2; i &lt; argc; ++i)
+    {
+      if (argv[i][0] == '/')
+      {
+        if (strlen(argv[i]) &gt; 2)
+          continue;
+        options_.push_back(argv[i][1]);
+      }
+      else
+      {
+        int number = atoi(argv[i]);
+        if (number &gt; 0)
+        {
+          maxItems_ = number;
+        }
+        else
+        {
+          patterns_.push_back(argv[i]);
+        }
+      }
+    }
+  }</span>
+
+  inline void ProcessCmdLine::showCmdLine(int argc, char** argv)
+  <span class = "toggleMethodDisplay">{
+    if (argc &gt; 2)
+    {
+      out_ &lt;&lt; "  empty";
+      return;
+    }
+    for (int i = 0; i &lt; argc; ++i)
+    {
+      if (argv[i] == "0")
+        continue;
+      if(argv[i][0] == '/')
+      { 
+        out_ &lt;&lt; "/" + char(argv[i][1]) &lt;&lt; " ";
+      }
+      else
+      {
+        out_ &lt;&lt; argv[i] &lt;&lt; " ";
+      }
+    }
+  }</span>
+
+  inline void ProcessCmdLine::showCmdLine()
+  <span class = "toggleMethodDisplay">{
+    if (path_ == "" && options_.size() == 0 && patterns_.size() == 0)
+    {
+      out_ &lt;&lt; "empty";
+      return;
+    }
+    showPath();
+    preface("", false);
+    showOptions();
+    preface("", false);
+    showPatterns();
+    preface("", false);
+    showMaxItems();
+  }</span>
+
+  inline void ProcessCmdLine::usage(const Usage& usage)
+  <span class = "toggleMethodDisplay">{
+    usage_ = usage;
+  }</span>
+
+  inline void ProcessCmdLine::usage()
+  <span class = "toggleMethodDisplay">{
+    out_ &lt;&lt; usage_;
+  }</span>
+
+  <span class = "toggleCommentDisplay">/////////////////////////////////////////////////////////////////////</span>
+  <span class = "toggleCommentDisplay">// Converter class</span>
+  <span class = "toggleCommentDisplay">// - supports converting unspecified types to and from strings</span>
+  <span class = "toggleCommentDisplay">// - a type is convertible if it provides insertion and extraction</span>
+  <span class = "toggleCommentDisplay">//   operators</span>
+
+  template &lt;typename T&gt;
+  class Converter
+  <span class = "toggleClassDisplay">{
+  public:
+    static std::string toString(const T& t);
+    static T toValue(const std::string& src);
+  };</span>
+  <span class = "toggleCommentDisplay">//----&lt; convert t to a string &gt;--------------------------------------</span>
+
+  template &lt;typename T&gt;
+  std::string Converter&lt;T&gt;::toString(const T& t)
+  <span class = "toggleMethodDisplay">{
+    std::ostringstream out;
+    out &lt;&lt; t;
+    return out.str();
+  }</span>
+  <span class = "toggleCommentDisplay">//----&lt; convert a string to an instance of T &gt;-----------------------</span>
+  <span class = "toggleCommentDisplay">/*
+  *  - the string must have been generated by Converter&lt;T&gt;::toString(const T& t)
+  *  - T::operator&gt;&gt; must be the inverse of T::operator&lt;&lt; 
+  */</span>
+  template&lt;typename T&gt;
+  T Converter&lt;T&gt;::toValue(const std::string& src)
+  <span class = "toggleMethodDisplay">{
+    std::istringstream in(src);
+    T t;
+    in &gt;&gt; t;
+    return t;
+  }</span>
+
+  <span class = "toggleCommentDisplay">///////////////////////////////////////////////////////////////////////</span>
+  <span class = "toggleCommentDisplay">// Box class</span>
+  <span class = "toggleCommentDisplay">// - wraps primitive type in class</span>
+  <span class = "toggleCommentDisplay">// - preserves primitive syntax</span>
+
+  template&lt;typename T&gt;
+  class Box
+  <span class = "toggleClassDisplay">{
+  public:
+    Box() : primitive_(T()) <span class = "toggleMethodDisplay">{}</span>
+    Box(const T& t) : primitive_(t) <span class = "toggleMethodDisplay">{}</span>
+    operator T&() { return primitive_; }
+    T& operator=(const T& t) <span class = "toggleMethodDisplay">{ primitive_ = t; return primitive_; }</span>
+  private:
+    T primitive_;
+  };</span>
+
+  <span class = "toggleCommentDisplay">///////////////////////////////////////////////////////////////////////</span>
+  <span class = "toggleCommentDisplay">// ToXml interface</span>
+  <span class = "toggleCommentDisplay">// - defines language for creating XML elements</span>
+
+  struct ToXml
+  {
+    virtual std::string toXml(const std::string& tag) = 0;
+    virtual ~ToXml() <span class = "toggleMethodDisplay">{};</span>
+  };
+
+  <span class = "toggleCommentDisplay">///////////////////////////////////////////////////////////////////////</span>
+  <span class = "toggleCommentDisplay">// PersistFactory&lt;T&gt; class</span>
+  <span class = "toggleCommentDisplay">// - wraps an instance of user-defined type</span>
+  <span class = "toggleCommentDisplay">// - preserves semantics of user-defined type</span>
+  <span class = "toggleCommentDisplay">// - adds toXml("tag") method</span>
+
+  template&lt;typename T&gt;
+  class PersistFactory : public T, ToXml
+  <span class = "toggleClassDisplay">{
+  public:
+    PersistFactory() = default;
+    PersistFactory(const T& t)
+    <span class = "toggleMethodDisplay">{
+      T::operator=(t);
+    }</span>
+    std::string toXml(const std::string& tag)
+    <span class = "toggleMethodDisplay">{
+      std::ostringstream out;
+      out &lt;&lt; "&lt;" &lt;&lt; tag &lt;&lt; "&gt;" &lt;&lt; *this &lt;&lt; "&lt;/" &lt;&lt; tag &lt;&lt; "&gt;";
+      return out.str();
+    }</span>
+  };</span>
+}
+</pre>
+</body></html>

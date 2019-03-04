@@ -1,8 +1,8 @@
 /////////////////////////////////////////////////////////////////////////////
 // FileSystem.cpp - Support file and directory operations                  //
-// ver 2.8                                                                 //
+// ver 3.0                                                                 //
 // ----------------------------------------------------------------------- //
-// copyright © Jim Fawcett, 2012                                           //
+// copyright ?Jim Fawcett, 2012                                           //
 // All rights granted provided that this notice is retained                //
 // ----------------------------------------------------------------------- //
 // Language:    Visual C++, Visual Studio 2010                             //
@@ -133,7 +133,6 @@ bool File::open(direction dirn, type typ)
     if (!(*pIStream).good())
     {
       good_ = false;
-      delete pIStream;
       pIStream = nullptr;
       //throw std::runtime_error("\n  open for input failed in File constructor");
     }
@@ -148,7 +147,6 @@ bool File::open(direction dirn, type typ)
     if (!(*pOStream).good())
     {
       good_ = false;
-      delete pOStream;
       pOStream = nullptr;
       //throw std::runtime_error("\n  open for output failed in File constructor");
     }
@@ -306,7 +304,7 @@ bool File::isGood()
     return (good_ = pIStream->good());
   if(pOStream != nullptr)
     return (good_ = pOStream->good());
-  return (good_ = false);
+  return (good_ == false);
 }
 //----< flushes output stream to its file >--------------------------------
 
@@ -332,14 +330,12 @@ void File::close()
   if (pIStream != nullptr)
   {
     pIStream->close();
-    delete pIStream;
     pIStream = nullptr;
     good_ = false;
   }
   if (pOStream)
   {
     pOStream->close();
-    delete pOStream;
     pOStream = nullptr;
     good_ = false;
   }
@@ -800,50 +796,7 @@ int main(int argc, char* argv[])
   std::string lower = Path::toLower("Temp.Txt");
   std::cout << "\n  Path::toLower(\"Temp.Txt\") = " << lower;
   std::cout << std::endl;
-  /*
-  title("Demonstrate FileSystemSearch class");
 
-  const size_t PathSetSize = 2;
-  std::string home = ::getenv("HOMEDRIVE");
-  std::string pathSet[] = { home+"\\\\", "." };
-  FileSystemSearch fss;
-  for(size_t i = 0; i<PathSetSize; ++i)
-  {
-    std::cout << "\n  searching for files on \"" << pathSet[i] << "\"";
-    std::cout << "\n " << std::string(27 + pathSet[i].size(), '-');
-    std::string searchPath = pathSet[i];
-    std::string fileName = fss.firstFile(searchPath);
-    if(fileName.size() > 0)
-      std::cout << "\n  " << fileName;
-    else
-      std::cout << "\n  no files match search";
-    while(true) {
-      fileName = fss.nextFile();
-      if(fileName.size() > 0)
-        std::cout << "\n  " << fileName;
-      else
-        break;
-    }
-    std::cout << std::endl;
-
-    std::cout << "\n  searching for directories on \"" << pathSet[i] << "\"";
-    std::cout << "\n " << std::string(33 + pathSet[i].size(), '-');
-    std::string dirName = fss.firstDirectory(searchPath);
-    if(dirName.size() > 0)
-      std::cout << "\n  " << dirName;
-    else
-      std::cout << "\n  no directories match search";
-    while(true)
-    {
-      dirName = fss.nextDirectory();
-      if(dirName.size() > 0)
-        std::cout << "\n  " << dirName;
-      else
-        break;
-    }
-    std::cout << std::endl;
-  }
-  */
   title("Demonstrate Directory class");
 
   // Display contents of current directory
@@ -1112,6 +1065,10 @@ int main(int argc, char* argv[])
   // test reading non-text files
 
   title("test reading non-text files", '-');
+  std::cout << "\n  Attempting to open Visual Studio files.";
+  std::cout << "\n  These are locked by VS when running from IDE.";
+  std::cout << "\n  They will open if you run FileSystemDemo from the debug folder,";
+  std::cout << "\n  provided you've closed the solution in VS.\n";
   std::cout << "\n";
   std::string testPath = "./debug";  // run from project directory (what Visual Studio does)
   if (!Directory::exists(testPath))
@@ -1122,7 +1079,7 @@ int main(int argc, char* argv[])
     try
     {
       std::string ext = Path::getExt(file);
-      if (ext == "exe" || ext == "dll" || file == "run.dat")
+      if (ext == "exe" || ext == "obj" || ext == "dll" || file == "run.dat")
       {
         /* reading binary file works, but generates a lot of garbage */
         /* I use run.dat to capture this output so including will make output confusing */
@@ -1156,7 +1113,7 @@ int main(int argc, char* argv[])
   in.open(File::in, File::text);
   File out("c:/temp/test.txt");
   out.open(File::out, File::text);
-  while(in.isGood())
+  while(in.isGood() && out.isGood())
   {
     std::string temp = in.getLine();
     //std::cout << "\n  " << temp.c_str();
@@ -1170,8 +1127,8 @@ int main(int argc, char* argv[])
 
   title("reading and writing buffers");
   std::cout << "\n  " << FileSystem::Directory::getCurrentDirectory();
-  std::string fileIn = "TestFileSystem/UnitTest.h";
-  std::string fileOut = "TestFileSystem/CopyOfUnitTest.h";
+  std::string fileIn = "../TestFileSystem/UnitTest.h";
+  std::string fileOut = "../TestFileSystem/CopyOfUnitTest.h";
   File bufferIn(fileIn);
   bufferIn.open(File::in, File::binary);
   if (!bufferIn.isGood())

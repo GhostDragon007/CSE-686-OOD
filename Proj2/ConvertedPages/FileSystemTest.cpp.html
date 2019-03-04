@@ -1,33 +1,85 @@
-<!Doctype html>
-<html>
-<head>
-<style>
-body{
-padding: 15px 40px;
-font - family: Consolas;
-font - size: 1.25em;
-font - weight: normal;
-}
-</style>
+<!DOCTYPE html>
+<!-- saved from url=(0113)https://ecs.syr.edu/faculty/fawcett/handouts/CSE687/code/Project2HelpS2019/OodProject2Helper/Proj2Helper.cpp.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+  <style>
+    body {
+      padding: 15px 40px;
+      font-family: Consolas;
+      font-size: 1.25em;
+      font-weight: normal;
+    }
+
+    span {
+      display: inline;
+    }
+
+    #funcButton {
+      position: fixed;
+      bottom: 50px;
+      right: 50px;
+    }
+	
+	#classButton {
+		position: fixed;
+      bottom: 70px;
+      right: 50px;
+	}
+	
+	#commentButton {
+		position: fixed;
+      bottom: 90px;
+      right: 50px;
+	}
+	
+    .toggleClassDisplay {
+    }
+
+    .toggleMethodDisplay {
+    }
+	
+	.toggleCommentDisplay {
+    }
+  </style>
+  <script>
+      function showHideClass(className) {
+        let elems = document.getElementsByClassName(className);
+        if (elems === null) {
+          return;
+        }
+        for (let i = 0; i < elems.length; ++i) {
+          let displayProp = elems[i].style.display;
+          if (displayProp === 'none')
+            elems[i].style['display'] = "inline";
+          else
+            elems[i].style['display'] = "none";
+        }
+      }
+  </script>
 </head>
 <body>
 <h3>FileSystemTest.cpp</h3>
+  <button onclick="showHideClass(&#39;toggleMethodDisplay&#39;)" id="funcButton">Show or Hide Method Contents</button>
+  <button onclick="showHideClass(&#39;toggleClassDisplay&#39;)" id="classButton">Show or Hide Class Contents</button>
+  <button onclick="showHideClass(&#39;toggleCommentDisplay&#39;)" id="commentButton">Show or Hide Comment Contents</button>
 <pre>
-/////////////////////////////////////////////////////////////////////////
-// FileSystemTest.cpp - Unit test cases for the FileSystem namespace   //
-// ver 1.1                                                             //
-// ------------------------------------------------------------------- //
-// copyright © Jim Fawcett, 2012                                       //
-// All rights granted provided that this notice is retained            //
-// ------------------------------------------------------------------- //
-// Jim Fawcett, Summer Projects, 2012                                  //
-/////////////////////////////////////////////////////////////////////////
-/*
+<pre>
+<a href="../ConvertedPages/FileSystem.h.html">FileSystem.h"</a>
+<a href="../ConvertedPages/UnitTest.h.html">"UnitTest.h"</a>
+<span class = "toggleCommentDisplay">/////////////////////////////////////////////////////////////////////////</span>
+<span class = "toggleCommentDisplay">// FileSystemTest.cpp - Unit test cases for the FileSystem namespace   //</span>
+<span class = "toggleCommentDisplay">// ver 1.1                                                             //</span>
+<span class = "toggleCommentDisplay">// ------------------------------------------------------------------- //</span>
+<span class = "toggleCommentDisplay">// copyright © Jim Fawcett, 2012                                       //</span>
+<span class = "toggleCommentDisplay">// All rights granted provided that this notice is retained            //</span>
+<span class = "toggleCommentDisplay">// ------------------------------------------------------------------- //</span>
+<span class = "toggleCommentDisplay">// Jim Fawcett, Summer Projects, 2012                                  //</span>
+<span class = "toggleCommentDisplay">/////////////////////////////////////////////////////////////////////////</span>
+<span class = "toggleCommentDisplay">/*
  * ver 1.1 : 23 Feb 13
  * - added tests in File::testFileExists()
  * - added tests in Path::getExt(...) for test cases 
  *   *.cpp, ../noExt ..\\someFile.ext
- */
+ */</span>
 #include &lt;iostream&gt;
 #include &lt;fstream&gt;
 #include &lt;string&gt;
@@ -39,22 +91,22 @@ using namespace FileSystem;
 using namespace Test;
 
 class TestFile : public TestBase&lt;TestFile&gt;
-{
+<span class = "toggleClassDisplay">{
 public:
   TestFile() : testFilePath("..\\FileSystemDemo\\FileSystem.cpp")
-  {
+  <span class = "toggleMethodDisplay">{
     std::cout &lt;&lt; "\n\n  Testing File class";
-  }
+  }</span>
   bool testName()
-  {
+  <span class = "toggleMethodDisplay">{
     File testFile(testFilePath);
     std::string name = Path::getName(testFile.name());
     std::string check = Path::getName(testFilePath);
     return checkResult(name == check, "testName");
-  }
+  }</span>
 
   bool testGetAndPutLine()
-  {
+  <span class = "toggleMethodDisplay">{
     std::string testline = "a test line";
     File outTestFile("tempTestFile.txt");
     outTestFile.open(File::out);
@@ -75,10 +127,10 @@ public:
       line1 == testline && line2 == testline, 
       "testGetAndPutLine"
     );
-  }
+  }</span>
 
   bool testGetAndPutBlock()
-  {
+  <span class = "toggleMethodDisplay">{
     Byte blockArray[] = { 'a', 'b', 'c', 'd' };
     Block block(&blockArray[0], &blockArray[4]);
     File outTestFile("tempTestFile.bin");
@@ -101,20 +153,20 @@ public:
       block1 == block && block2 == block, 
       "testGetAndPutBlock"
     );
-  }
+  }</span>
 
   bool testExists()
-  {
+  <span class = "toggleMethodDisplay">{
     bool t1, t2;
     std::string testFileSpec = "test.txt";
     t1 = File::exists(testFileSpec);
     testFileSpec = "foobar";
     t2 = !File::exists(testFileSpec);
     return checkResult(t1 & t2, "testExists");
-  }
+  }</span>
 
   bool testCopyAndRemove()
-  {
+  <span class = "toggleMethodDisplay">{
     bool t1, t2, t3, t4;
     std::string testFileSpec = "test.txt";
     std::string dst = "..\\test.txt";
@@ -131,10 +183,10 @@ public:
       std::cout &lt;&lt; "\n  " &lt;&lt; testFileSpec &lt;&lt; " does not exist";
       return failed("testCopyAndRemove");
     }
-  }
+  }</span>
 
   bool test()
-  {
+  <span class = "toggleMethodDisplay">{
     bool t1, t2, t3, t4, t5;
     t1 = doTest(&TestFile::testName);
     t2 = doTest(&TestFile::testGetAndPutLine);
@@ -142,35 +194,35 @@ public:
     t4 = doTest(&TestFile::testExists);
     t5 = doTest(&TestFile::testCopyAndRemove);
     return t1 && t2 && t3 && t4 && t5;
-  }
+  }</span>
 private:
     const std::string testFilePath;
-};
+};</span>
 
 class TestFileInfo : public TestBase&lt;TestFileInfo&gt;
-{
+<span class = "toggleClassDisplay">{
 public:
   TestFileInfo() : testFilePath("..\\FileSystemDemo\\FileSystem.cpp")
-  {
+  <span class = "toggleMethodDisplay">{
     std::cout &lt;&lt; "\n\n  Testing FileInfo class";
-  }
+  }</span>
   bool testConstruction()
-  {
+  <span class = "toggleMethodDisplay">{
     FileInfo fi(testFilePath);
     return checkResult(fi.good(), "testConstruction");
-  }
+  }</span>
   bool testName()
-  {
+  <span class = "toggleMethodDisplay">{
     FileInfo fi(testFilePath);
     std::string name = fi.name();
     std::string check = Path::getName(testFilePath);
 
-    //throw std::exception("testFileInfoName");
+    <span class = "toggleCommentDisplay">//throw std::exception("testFileInfoName");</span>
     
     return checkResult(name == check, "testName");
-  }
+  }</span>
   bool testDate()
-  {
+  <span class = "toggleMethodDisplay">{
     bool t1, t2, t3;
     FileInfo fi(testFilePath);
     std::string date = fi.date(FileInfo::fullformat);
@@ -180,9 +232,9 @@ public:
     date = fi.date(FileInfo::timeformat);
     t3 = date.find("/") &gt;= date.size() && date.find(":") &lt; date.size();
     return checkResult(t1 && t2 && t3, "testDate");
-  }
+  }</span>
   bool testSize()
-  {
+  <span class = "toggleMethodDisplay">{
     bool t1, t2;
     File testSize("testsize");
     testSize.open(File::out, File::binary);
@@ -197,10 +249,10 @@ public:
     size = fi2.size();
     t2 = size == 4;
     return checkResult(t1 && t2, "testSize");
-  }
+  }</span>
 
   bool testNameCompare()
-  {
+  <span class = "toggleMethodDisplay">{
     bool t1, t2, t3, t4, t5, t6, t7, t8;
     t1 = t2 = t3 = t4 = t5 = t6 = t7 = t8 = false;
     File testA("testA");
@@ -230,9 +282,9 @@ public:
       t1 && t2 && t3 && t4 && t5 && t6 && t7, 
       "testNameCompare"
     );
-  }
+  }</span>
   bool test()
-  {
+  <span class = "toggleMethodDisplay">{
     bool t1, t2, t3, t4, t5;
     t1 = doTest(&TestFileInfo::testConstruction);
     t2 = doTest(&TestFileInfo::testName);
@@ -240,26 +292,26 @@ public:
     t4 = doTest(&TestFileInfo::testSize);
     t5 = doTest(&TestFileInfo::testNameCompare);
     return t1 && t2 && t3 && t4 && t5;
-  }
+  }</span>
 private:
   const std::string testFilePath;
-};
+};</span>
 
 class TestPath : public TestBase&lt;TestPath&gt;
-{
+<span class = "toggleClassDisplay">{
 public:
   TestPath() : testFilePath("..\\FileSystemDemo\\FileSystem.cpp")
-  {
+  <span class = "toggleMethodDisplay">{
     std::cout &lt;&lt; "\n\n  Testing Path class";
-  }
+  }</span>
   bool TestGetFullFileSpec()
-  {
+  <span class = "toggleMethodDisplay">{
     std::string currPath = Directory::getCurrentDirectory();
     std::string fileSpec = Path::getFullFileSpec(".");
     return checkResult(currPath == fileSpec, "TestGetFullFileSpec");
-  }
+  }</span>
   bool TestGetPath()
-  {
+  <span class = "toggleMethodDisplay">{
     bool t1, t2;
     std::string path = Path::getPath("..\\foobar\\someFile.txt");
     std::string expected = "..\\foobar\\";
@@ -268,9 +320,9 @@ public:
     expected = "../foobar/";
     t2 = path == expected;
     return checkResult(t1 && t2, "TestGetPath");
-  }
+  }</span>
   bool TestGetName()
-  {
+  <span class = "toggleMethodDisplay">{
     bool t1, t2, t3;
     std::string name = Path::getName("..\\foobar\\someFile.txt");
     std::string expected = "someFile.txt";
@@ -282,9 +334,9 @@ public:
     expected = "someFile";
     t3 = name == expected;
     return checkResult(t1 && t2 && t3, "TestGetName");
-  }
+  }</span>
   bool TestGetExt()
-  {
+  <span class = "toggleMethodDisplay">{
     bool t1, t2, t3, t4, t5;
     std::string ext = Path::getExt("../foobar/someFile.txt");
     std::string expected = "txt";
@@ -302,9 +354,9 @@ public:
     expected = "cpp";
     t5 = ext == expected;
     return checkResult(t1 && t2 && t3 && t4 && t5, "TestGetExt");
-  }
+  }</span>
   bool TestFileSpec()
-  {
+  <span class = "toggleMethodDisplay">{
     bool t1, t2, t3;
     std::string path = "./foo";
     std::string name = "bar.txt";
@@ -322,9 +374,9 @@ public:
     fileSpec = Path::fileSpec(path,name);
     t3 = fileSpec == expected;
     return checkResult(t1 && t2 && t3, "TestFileSpec");
-  }
+  }</span>
   bool test()
-  {
+  <span class = "toggleMethodDisplay">{
     bool t1, t2, t3, t4, t5;
     t1 = doTest(&TestPath::TestGetFullFileSpec);
     t2 = doTest(&TestPath::TestGetPath);
@@ -332,20 +384,20 @@ public:
     t4 = doTest(&TestPath::TestGetExt);
     t5 = doTest(&TestPath::TestFileSpec);
     return t1 && t2 && t3 && t4 && t5;
-  }
+  }</span>
 private:
   const std::string testFilePath;
-};
+};</span>
 
 class TestDirectory : public TestBase&lt;TestDirectory&gt;
-{
+<span class = "toggleClassDisplay">{
 public:
   TestDirectory() : testPath_("c:\\temp")
-  {
+  <span class = "toggleMethodDisplay">{
     std::cout &lt;&lt; "\n\n  Testing Directory class";
-  }
+  }</span>
   bool TestCreateRemoveExists()
-  {
+  <span class = "toggleMethodDisplay">{
     bool t1, t2, t3;
     std::string path = testPath_ + "\\TestDir";
     t1 = Directory::create(path) || Directory::exists(path);
@@ -354,9 +406,9 @@ public:
     ::Sleep(100);
     t3 = Directory::remove(path) || !Directory::exists(path);
     return checkResult(t1 && t2 && t3, "TestCreateRemoveExists");
-  }
+  }</span>
   bool TestGetAndSetCurrentDirectory()
-  {
+  <span class = "toggleMethodDisplay">{
     bool t1, t2, t3;
     std::string currPath = Directory::getCurrentDirectory();
     t1 = Path::getFullFileSpec(".") == currPath;
@@ -366,18 +418,18 @@ public:
     Directory::setCurrentDirectory(currPath);
     t3 = Directory::getCurrentDirectory() == currPath;
     return checkResult(t1 && t2 && t3, "TestGetAndSetCurrentDirectory");
-  }
+  }</span>
   bool TestGetFilesAndDirectories()
-  {
+  <span class = "toggleMethodDisplay">{
     bool t1, t2, t3, t4, t5;
 
-    // test finding files by copying know files then getting them
+    <span class = "toggleCommentDisplay">// test finding files by copying know files then getting them</span>
     std::string srcPath = "..\\FileSystemDemo";
     std::string dstPath = testPath_ + "\\testDir1";
 
-    // create place to look
+    <span class = "toggleCommentDisplay">// create place to look</span>
     Directory::create(dstPath);
-    // store files there
+    <span class = "toggleCommentDisplay">// store files there</span>
     std::string fileSpec1 = Path::fileSpec(srcPath,"FileSystem.h");
     std::string fileSpec2 = Path::fileSpec(srcPath,"FileSystem.cpp");
     std::string dstFile1 = Path::fileSpec(dstPath,"FileSystem.h"); 
@@ -385,7 +437,7 @@ public:
     std::string dstFile2 = Path::fileSpec(dstPath,"FileSystem.cpp");
     File::copy(fileSpec2, dstFile2);
     t1 = File::exists(dstFile1) && File::exists(dstFile2);
-    // now test getFiles
+    <span class = "toggleCommentDisplay">// now test getFiles</span>
     std::vector&lt;std::string&gt; files = Directory::getFiles(dstPath);
     std::vector&lt;std::string&gt;::iterator iter 
       = std::find(files.begin(), files.end(), "FileSystem.h");
@@ -393,7 +445,7 @@ public:
     iter = std::find(files.begin(), files.end(), "FileSystem.cpp");
     t3 = iter != files.end();
 
-    // test finding directories by creating them and then finding them
+    <span class = "toggleCommentDisplay">// test finding directories by creating them and then finding them</span>
     Directory::create(testPath_ + "\\testDir2");
     Directory::create(testPath_ + "\\testDir3");
     std::vector&lt;std::string&gt; dirs = Directory::getDirectories(testPath_);
@@ -402,27 +454,27 @@ public:
     iter = std::find(dirs.begin(), dirs.end(), "testDir3");
     t5 = iter != dirs.end();
 
-    // clean up
-    Directory::remove(testPath_ + "\\testDir1");  // fails because it has contents
+    <span class = "toggleCommentDisplay">// clean up</span>
+    Directory::remove(testPath_ + "\\testDir1");  <span class = "toggleCommentDisplay">// fails because it has contents</span>
     Directory::remove(testPath_ + "\\testDir2");  
     Directory::remove(testPath_ + "\\testDir3");
 
     return checkResult(t1 && t2 && t3 && t4 &&t5, "TestGetFilesAndDirectories");
-  }
-  bool test()  // overriding inherited test method
-  {
+  }</span>
+  bool test()  <span class = "toggleCommentDisplay">// overriding inherited test method</span>
+  <span class = "toggleMethodDisplay">{
     bool t1, t2, t3;
     t1 = doTest(&TestDirectory::TestCreateRemoveExists);
     t2 = doTest(&TestDirectory::TestGetAndSetCurrentDirectory);
     t3 = doTest(&TestDirectory::TestGetFilesAndDirectories);
     return t1 && t2 && t3;
-  }
+  }</span>
 private:
   std::string testPath_;
-};
+};</span>
 
 bool test()
-{
+<span class = "toggleMethodDisplay">{
   bool t1, t2, t3, t4;
   TestFile tf;
   t1 = tf.test();
@@ -433,9 +485,9 @@ bool test()
   TestDirectory td;
   t4 = td.test();
   return t1 && t2 && t3;
-}
+}</span>
 int main(int argc, char* argv[])
-{
+<span class = "toggleMethodDisplay">{
   Title("Testing FileSystem namespace classes");
 
   if(test())

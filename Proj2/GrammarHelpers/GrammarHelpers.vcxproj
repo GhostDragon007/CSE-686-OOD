@@ -147,16 +147,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\Logger\Logger.h" />
-    <ClInclude Include="..\SemiExp\itokcollection.h" />
-    <ClInclude Include="..\SemiExp\SemiExp.h" />
-    <ClInclude Include="..\Tokenizer\Tokenizer.h" />
+    <ClInclude Include="..\SemiExpression\ITokenCollection.h" />
+    <ClInclude Include="..\SemiExpression\Semi.h" />
+    <ClInclude Include="..\Tokenizer\Toker.h" />
     <ClInclude Include="..\Utilities\Utilities.h" />
     <ClInclude Include="GrammarHelpers.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Logger\Logger.cpp" />
-    <ClCompile Include="..\SemiExp\SemiExp.cpp" />
-    <ClCompile Include="..\Tokenizer\Tokenizer.cpp" />
+    <ClCompile Include="..\SemiExpression\Semi.cpp" />
+    <ClCompile Include="..\Tokenizer\Toker.cpp" />
     <ClCompile Include="..\Utilities\Utilities.cpp" />
     <ClCompile Include="GrammarHelpers.cpp" />
   </ItemGroup>

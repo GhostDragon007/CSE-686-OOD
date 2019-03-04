@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<!-- saved from url=(0113)https://ecs.syr.edu/faculty/fawcett/handouts/CSE687/code/Project2HelpS2019/OodProject2Helper/Proj2Helper.cpp.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+  <style>
+    body {
+      padding: 15px 40px;
+      font-family: Consolas;
+      font-size: 1.25em;
+      font-weight: normal;
+    }
+
+    span {
+      display: inline;
+    }
+
+    #funcButton {
+      position: fixed;
+      bottom: 50px;
+      right: 50px;
+    }
+	
+	#classButton {
+		position: fixed;
+      bottom: 70px;
+      right: 50px;
+	}
+	
+	#commentButton {
+		position: fixed;
+      bottom: 90px;
+      right: 50px;
+	}
+	
+    .toggleClassDisplay {
+    }
+
+    .toggleMethodDisplay {
+    }
+	
+	.toggleCommentDisplay {
+    }
+  </style>
+  <script>
+      function showHideClass(className) {
+        let elems = document.getElementsByClassName(className);
+        if (elems === null) {
+          return;
+        }
+        for (let i = 0; i < elems.length; ++i) {
+          let displayProp = elems[i].style.display;
+          if (displayProp === 'none')
+            elems[i].style['display'] = "inline";
+          else
+            elems[i].style['display'] = "none";
+        }
+      }
+  </script>
+</head>
+<body>
+<h3>Semi.cpp</h3>
+  <button onclick="showHideClass(&#39;toggleMethodDisplay&#39;)" id="funcButton">Show or Hide Method Contents</button>
+  <button onclick="showHideClass(&#39;toggleClassDisplay&#39;)" id="classButton">Show or Hide Class Contents</button>
+  <button onclick="showHideClass(&#39;toggleCommentDisplay&#39;)" id="commentButton">Show or Hide Comment Contents</button>
+<pre>
+<pre>
+<a href="../ConvertedPages/Semi.h.html">"Semi.h"</a>
+<span class = "toggleCommentDisplay">/////////////////////////////////////////////////////////////////////</span>
+<span class = "toggleCommentDisplay">// Semi.cpp - Collects groups of tokens that are useful for        //</span>
+<span class = "toggleCommentDisplay">// ver 1.2    grammatical analysis                                 //</span>
+<span class = "toggleCommentDisplay">//                                                                 //</span>
+<span class = "toggleCommentDisplay">// Jim Fawcett, CSE687 - Object Oriented Design, Spring 2019       //</span>
+<span class = "toggleCommentDisplay">/////////////////////////////////////////////////////////////////////</span>
+
+#include "Semi.h"
+#include &lt;sstream&gt;
+
+namespace Lexer
+{
+  Semi::Semi(bool createToker<span class = "toggleCommentDisplay">/* = false*/</span>)
+  <span class = "toggleMethodDisplay">{
+    if (createToker)
+      pToker_ = new Toker;
+  }</span>
+
+  Semi::Semi(std::vector&lt;Token&gt; list, bool createToker<span class = "toggleCommentDisplay">/* = false*/</span>)
+  <span class = "toggleMethodDisplay">{
+    if (createToker)
+      pToker_ = new Toker;
+
+    for (Token tok : list)
+      toks.push_back(tok);
+  }</span>
+
+  Semi::~Semi()
+  <span class = "toggleMethodDisplay">{
+    delete pToker_;
+    pToker_ = nullptr;
+  }</span>
+
+  Toker* Semi::getToker()
+  <span class = "toggleMethodDisplay">{
+    return pToker_;
+  }</span>
+
+  void Semi::setToker(Toker* pToker)
+  <span class = "toggleMethodDisplay">{
+    if (pToker_ != nullptr)
+      delete pToker_;
+    pToker_ = pToker;
+  }</span>
+
+  void Semi::addRange(TokColl coll)
+  <span class = "toggleMethodDisplay">{
+    for (Token tok : coll)
+      toks.push_back(tok);
+  }</span>
+
+  bool Semi::open(const std::string& source)
+  <span class = "toggleMethodDisplay">{
+    return pToker_-&gt;open(source);
+  }</span>
+
+  void Semi::close()
+  <span class = "toggleMethodDisplay">{
+    pToker_-&gt;close();
+  }</span>
+  <span class = "toggleCommentDisplay">//----&lt; return number of tokens in semi-expression &gt;-------------</span>
+
+  size_t Semi::size() const
+  <span class = "toggleMethodDisplay">{
+    return toks.size();
+  }</span>
+  <span class = "toggleCommentDisplay">//----&lt; convert semi to string &gt;---------------------------------</span>
+
+  std::string Semi::ToString()
+  <span class = "toggleMethodDisplay">{
+    std::string temp;
+    for (Token tok : toks)
+    {
+      temp += tok += " ";
+    }
+    return temp;
+  }</span>
+  <span class = "toggleCommentDisplay">//----&lt; return number of lines processed &gt;-----------------------</span>
+
+  size_t Semi::lineCount()
+  <span class = "toggleMethodDisplay">{
+    return pToker_-&gt;lineCount();
+  }</span>
+  <span class = "toggleCommentDisplay">//----&lt; is tok a terminator for the current semi-expression? &gt;---</span>
+
+  bool Semi::isTerminator(Token tok)
+  <span class = "toggleMethodDisplay">{
+    if (tok == ";" || tok == "{" || tok == "}")
+      return true;
+    if (tok == "\n")
+    {
+      trim();
+      if (toks.size() &gt; 0 && toks[0] == "#")
+        return true;
+    }
+    return false;
+  }</span>
+  <span class = "toggleCommentDisplay">//----&lt; remove leading newlines &gt;--------------------------------</span>
+
+  void Semi::trim()
+  <span class = "toggleMethodDisplay">{
+    size_t count = 0;
+    for (count = 0; count &lt; toks.size(); ++count)
+    {
+      if (toks[count] != "\n")
+        break;
+    }
+    if (count == 0)
+      return;
+
+    TokColl temp;
+    for (size_t i = count; i &lt; toks.size(); ++i)
+      temp.push_back(toks[i]);
+    toks = temp;
+  }</span>
+  <span class = "toggleCommentDisplay">//----&lt; does semi contain specific token? &gt;----------------------</span>
+
+  bool Semi::contains(Token tok) const
+  <span class = "toggleMethodDisplay">{
+    for (Token test : toks)
+      if (test == tok)
+        return true;
+    return false;
+  }</span>
+  <span class = "toggleCommentDisplay">//----&lt; find token in semi &gt;-------------------------------------</span>
+
+  bool Semi::find(Token tok, size_t& index, size_t offset) const
+  <span class = "toggleMethodDisplay">{
+    for (index = offset; index &lt; size(); ++index)
+    {
+      if (toks[index] == tok)
+        return true;
+    }
+    index = size();
+    return false;
+  }</span>
+  <span class = "toggleCommentDisplay">//----&lt; find last occurance of tok &gt;-----------------------------</span>
+
+  bool Semi::findLast(Token tok, size_t& index) const
+  <span class = "toggleMethodDisplay">{
+    int pos = -1;
+    for (size_t i = 0; i &lt; toks.size(); ++i)
+    {
+      if (toks[i] == tok)
+        pos = int(i);
+    }
+    if (pos == -1)
+      index = size();
+    else
+      index = pos;
+    return (pos != -1);
+  }</span>
+  <span class = "toggleCommentDisplay">//----&lt; find predecessor of token &gt;------------------------------</span>
+
+  Token Semi::predecessor(Token tok)
+  <span class = "toggleMethodDisplay">{
+    size_t index;
+    if (find(tok, index) && index &gt; 0)
+    {
+      return toks[index - 1];
+    }
+    return "";
+  }</span>
+  <span class = "toggleCommentDisplay">//----&lt; return last token in collection &gt;------------------------</span>
+
+  Token Semi::last() const
+  <span class = "toggleMethodDisplay">{
+    return toks[toks.size() - 1];
+  }</span>
+  <span class = "toggleCommentDisplay">//----&lt; test for ordered sequence of tokens &gt;--------------------</span>
+
+  bool Semi::hasSequence(TokColl tokSeq)
+  <span class = "toggleMethodDisplay">{
+    int position = 0;
+    for (Token tok : toks)
+    {
+      if (position == tokSeq.size() - 1)
+        return true;
+      if (tok == tokSeq[position])
+        ++position;
+    }
+    return (position == tokSeq.size() - 1);
+  }</span>
+  <span class = "toggleCommentDisplay">//----&lt; fold &gt;---------------------------------------------------</span>
+
+  void Semi::fold()
+  <span class = "toggleMethodDisplay">{
+    TokColl tc1{ "for", "(", ":" };  <span class = "toggleCommentDisplay">// range-based for</span>
+    if (hasSequence(tc1))
+      return;
+    TokColl tc{ "for", "(", ";" };   <span class = "toggleCommentDisplay">// conventional for</span>
+    if (hasSequence(tc))
+    {
+      Semi temp;
+      temp.addRange(this-&gt;toks);
+      get();  <span class = "toggleCommentDisplay">// get i&lt;N;</span>
+      temp.addRange(this-&gt;toks);
+      get();
+      temp.addRange(this-&gt;toks);  <span class = "toggleCommentDisplay">// get ++i) .. {</span>
+      toks = temp.toks;
+    }
+  }</span>
+  <span class = "toggleCommentDisplay">//----&lt; used by parser to get the next collection of tokens &gt;----</span>
+
+  bool Semi::get()
+  <span class = "toggleMethodDisplay">{
+    toks.clear();
+
+    while (!pToker_-&gt;isDone())
+    {
+      Token tok = pToker_-&gt;getTok();
+      if (tok != "\n")
+        toks.push_back(tok);
+      if (isComment(tok))
+        return true;
+      if (isTerminator(tok))
+      {
+        fold();
+        return true;
+      }
+    }
+    return false;
+  }</span>
+  <span class = "toggleCommentDisplay">//----&lt; clone replaces tokens in caller with tokens of argument &gt;----</span>
+
+  void Semi::clone(const ITokenCollection& tc, size_t offset)
+  <span class = "toggleMethodDisplay">{
+    toks.clear();
+    for (size_t i = offset; i &lt; tc.size(); ++i)
+    {
+      toks.push_back(tc[i]);
+    }
+  }</span>
+  <span class = "toggleCommentDisplay">//----&lt; clone tokens of existing SemiExp &gt;---------------------------</span>
+  <span class = "toggleCommentDisplay">/*
+  *  Note:
+  *  - Returns pointer to new SemiExp on heap.  Application is
+  *    responsible for deleting.
+  *  - Does not clone pointer to _toker or hasToken members!
+  */</span>
+  ITokenCollection* Semi::clone() const
+  <span class = "toggleMethodDisplay">{
+    Semi* pClone = new Semi;
+    for (size_t i = 0; i &lt; size(); ++i)
+      pClone-&gt;add(toks[i]);
+    return pClone;
+  }</span>
+  <span class = "toggleCommentDisplay">//----&lt; indexer allows us to index for a specific token &gt;--------</span>
+
+  Token& Semi::operator[](size_t i)
+  <span class = "toggleMethodDisplay">{
+    if (i &lt; 0 || toks.size() &lt;= i)
+      throw(std::exception());
+    return toks[i];
+  }</span>
+  <span class = "toggleCommentDisplay">//----&lt; indexer allows us to index for a specific token &gt;--------</span>
+
+  Token Semi::operator[](size_t i) const
+  <span class = "toggleMethodDisplay">{
+    if (i &lt; 0 || toks.size() &lt;= i)
+      throw(std::exception());
+    return toks[i];
+  }</span>
+  <span class = "toggleCommentDisplay">//----&lt; begin iterator &gt;-----------------------------------------</span>
+
+  Semi::iterator Semi::begin()
+  <span class = "toggleMethodDisplay">{
+    return toks.begin();
+  }</span>
+  <span class = "toggleCommentDisplay">//----&lt; end iterator &gt;-------------------------------------------</span>
+
+  Semi::iterator Semi::end()
+  <span class = "toggleMethodDisplay">{
+    return toks.end();
+  }</span>
+  <span class = "toggleCommentDisplay">//----&lt; add a token to the end of this semi-expression &gt;---------</span>
+
+  ITokenCollection* Semi::add(Token token)
+  <span class = "toggleMethodDisplay">{
+    toks.push_back(token);
+    return this;
+  }</span>
+  <span class = "toggleCommentDisplay">//----&lt; remove element at index &gt;---------------------------------</span>
+
+  bool Semi::remove(size_t index)
+  <span class = "toggleMethodDisplay">{
+    iterator iter = toks.erase(toks.begin() + index);
+    return (toks.begin() &lt;= iter && iter &lt; toks.end());
+  }</span>
+  <span class = "toggleCommentDisplay">//----&lt; remove first instance of tok &gt;-----------------------------</span>
+
+  bool Semi::remove(Token tok)
+  <span class = "toggleMethodDisplay">{
+    size_t pos;
+    if (!find(tok, pos))
+      return false;
+    return remove(pos);
+  }</span>
+  <span class = "toggleCommentDisplay">//----&lt; clear all the tokens from internal collection &gt;----------</span>
+
+  void Semi::clear()
+  <span class = "toggleMethodDisplay">{
+    toks.clear();
+  }</span>
+  <span class = "toggleCommentDisplay">//----&lt; are we at the end of the token source stream? &gt;----------</span>
+
+  bool Semi::isDone()
+  <span class = "toggleMethodDisplay">{
+    return pToker_-&gt;isDone();
+  }</span>
+  <span class = "toggleCommentDisplay">//----&lt; insert a token at position n &gt;---------------------------</span>
+
+  bool Semi::insert(size_t n, Token tok)
+  <span class = "toggleMethodDisplay">{
+    if (n &lt; 0 || n &gt;= tok.size())
+      return false;
+    TokColl::iterator iter = toks.begin();
+    toks.insert(iter + n, tok);
+    return true;
+  }</span>
+  <span class = "toggleCommentDisplay">//----&lt; does this semi-expression contain a terminator? &gt;--------</span>
+
+  bool Semi::hasTerminator()
+  <span class = "toggleMethodDisplay">{
+    if (toks.size() &lt;= 0)
+      return false;
+    if (isTerminator(toks[toks.size() - 1]))
+      return true;
+    return false;
+  }</span>
+  <span class = "toggleCommentDisplay">//----&lt; display contents of semi-expression on console &gt;---------</span>
+
+  std::string Semi::show() const
+  <span class = "toggleMethodDisplay">{
+    std::ostringstream out;
+    out &lt;&lt; "\n-- ";
+    for (Token tok : toks)
+    {
+      if (tok != "\n")
+        out &lt;&lt; tok &lt;&lt; " ";
+      else
+        out &lt;&lt; "\n";
+    }
+    return out.str();
+  }</span>
+  <span class = "toggleCommentDisplay">//----&lt; is this token a comment? &gt;---------------------------------</span>
+
+  bool Semi::isComment(Token tok)
+  <span class = "toggleMethodDisplay">{
+    Toker* pToker = getToker();
+    return (pToker-&gt;isSingleLineComment(tok) || pToker-&gt;isMultipleLineComment(tok));
+  }</span>
+}
+
+#ifdef TEST_SEMI
+
+using namespace Lexer;
+
+int main()
+<span class = "toggleMethodDisplay">{
+  std::cout &lt;&lt; "\n  testing Semi";
+  std::cout &lt;&lt; "\n ==============";
+
+  <span class = "toggleCommentDisplay">// Access Semi through interface and object factory.</span>
+  <span class = "toggleCommentDisplay">// That isolates client from any changes that may occur to Semi</span>
+  <span class = "toggleCommentDisplay">// as long as ITokenCollection doesn't change.</span>
+
+  ITokenCollection* pSemi = Factory::create(true);  <span class = "toggleCommentDisplay">// true creates toker</span>
+
+  <span class = "toggleCommentDisplay">//std::string source = "../SemiExpression/semi.h";</span>
+  std::string source = "../TestFiles/DirExplorerN.h";
+  if (!pSemi-&gt;open(source))
+  {
+    std::cout &lt;&lt; "\n  Can't open \"" + source + "\"";
+    return 1;
+  }
+  Toker* pToker = pSemi-&gt;getToker();
+  pToker-&gt;doReturnComments(true);
+
+  while (!pSemi-&gt;isDone())
+  {
+    pSemi-&gt;get();
+    std::cout &lt;&lt; pSemi-&gt;show();
+  }
+  std::cout &lt;&lt; "\n";
+
+  std::cout &lt;&lt; "\n  demonstrating semi operations";
+  std::cout &lt;&lt; "\n -------------------------------";
+
+  ITokenCollection* pTest = Factory::create();
+
+  pTest-&gt;add("one")-&gt;add("two")-&gt;add("three");
+  std::cout &lt;&lt; pTest-&gt;show();
+  TokColl coll1 { "one", "three" };
+  if (pTest-&gt;hasSequence(coll1))
+    std::cout &lt;&lt; "\n  semi has token \"one\" followed by token \"three\"";
+  TokColl coll2{ "foo", "Two" };
+  if (!pTest-&gt;hasSequence(coll2))
+    std::cout &lt;&lt; "\n  semi does not have token \"foo\" followed by token \"two\"";
+  if (!pTest-&gt;hasTerminator())
+    std::cout &lt;&lt; "\n  semi does not have terminator";
+
+  std::cout &lt;&lt; "\n  demonstrate changing semi with insert # and add \\n";
+  pTest-&gt;insert(0, "#");
+  pTest-&gt;add("\n");
+  std::cout &lt;&lt; pTest-&gt;show();
+
+  std::cout &lt;&lt; "\n  removing \\n";
+  pTest-&gt;remove("\n");
+  <span class = "toggleCommentDisplay">//size_t pos = pTest-&gt;find("\n");</span>
+  <span class = "toggleCommentDisplay">//pTest-&gt;remove(pos);</span>
+  std::cout &lt;&lt; pTest-&gt;show();
+
+  std::cout &lt;&lt; "\n  demonstrate semi tests";
+  if (pTest-&gt;hasTerminator())
+    std::cout &lt;&lt; "\n  semi has terminator";
+  else
+    std::cout &lt;&lt; "\n  semi does not have terminator";
+
+  size_t index;
+  Token tok = "two";
+  if (pTest-&gt;find(tok, index))
+    std::cout &lt;&lt; "\n  found token \"" &lt;&lt; tok &lt;&lt; "\" at position " &lt;&lt; index;
+  else
+    std::cout &lt;&lt; "\n  did not find token \"" &lt;&lt; tok &lt;&lt; "\"";
+  tok = "foo";
+  if (pTest-&gt;find(tok, index))
+    std::cout &lt;&lt; "\n  found token \"" &lt;&lt; tok &lt;&lt; "\" at position " &lt;&lt; index;
+  else
+    std::cout &lt;&lt; "\n  did not find token \"" &lt;&lt; tok &lt;&lt; "\"";
+
+  tok = "one";
+  Token tok2 = pTest-&gt;predecessor(tok);
+  std::cout &lt;&lt; "\n  predecessor of \"" &lt;&lt; tok &lt;&lt; "\" is \"" &lt;&lt; tok2;
+  tok = "bar";
+  tok2 = pTest-&gt;predecessor(tok);
+    std::cout &lt;&lt; "\n  predecessor of \"" &lt;&lt; tok &lt;&lt; "\" is \"" &lt;&lt; tok2 &lt;&lt; "\"";
+
+  std::cout &lt;&lt; "\n  indexing semi\n  ";
+  for (size_t i = 0; i &lt; pTest-&gt;size(); ++i)
+    std::cout &lt;&lt; (*pTest)[i] &lt;&lt; " ";
+  std::cout &lt;&lt; "\n  using range for:\n  ";
+  for(auto tk : (*pTest))
+    std::cout &lt;&lt; tk &lt;&lt; " ";
+
+  std::cout &lt;&lt; "\n  testing clones:";
+  ITokenCollection* pTest2 = nullptr;
+  std::cout &lt;&lt; "\n    clone target after cloning:";
+  pTest2 = pTest-&gt;clone();
+  std::cout &lt;&lt; pTest2-&gt;show();
+  pTest-&gt;add("anotherTok")-&gt;add(";");
+  pTest2-&gt;clone(*pTest);
+  std::cout &lt;&lt; pTest2-&gt;show();
+
+  std::cout &lt;&lt; "\n  testing detection of comments:";
+  bool test1 = pTest2-&gt;isComment("<span class = "toggleCommentDisplay">// cpp comment");</span>
+  bool test2 = pTest2-&gt;isComment("<span class = "toggleCommentDisplay">/* a comment */</span>");
+  if (test1 && test2)
+    std::cout &lt;&lt; "\n  detection of comments passes";
+  else
+    std::cout &lt;&lt; "\n  detection of comments fails";
+  std::cout &lt;&lt; "\n\n";
+}</span>
+#endif
+
+
+</pre>
+</body></html>

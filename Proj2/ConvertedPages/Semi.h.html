@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<!-- saved from url=(0113)https://ecs.syr.edu/faculty/fawcett/handouts/CSE687/code/Project2HelpS2019/OodProject2Helper/Proj2Helper.cpp.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+  <style>
+    body {
+      padding: 15px 40px;
+      font-family: Consolas;
+      font-size: 1.25em;
+      font-weight: normal;
+    }
+
+    span {
+      display: inline;
+    }
+
+    #funcButton {
+      position: fixed;
+      bottom: 50px;
+      right: 50px;
+    }
+	
+	#classButton {
+		position: fixed;
+      bottom: 70px;
+      right: 50px;
+	}
+	
+	#commentButton {
+		position: fixed;
+      bottom: 90px;
+      right: 50px;
+	}
+	
+    .toggleClassDisplay {
+    }
+
+    .toggleMethodDisplay {
+    }
+	
+	.toggleCommentDisplay {
+    }
+  </style>
+  <script>
+      function showHideClass(className) {
+        let elems = document.getElementsByClassName(className);
+        if (elems === null) {
+          return;
+        }
+        for (let i = 0; i < elems.length; ++i) {
+          let displayProp = elems[i].style.display;
+          if (displayProp === 'none')
+            elems[i].style['display'] = "inline";
+          else
+            elems[i].style['display'] = "none";
+        }
+      }
+  </script>
+</head>
+<body>
+<h3>Semi.h</h3>
+  <button onclick="showHideClass(&#39;toggleMethodDisplay&#39;)" id="funcButton">Show or Hide Method Contents</button>
+  <button onclick="showHideClass(&#39;toggleClassDisplay&#39;)" id="classButton">Show or Hide Class Contents</button>
+  <button onclick="showHideClass(&#39;toggleCommentDisplay&#39;)" id="commentButton">Show or Hide Comment Contents</button>
+<pre>
+<pre>
+﻿#ifndef SEMI_H
+#define SEMI_H
+<span class = "toggleCommentDisplay">/////////////////////////////////////////////////////////////////////</span>
+<span class = "toggleCommentDisplay">// Semi.h - Collects groups of tokens that are useful for          //</span>
+<span class = "toggleCommentDisplay">// ver 1.2   grammatical analysis                                  //</span>
+<span class = "toggleCommentDisplay">//                                                                 //</span>
+<span class = "toggleCommentDisplay">// Jim Fawcett, CSE687 - Object Oriented Design, Spring 2019       //</span>
+<span class = "toggleCommentDisplay">/////////////////////////////////////////////////////////////////////</span>
+<span class = "toggleCommentDisplay">/*
+ * Package Operations:
+ * -------------------
+ * - This package contains a Semi class that implements ITokenCollection
+ *   interface.  It also contains a Factory class that creates instances
+ *   of Semi.
+ * - Semiressions are collections of tokens that are useful for 
+ *   detecting specific grammatical constructs.  It is important that
+ *   each instance of Semi contains all tokens necessary to make a 
+ *   decision about a grammatical construct, e.g., is this a class?
+ * - It is also important that each Semi instance does not contain 
+ *   tokens relevant for more than one detection.
+ * - This code demonstrates how to build a semi-expression collector,
+ *   using the state-based tokenizer. 
+ * 
+ * Required Files:
+ * ---------------
+ * Semi.h, Semi.cpp,
+ * ITokenCollection.h, 
+ * Toker.h, Toker.cpp
+ * 
+ * Maintenance History
+ * -------------------
+ * ver 1.2 : 03 Mar 2019
+ * - fixed bug in getTok by explicitly returning token if comment
+ *   bug reported by Anonymous in Piazza Q&A, @98
+ * ver 1.1 : 27 Feb 2019
+ * - fixed bug in fold() by returning if range-based for
+ * ver 1.0 : 09 Jan 2019
+ * - first release
+ * 
+ * Note:
+ * - This is a redesign of the Semi package you will find in the Parser folder
+ *   in the Repository.
+ */</span>
+
+#include &lt;string&gt;
+#include &lt;vector&gt;
+#include "ITokenCollection.h"
+#include "../Tokenizer/Toker.h"
+
+namespace Lexer
+{
+  <span class = "toggleCommentDisplay">///////////////////////////////////////////////////////////////////</span>
+  <span class = "toggleCommentDisplay">// Semi class</span>
+  <span class = "toggleCommentDisplay">// - collects tokens from Lexer::Toker.</span>
+  <span class = "toggleCommentDisplay">// - terminates collection on collecting the special tokens:</span>
+  <span class = "toggleCommentDisplay">//     ";", "{", "}", and "\n" when the first character is "#"</span>
+  <span class = "toggleCommentDisplay">// - It implements the IEnumerable interface, which is a contract</span>
+  <span class = "toggleCommentDisplay">//   to return an Enumerater object that foreach uses to step through</span>
+  <span class = "toggleCommentDisplay">//   items in a collection.</span>
+  <span class = "toggleCommentDisplay">// - It also implements the ITokenCollection interface that the</span>
+  <span class = "toggleCommentDisplay">//   parser will use to extract token sequences for rule-checking.</span>
+
+  class Semi : public ITokenCollection
+  <span class = "toggleClassDisplay">{
+  private:
+    TokColl toks;  <span class = "toggleCommentDisplay">// private collection of tokens</span>
+    Toker* pToker_ = nullptr;
+
+  public:
+    Semi(bool createToker = false);
+    Semi(std::vector&lt;Token&gt; list, bool createToker = false);
+    virtual ~Semi();
+
+    virtual Toker* getToker() override;
+    virtual void setToker(Toker* pToker) override;
+    virtual void addRange(TokColl coll) override;
+    virtual bool open(const std::string& source) override;
+    virtual void close() override;
+    virtual size_t size() const override;
+    virtual std::string ToString() override;
+    virtual size_t lineCount() override;
+    bool isTerminator(Token tok);
+    virtual void trim() override;
+    virtual bool contains(Token tok) const override;
+    <span class = "toggleCommentDisplay">// note find functions return index reference of founct token position</span>
+    virtual bool find(Token tok, size_t& index, size_t offset = 0) const override;   <span class = "toggleCommentDisplay">// find tok if in semi</span>
+    virtual bool findLast(Token tok, size_t&index) const override;
+    virtual Token predecessor(Token tok) override;
+    virtual Token last() const override;
+    virtual bool hasSequence(TokColl tokSeq) override;
+    void fold();
+    virtual bool get() override;
+    virtual void clone(const ITokenCollection& tc, size_t offset = 0) override;
+    virtual ITokenCollection* clone() const override;
+    virtual Token& operator[](size_t i) override;
+    virtual Token operator[](size_t i) const override;
+    virtual iterator begin() override;
+    virtual iterator end() override;
+    virtual ITokenCollection* add(Token token) override;
+    virtual bool remove(size_t index) override;
+    virtual bool remove(Token tok) override;
+    virtual void clear() override;
+    virtual bool isDone() override;
+    virtual bool insert(size_t n, Token tok) override;
+    virtual bool hasTerminator() override;
+    virtual std::string show() const override;
+    virtual bool isComment(Token tok) override;
+  };</span>
+
+  class Factory
+  <span class = "toggleClassDisplay">{
+  public:
+    static ITokenCollection* create(bool createToker = false)
+    <span class = "toggleMethodDisplay">{
+      Semi* rtn = new Semi(createToker);
+      return rtn;
+    }</span>
+  };</span>
+}
+
+#endif
+
+</pre>
+</body></html>

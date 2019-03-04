@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<!-- saved from url=(0113)https://ecs.syr.edu/faculty/fawcett/handouts/CSE687/code/Project2HelpS2019/OodProject2Helper/Proj2Helper.cpp.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+  <style>
+    body {
+      padding: 15px 40px;
+      font-family: Consolas;
+      font-size: 1.25em;
+      font-weight: normal;
+    }
+
+    span {
+      display: inline;
+    }
+
+    #funcButton {
+      position: fixed;
+      bottom: 50px;
+      right: 50px;
+    }
+	
+	#classButton {
+		position: fixed;
+      bottom: 70px;
+      right: 50px;
+	}
+	
+	#commentButton {
+		position: fixed;
+      bottom: 90px;
+      right: 50px;
+	}
+	
+    .toggleClassDisplay {
+    }
+
+    .toggleMethodDisplay {
+    }
+	
+	.toggleCommentDisplay {
+    }
+  </style>
+  <script>
+      function showHideClass(className) {
+        let elems = document.getElementsByClassName(className);
+        if (elems === null) {
+          return;
+        }
+        for (let i = 0; i < elems.length; ++i) {
+          let displayProp = elems[i].style.display;
+          if (displayProp === 'none')
+            elems[i].style['display'] = "inline";
+          else
+            elems[i].style['display'] = "none";
+        }
+      }
+  </script>
+</head>
+<body>
+<h3>Dependencies.cpp</h3>
+  <button onclick="showHideClass(&#39;toggleMethodDisplay&#39;)" id="funcButton">Show or Hide Method Contents</button>
+  <button onclick="showHideClass(&#39;toggleClassDisplay&#39;)" id="classButton">Show or Hide Class Contents</button>
+  <button onclick="showHideClass(&#39;toggleCommentDisplay&#39;)" id="commentButton">Show or Hide Comment Contents</button>
+<pre>
+<pre>
+<a href="../ConvertedPages/Dependencies.h.html">"Dependencies.h"</a>
+<a href="../ConvertedPages/Parser.h.html">Parser.h"</a>
+<a href="../ConvertedPages/Utilities.h.html">Utilities.h"</a>
+<a href="../ConvertedPages/Toker.h.html">Toker.h"</a>
+<a href="../ConvertedPages/Semi.h.html">Semi.h"</a>
+<a href="../ConvertedPages/ActionsAndRules.h.html">ActionsAndRules.h"</a>
+<a href="../ConvertedPages/ConfigureParser.h.html">ConfigureParser.h"</a>
+<span class = "toggleCommentDisplay">/////////////////////////////////////////////////////////////////////</span>
+<span class = "toggleCommentDisplay">//  Dependencies.cpp - Records file dependencies for each          //</span>
+<span class = "toggleCommentDisplay">//                     processed file                              //</span>
+<span class = "toggleCommentDisplay">//  ver 1.0                                                        //</span>
+<span class = "toggleCommentDisplay">//  Language:      Visual C++, Visual Studio 2017                  //</span>
+<span class = "toggleCommentDisplay">//  Platform:      Dell Latitude 5580, Windows 10                  //</span>
+<span class = "toggleCommentDisplay">//  Application:   CSE687 - OOD Project #2                         //</span>
+<span class = "toggleCommentDisplay">//  Author:        Junhao Shen, Syracuse University                //</span>
+<span class = "toggleCommentDisplay">//                 jshen18@syr.edu                                 //</span>
+<span class = "toggleCommentDisplay">/////////////////////////////////////////////////////////////////////</span>
+
+#include &lt;iostream&gt;
+#include "Dependencies.h"
+#include "../Parser/Parser.h"
+#include "../Utilities/Utilities.h"
+#include "../Tokenizer/Toker.h"
+#include "../SemiExpression/Semi.h"
+#include "../Parser/ActionsAndRules.h"
+#include "../Parser/ConfigureParser.h"
+
+using namespace Lexer;
+using namespace Utilities;
+using Demo = Logging::StaticLogger&lt;1&gt;;
+using namespace CodeAnalysis;
+
+Dependencies::Dependencies() <span class = "toggleMethodDisplay">{}</span>
+Dependencies::~Dependencies() <span class = "toggleMethodDisplay">{}</span>
+
+<span class = "toggleCommentDisplay">//----&lt; find files' dependencies &gt;-----------------------------------------</span>
+
+#define Util StringHelper
+using mapString = std::map&lt;std::string, std::vector&lt;std::string&gt;&gt;;
+
+mapString Dependencies::findDependencies(std::vector&lt;std::string&gt; files)
+<span class = "toggleMethodDisplay">{
+	for (int i = 0; i &lt; files.size(); ++i)
+	{
+		std::string fileSpec = FileSystem::Path::getFullFileSpec(files[i]);
+		std::string msg = "Processing file " + fileSpec;
+		std::vector&lt;std::string&gt; dependency;
+		Util::title(msg);
+		ConfigParseForCodeAnal configure;
+		Parser* pParser = configure.Build();
+		try
+		{
+			if (pParser)
+			{
+				if (!configure.Attach(files[i]))
+				{
+					std::string name = FileSystem::Path::getName(files[i]);
+					std::cout &lt;&lt; "\n  could not open file " &lt;&lt; name &lt;&lt; std::endl;
+					continue;
+				}
+			}
+			else
+			{
+				std::cout &lt;&lt; "\n\n  Parser not built\n\n";
+				return this-&gt;dependencies;
+			}
+			<span class = "toggleCommentDisplay">// now that parser is built, use it</span>
+			while (pParser-&gt;next())
+				pParser-&gt;parse();
+			std::cout &lt;&lt; "\n";
+			<span class = "toggleCommentDisplay">// show AST</span>
+			Repository* pRepo = Repository::getInstance();
+			ASTNode* pGlobalScope = pRepo-&gt;getGlobalScope();
+			<span class = "toggleCommentDisplay">// Filter statement and get those dependencies we want</span>
+			for (auto statement : pGlobalScope-&gt;statements_) {
+				if (statement-&gt;size() == 3) {
+					auto i = statement-&gt;begin();
+					if (*i == "#") {
+						i++;
+						if (*i == "include") {
+							i++;
+							dependency.push_back(*i);
+						}
+					}
+				}
+			}
+			this-&gt;dependencies[files[i]] = dependency;
+		}
+		catch (std::exception& ex)
+		{
+			std::cout &lt;&lt; "\n\n    " &lt;&lt; ex.what() &lt;&lt; "\n\n";
+			std::cout &lt;&lt; "\n  exception thrown at line " &lt;&lt; __LINE__;
+		}
+	}
+	std::cout &lt;&lt; "\n";
+	return this-&gt;dependencies;
+}</span>
+
+
+#ifdef TEST_DEPENDENCIES
+
+<span class = "toggleCommentDisplay">//----&lt; DEPENDENCIES TEST TUB &gt;------------------------------------------</span>
+
+using namespace std;
+
+int main()
+<span class = "toggleMethodDisplay">{
+	Dependencies depend;
+	vector&lt;string&gt; files = { "Dependencies.cpp", "Dependencies.h" };
+	map&lt;string, vector&lt;string&gt;&gt; dependencies = depend.findDependencies(files);
+
+	Util::title("Test Dependencies");
+	for (auto i = dependencies.begin(); i != dependencies.end(); i++) {
+		std::cout &lt;&lt; "\nFor " &lt;&lt; i-&gt;first &lt;&lt; ", Dependencies are: \n";
+		for (auto item : i-&gt;second)
+			std::cout &lt;&lt; item &lt;&lt; std::endl;
+		std::cout &lt;&lt; "\n\n";
+	}
+
+	return 0;
+}</span>
+
+#endif
+
+
+</pre>
+</body></html>

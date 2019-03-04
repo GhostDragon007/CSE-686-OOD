@@ -2,9 +2,9 @@
 #define FILESYSTEM_H
 /////////////////////////////////////////////////////////////////////////////
 // FileSystem.h - Support file and directory operations                    //
-// ver 2.8                                                                 //
+// ver 3.0                                                                 //
 // ----------------------------------------------------------------------- //
-// copyright © Jim Fawcett, 2012                                           //
+// copyright ?Jim Fawcett, 2012                                           //
 // All rights granted provided that this notice is retained                //
 // ----------------------------------------------------------------------- //
 // Language:    Visual C++, Visual Studio 2010                             //
@@ -80,8 +80,15 @@
  *
  * Maintenance History:
  * ====================
- * ver 2.8 : 05 Nov 2017
- *  - modified File class in FileSystem to remove memory leak
+ * ver 3.0 : 22 Feb 2019
+ * - Fixed bugs, found by Ammar Salam and Namen Parakh in Directory::remove
+ *   and Directory::create, which returned the wrong boolean value, by
+ *   replacing == with !=.
+ * ver 2.9 : 06 Sep 2018
+ * - Fixed bug in File::isGood() by returning result of comparison, not assignment
+ * ver 2.8 : 23 Feb 2018
+ * - Fixed bug in FileSystem.cpp main() which added one
+ *   test for file open success.
  * ver 2.7 : 28 May 2017
  * - Fixed bug by closing files in FileInfo destructor.
  *   Thanks to Kaiqi Zhang for finding bug and proposing

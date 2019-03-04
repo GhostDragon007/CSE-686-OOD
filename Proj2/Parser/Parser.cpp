@@ -1,9 +1,9 @@
 /////////////////////////////////////////////////////////////////////
-//  Parser.cpp - Analyzes C++ language constructs                  //
-//  ver 1.5                                                        //
-//  Language:      Visual C++ 2008, SP1                            //
-//  Platform:      Dell XPS 8900, Windows 10                       //
-//  Application:   Prototype for CSE687 Pr1, Sp09, ...             //
+//  Parser.cpp - Analyzes C++ and C# language constructs           //
+//  ver 1.0                                                        //
+//  Language:      Visual C++, Visual Studio 2015                  //
+//  Platform:      Dell XPS 8920, Windows 10                       //
+//  Application:   Prototype for CSE687 - OOD Projects             //
 //  Author:        Jim Fawcett, CST 4-187, Syracuse University     //
 //                 (315) 443-3948, jfawcett@twcny.rr.com           //
 /////////////////////////////////////////////////////////////////////
@@ -17,195 +17,233 @@
 #include "ActionsAndRules.h"
 #include "ConfigureParser.h"
 
-using namespace CodeAnalysis;
-using namespace Scanner;
+//using namespace CodeAnalysis;
+using namespace Lexer;
 using namespace Utilities;
 using Demo = Logging::StaticLogger<1>;
 
-//----< register parsing rule >--------------------------------
+namespace CodeAnalysis {
 
-void Parser::addRule(IRule* pRule)
-{
-  rules.push_back(pRule);
-}
-//----< get next ITokCollection >------------------------------
+  //----< register parsing rule >--------------------------------
 
-bool Parser::next() 
-{ 
-  bool succeeded = pTokColl->get();
-
-  if (!succeeded)
+  void Parser::addRule(IRule* pRule)
   {
-    return false;
+    rules.push_back(pRule);
   }
-  std::string debug = pTokColl->show();
-  //GrammarHelper::showParseDemo("get SemiExp: ", *pTokColl);
+  //----< get next ITokenCollection >------------------------------
 
-  pTokColl->trim();
-
-  return true;
-}
-
-//----< parse the SemiExp by applying all rules to it >--------
-
-bool Parser::parse()
-{
-  for (size_t i = 0; i<rules.size(); ++i)
+  bool Parser::next()
   {
-    std::string debug = pTokColl->show();
+    bool succeeded = pTokColl->get();
+    if (!succeeded)
+    {
+      return false;
+    }
 
-    bool doWhat = rules[i]->doTest(pTokColl);
-    if (doWhat == IRule::Stop)
-      break;
+    pTokColl->trim();
+
+    return true;
   }
-  return true;
-}
-//----< register action with a rule >--------------------------
-
-void IRule::addAction(IAction *pAction)
-{
-  actions.push_back(pAction);
-}
-//----< invoke all actions associated with a rule >------------
-
-void IRule::doActions(const ITokCollection* pTokColl)
-{
-  if(actions.size() > 0)
-    for(size_t i=0; i<actions.size(); ++i)
-      actions[i]->doAction(pTokColl);
-}
 
 #define Util StringHelper
-std::vector<std::vector<int>> Parser::doParse(std::vector<std::string> filenames) {
-	std::vector<std::vector<int>> position(2);
-	Util::Title("Testing Parser Class");
-	putline();
+  void Parser::doParse(ASTNode& astNode, std::vector<std::string>& filenames)
+  {
+	  Util::Title("Testing Parser Class");
+	  putline();
 
-	// collecting tokens from files, named on the command line
+	  // collecting tokens from files, named on the command line
 
-	/*if (argc < 2)
-	{
-		std::cout
-			<< "\n  please enter name of file to process on command line\n\n";
-		return 1;
-	}*/
+	  /*if (argc < 2)
+	  {
+		  std::cout
+			  << "\n  please enter name of file to process on command line\n\n";
+		  return 1;
+	  }*/
 
-	for (int i = 0; i < filenames.size(); ++i)
-	{
-		std::string fileSpec = filenames[i];
-		std::string msg = "Processing file" + fileSpec;
-		Util::title(msg);
+	  for (int i = 0; i < filenames.size(); ++i)
+	  {
+		  std::string fileSpec = filenames[i];
+		  std::string msg = "Processing file " + fileSpec;
+		  std::vector<std::string> dependency;
+		  Util::title(msg);
 
-		ConfigParseForCodeAnal configure;
-		Parser* pParser = configure.Build();
-		try
-		{
-			if (pParser)
-			{
-				if (!configure.Attach(filenames[i]))
-				{
-					std::string name = FileSystem::Path::getName(filenames[i]);
-					std::cout << "\n  could not open file " << name << std::endl;
-					continue;
-				}
-			}
-			else
-			{
-				std::cout << "\n\n  Parser not built\n\n";
-				return position;
-			}
-			// now that parser is built, use it
+		  ConfigParseForCodeAnal configure;
+		  Parser* pParser = configure.Build();
+		  try
+		  {
+			  if (pParser)
+			  {
+				  if (!configure.Attach(filenames[i]))
+				  {
+					  std::string name = FileSystem::Path::getName(filenames[i]);
+					  std::cout << "\n  could not open file " << name << std::endl;
+					  continue;
+				  }
+			  }
+			  else
+			  {
+				  std::cout << "\n\n  Parser not built\n\n";
+				  return;
+			  }
+			  // now that parser is built, use it
 
-			while (pParser->next())
-				pParser->parse();
-			std::cout << "\n";
+			  while (pParser->next())
+				  pParser->parse();
+			  std::cout << "\n";
 
-			// show AST
-			Repository* pRepo = Repository::getInstance();
-			ASTNode* pGlobalScope = pRepo->getGlobalScope();
-			TreeWalk(pGlobalScope, position);
-			putline();
-		}
-		catch (std::exception& ex)
-		{
-			std::cout << "\n\n    " << ex.what() << "\n\n";
-			std::cout << "\n  exception thrown at line " << __LINE__;
-		}
-	}
-	std::cout << "\n";
-	return position;
+			  // show AST
+			  Repository* pRepo = Repository::getInstance();
+			  ASTNode* pGlobalScope = pRepo->getGlobalScope();
+			  /*TreeWalk(pGlobalScope);
+			  putline();*/
+			  //for (auto statement : pGlobalScope->statements_) {
+			  //	auto i = statement->begin();
+			  //	if (*i == "#") {
+			  //		i++;
+			  //		if (*i == "include") {
+			  //			i++;
+			  //			dependency.push_back(*i);
+			  //		}
+			  //	}
+			  //		//FileSystem::Path::getFullFileSpec(
+			  //}			
+			  astNode = *pGlobalScope;
+		  }
+		  catch (std::exception& ex)
+		  {
+			  std::cout << "\n\n    " << ex.what() << "\n\n";
+			  std::cout << "\n  exception thrown at line " << __LINE__;
+		  }
+	  }
+	  std::cout << "\n";
+	  return;
+  }
+
+  //----< parse the Semi by applying all rules to it >--------
+
+  bool Parser::parse()
+  {
+    for (size_t i = 0; i < rules.size(); ++i)
+    {
+      bool doWhat = rules[i]->doTest(pTokColl);
+      if (doWhat == IRule::Stop)
+        break;
+    }
+    return true;
+  }
+  //----< register action with a rule >--------------------------
+
+  void IRule::addAction(IAction *pAction)
+  {
+    actions.push_back(pAction);
+  }
+  //----< invoke all actions associated with a rule >------------
+
+  void IRule::doActions(const Lexer::ITokenCollection* pTokColl)
+  {
+    if (actions.size() > 0)
+      for (size_t i = 0; i < actions.size(); ++i)
+        actions[i]->doAction(pTokColl);
+  }
+
+  //----< test stub >--------------------------------------------
 }
-
-//----< test stub >--------------------------------------------
-
-#include "../FileSystem/FileSystem.h"
 
 #ifdef TEST_PARSER
 
+#include "../FileSystem/FileSystem.h"
 #include <queue>
 #include <string>
 #define Util StringHelper
 
+using namespace CodeAnalysis;
+
 int main(int argc, char* argv[])
 {
-  Util::Title("Testing Parser Class");
-  putline();
+	Parser parser;
+	std::vector<std::string> fileName = { "D:\\\Git\\\CSE-687-OOD\\\Proj2\\\Parser\\\Parser.cpp",
+									      "D:\\\Git\\\CSE-687-OOD\\\Proj2\\\Parser\\\Parser.h"};
+	/*ASTNode astNode;
+	parser.doParse(astNode, fileName);*/
 
-  // collecting tokens from files, named on the command line
+	return 0;
+  //Util::Title("Testing Parser Class");
+  //putline();
 
-  if(argc < 2)
-  {
-    std::cout 
-      << "\n  please enter name of file to process on command line\n\n";
-    return 1;
-  }
+  //// Analyzing files, named on the command line
 
-  for(int i=1; i<argc; ++i)
-  {
-    std::string fileSpec = FileSystem::Path::getFullFileSpec(argv[i]);
-    std::string msg = "Processing file" + fileSpec;
-    Util::title(msg);
+  //if(argc < 2)
+  //{
+  //  std::cout 
+  //    << "\n  please enter name of file to process on command line\n\n";
+  //  return 1;
+  //}
 
-    ConfigParseForCodeAnal configure;
-    Parser* pParser = configure.Build();
-    try
-    {
-      if(pParser)
-      {
-        if(!configure.Attach(argv[i]))
-        {
-          std::string name = FileSystem::Path::getName(argv[i]);
-          std::cout << "\n  could not open file " << name << std::endl;
-          continue;
-        }
-      }
-      else
-      {
-        std::cout << "\n\n  Parser not built\n\n";
-        return 1;
-      }
-      // now that parser is built, use it
+  //std::string fileSpec;
 
-      while(pParser->next())
-        pParser->parse();
-      std::cout << "\n";
+  //for(int i=1; i<argc; ++i)  // iterate over files
+  //{
+  //  fileSpec = FileSystem::Path::getFullFileSpec(argv[i]);
+  //  std::string msg = "Processing file" + fileSpec;
+  //  Util::title(msg);
 
-      // show AST
-      Repository* pRepo = Repository::getInstance();
-      ASTNode* pGlobalScope = pRepo->getGlobalScope();
-	  std::vector<std::vector<int>> position(2);
-      TreeWalk(pGlobalScope, position);
-      putline();
-    }
-    catch(std::exception& ex)
-    {
-      std::cout << "\n\n    " << ex.what() << "\n\n";
-      std::cout << "\n  exception thrown at line " << __LINE__;
-    }
-  }
-  std::cout << "\n";
+  //  ConfigParseForCodeAnal configure;
+  //  Parser* pParser = configure.Build();
 
-  return 0;
+  //  std::string name;
+
+  //  try
+  //  {
+  //    if(pParser)
+  //    {
+  //      name = FileSystem::Path::getName(argv[i]);
+  //      if(!configure.Attach(fileSpec))
+  //      {
+  //        std::cout << "\n  could not open file " << name << std::endl;
+  //        continue;
+  //      }
+  //    }
+  //    else
+  //    {
+  //      std::cout << "\n\n  Parser not built\n\n";
+  //      return 1;
+  //    }
+
+  //    // save current package name
+
+  //    Repository* pRepo = Repository::getInstance();
+  //    pRepo->package() = name;
+
+  //    // parse the package
+
+  //    while (pParser->next())
+  //    {
+  //      pParser->parse();
+  //    }
+  //    std::cout << "\n";
+
+  //    // final AST operations
+  //    ASTNode* pGlobalScope = pRepo->getGlobalScope();
+
+  //    // walk AST, computing complexity for each node
+  //    // and record in AST node's element
+
+  //    complexityEval(pGlobalScope);
+  //    
+  //    // Walk AST, displaying each element, indented
+  //    // by generation
+
+  //    TreeWalk(pGlobalScope);
+  //  }
+  //  catch(std::exception& ex)
+  //  {
+  //    std::cout << "\n\n    " << ex.what() << "\n\n";
+  //    std::cout << "\n  exception caught at line " << __LINE__ << " ";
+  //    std::cout << "\n  in package \"" << name << "\"";
+  //  }
+  //  std::cout << "\n";
+  //}
+  //std::cout << "\n";
 }
 
 #endif

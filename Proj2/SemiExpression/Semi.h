@@ -2,7 +2,7 @@
 #define SEMI_H
 /////////////////////////////////////////////////////////////////////
 // Semi.h - Collects groups of tokens that are useful for          //
-// ver 1.0   grammatical analysis                                  //
+// ver 1.2   grammatical analysis                                  //
 //                                                                 //
 // Jim Fawcett, CSE687 - Object Oriented Design, Spring 2019       //
 /////////////////////////////////////////////////////////////////////
@@ -29,6 +29,11 @@
  * 
  * Maintenance History
  * -------------------
+ * ver 1.2 : 03 Mar 2019
+ * - fixed bug in getTok by explicitly returning token if comment
+ *   bug reported by Anonymous in Piazza Q&A, @98
+ * ver 1.1 : 27 Feb 2019
+ * - fixed bug in fold() by returning if range-based for
  * ver 1.0 : 09 Jan 2019
  * - first release
  * 

@@ -13,15 +13,31 @@
       display: inline;
     }
 
-    button {
+    #funcButton {
       position: fixed;
       bottom: 50px;
       right: 50px;
     }
+	
+	#classButton {
+		position: fixed;
+      bottom: 70px;
+      right: 50px;
+	}
+	
+	#commentButton {
+		position: fixed;
+      bottom: 90px;
+      right: 50px;
+	}
+	
     .toggleClassDisplay {
     }
 
     .toggleMethodDisplay {
+    }
+	
+	.toggleCommentDisplay {
     }
   </style>
   <script>
@@ -41,204 +57,81 @@
   </script>
 </head>
 <body>
-  <h3>Project #2 helper</h3>
-  <button onclick="showHideClass(&#39;toggleMethodDisplay&#39;)">Show or Hide Method Contents</button>
+<h3>DirExplorerN.cpp</h3>
+  <button onclick="showHideClass(&#39;toggleMethodDisplay&#39;)" id="funcButton">Show or Hide Method Contents</button>
+  <button onclick="showHideClass(&#39;toggleClassDisplay&#39;)" id="classButton">Show or Hide Class Contents</button>
+  <button onclick="showHideClass(&#39;toggleCommentDisplay&#39;)" id="commentButton">Show or Hide Comment Contents</button>
 <pre>
 <pre>
-/////////////////////////////////////////////////////////////////////
-// DirExplorerN.cpp - Naive directory explorer                     //
-// ver 1.2                                                         //
-// Jim Fawcett, CSE687 - Object Oriented Design, Fall 2018         //
-// Modified by Junhao Shen, Spring 2019                            //
-/////////////////////////////////////////////////////////////////////
-  // only compile the following when defined
+<a href="../ConvertedPages/DirExplorerN.h.html">"DirExplorerN.h"</a>
+<a href="../ConvertedPages/StringUtilities.h.html">StringUtilities.h"</a>
+<a href="../ConvertedPages/CodeUtilities.h.html">CodeUtilities.h"</a>
+<span class = "toggleCommentDisplay">/////////////////////////////////////////////////////////////////////</span>
+<span class = "toggleCommentDisplay">// DirExplorerN.cpp - Naive directory explorer                     //</span>
+<span class = "toggleCommentDisplay">// ver 1.2                                                         //</span>
+<span class = "toggleCommentDisplay">// Jim Fawcett, CSE687 - Object Oriented Design, Fall 2018         //</span>
+<span class = "toggleCommentDisplay">/////////////////////////////////////////////////////////////////////</span>
+
+#ifdef TEST_DIREXPLORERN  <span class = "toggleCommentDisplay">// only compile the following when defined</span>
 
 #include "DirExplorerN.h"
+#include "../Utilities/StringUtilities/StringUtilities.h"
+#include "../Utilities/CodeUtilities/CodeUtilities.h"
 
 using namespace Utilities;
 using namespace FileSystem;
 
-DirExplorerN::DirExplorerN() 
-<span class = "toggleMethodDisplay">{
-}
-</span>
-DirExplorerN::DirExplorerN(const std::string& path) : path_(path)
-<span class = "toggleMethodDisplay">{
-	patterns_.push_back("*.*");
-}
-</span>//----&lt; add specified patterns for selecting file names &gt;----------
-
-void DirExplorerN::addPattern(const std::string& patt)
-<span class = "toggleMethodDisplay">{
-	if (patterns_.size() == 1 && patterns_[0] == "*.*")
-		patterns_.pop_back();
-	patterns_.push_back(patt);
-}
-</span>//----&lt; set option to recusively walk dir tree &gt;-------------------
-
-void DirExplorerN::recurse(bool doRecurse)
-<span class = "toggleMethodDisplay">{
-	recurse_ = doRecurse;
-}
-</span>//----&lt; start Depth First Search at path held in path_ &gt;-----------
-
-void DirExplorerN::search(const std::string& regexes_)
-<span class = "toggleMethodDisplay">{
-	find(path_, regexes_);
-}
-</span>//----&lt; search for directories and their files &gt;-------------------
-/*
-  Recursively finds all the dirs and files on the specified path,
-  executing doDir when entering a directory and doFile when finding a file
-*/
-void DirExplorerN::find(const std::string& path, const std::string& regexes_)
-<span class = "toggleMethodDisplay">{
-	// show current directory
-
-	std::string fpath = FileSystem::Path::getFullFileSpec(path);
-	doDir(fpath);
-
-	for (auto patt : patterns_)
-	{
-		std::vector&lt;std::string&gt; files = FileSystem::Directory::getFiles(fpath, patt);
-		for (auto f : files)
-		{
-			std::string fullPath = fpath + "\\" + f;
-			std::regex r(regexes_);
-			if (std::regex_match(f, r)) { // find the files that satisfy the regex
-				std::string newFile = "../ConvertedPages/";
-				newFile = FileSystem::Path::getFullFileSpec(newFile);
-				this-&gt;vec_fullPath.push_back(fullPath);
-				this-&gt;vec_fileName.push_back(f);
-				doFile(f, fullPath);  // show each file in current directory
-			}
-		}
-	}
-
-	std::vector&lt;std::string&gt; dirs = FileSystem::Directory::getDirectories(fpath);
-	for (auto d : dirs)
-	{
-		if (d == "." || d == "..")
-			continue;
-		std::string dpath = fpath + "\\" + d;
-		if (recurse_)
-		{
-			find(dpath, regexes_);   // recurse into subdirectories
-		}
-		else
-		{
-			doDir(dpath);  // show subdirectories
-		}
-	}
-}
-</span>//----&lt; an application changes to enable specific file ops &gt;-------
-
-void DirExplorerN::doFile(const std::string& filename, const std::string& fullPath)
-<span class = "toggleMethodDisplay">{
-	++fileCount_;
-	std::cout &lt;&lt; "\n  --   " &lt;&lt; filename;
-}
-</span>//----&lt; an application changes to enable specific dir ops &gt;--------
-
-void DirExplorerN::doDir(const std::string& dirname)
-<span class = "toggleMethodDisplay">{
-	++dirCount_;
-	std::cout &lt;&lt; "\n  ++ " &lt;&lt; dirname;
-}
-</span>//----&lt; return number of files processed &gt;-------------------------
-
-size_t DirExplorerN::fileCount()
-<span class = "toggleMethodDisplay">{
-	return fileCount_;
-}
-</span>//----&lt; return number of directories processed &gt;-------------------
-
-size_t DirExplorerN::dirCount()
-<span class = "toggleMethodDisplay">{
-	return dirCount_;
-}
-</span>//----&lt; show final counts for files and dirs &gt;---------------------
-
-void DirExplorerN::showStats()
-<span class = "toggleMethodDisplay">{
-	std::cout &lt;&lt; "\n\n  processed " &lt;&lt; fileCount_ &lt;&lt; " files in " &lt;&lt; dirCount_ &lt;&lt; " directories";
-}
-</span>
 ProcessCmdLine::Usage customUsage()
 <span class = "toggleMethodDisplay">{
-	std::string usage;
-	usage += "\n  Command Line: path [/option]* [/pattern]*";
-	usage += "\n    path is relative or absolute path where processing begins";
-	usage += "\n    [/option]* are one or more options of the form:";
-	usage += "\n      /s - walk directory recursively";
-	//usage += "\n      /h - hide empty directories";
-	//usage += "\n      /a - on stopping, show all files in current directory";
-	usage += "\n    [pattern]* are one or more pattern strings of the form:";
-	usage += "\n      *.h *.cpp *.cs *.txt or *.*";
-	usage += "\n";
-	return usage;
-}
-</span>
-//----&lt; Do DirExplorer &gt;-------------------
-//DirExplorer: accept command parameters to find files fullpath
-
-std::vector&lt;std::vector&lt;std::string&gt;&gt; DirExplorerN::doDirExplore(int argc, char *argv[]) 
-<span class = "toggleMethodDisplay">{
-	Title("DirExplorer: accept command parameters to find files fullpath");
-
-	ProcessCmdLine pcl(argc, argv);
-	pcl.usage(customUsage());
-
-	preface("Command Line: ");
-	pcl.showCmdLine();
-	putline();
-	std::vector&lt;std::vector&lt;std::string&gt;&gt; res;
-	std::string regs = argv[5];
-
-	if (pcl.parseError())
-	{
-		pcl.usage();
-		std::cout &lt;&lt; "\n\n";
-		return res;
-	}
-
-	DirExplorerN de(pcl.path());
-	for (auto patt : pcl.patterns())
-	{
-		de.addPattern(patt);
-	}
-
-	if (pcl.hasOption('s'))
-	{
-		de.recurse();
-	}
-	
-	de.search(regs);
-	de.showStats();
-	res.push_back(de.vec_fileName);
-	res.push_back(de.vec_fullPath);
-	if (res[0].empty())
-		std::cout &lt;&lt; "\n\nError Message: No file has been found!" &lt;&lt; std::endl;
-	return res;
-}
-</span>
-//----&lt; DIREXPLORER TEST STUB &gt;-------------------
-#ifdef TEST_DIREXPLORERN
+  std::string usage;
+  usage += "\n  Command Line: path [/option]* [/pattern]*";
+  usage += "\n    path is relative or absolute path where processing begins";
+  usage += "\n    [/option]* are one or more options of the form:";
+  usage += "\n      /s - walk directory recursively";
+  <span class = "toggleCommentDisplay">//usage += "\n      /h - hide empty directories";</span>
+  <span class = "toggleCommentDisplay">//usage += "\n      /a - on stopping, show all files in current directory";</span>
+  usage += "\n    [pattern]* are one or more pattern strings of the form:";
+  usage += "\n      *.h *.cpp *.cs *.txt or *.*";
+  usage += "\n";
+  return usage;
+}</span>
 
 int main(int argc, char *argv[])
 <span class = "toggleMethodDisplay">{
-	DirExplorerN dir = DirExplorerN();
-	std::vector&lt;std::vector&lt;std::string&gt;&gt; res = dir.doDirExplore(argc, argv);
-	std::vector &lt;std::string&gt; fileName = res[1];
-	//std::vector &lt;std::string&gt; path = res[1];
-	std::cout &lt;&lt; "\n\n--------------------TEST DIREXPLORER--------------------\n" &lt;&lt; std::endl
-		&lt;&lt; "Find all *.cpp & *.h File:" &lt;&lt; std::endl;
-	for (auto str : fileName)
-		std::cout &lt;&lt; "  --  " &lt;&lt; str &lt;&lt; std::endl;
-	std::cout &lt;&lt; "\n\n--------------------END TEST DIREXPLORER--------------------\n" &lt;&lt; std::endl;
-	std::cout &lt;&lt; "\n\n";
-	return 0;
-}
-</span>#endif
+  Title("Demonstrate DirExplorer-Naive, " + DirExplorerN::version());
+
+  ProcessCmdLine pcl(argc, argv);
+  pcl.usage(customUsage());
+
+  preface("Command Line: ");
+  pcl.showCmdLine();
+  putline();
+
+  if (pcl.parseError())
+  {
+    pcl.usage();
+    std::cout &lt;&lt; "\n\n";
+    return 1;
+  }
+
+  DirExplorerN de(pcl.path());
+  for (auto patt : pcl.patterns())
+  {
+    de.addPattern(patt);
+  }
+
+  if (pcl.hasOption('s'))
+  {
+    de.recurse();
+  }
+
+  de.search();
+  de.showStats();
+
+  std::cout &lt;&lt; "\n\n";
+  return 0;
+}</span>
+
+#endif
 </pre>
 </body></html>

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<!-- saved from url=(0113)https://ecs.syr.edu/faculty/fawcett/handouts/CSE687/code/Project2HelpS2019/OodProject2Helper/Proj2Helper.cpp.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+  <style>
+    body {
+      padding: 15px 40px;
+      font-family: Consolas;
+      font-size: 1.25em;
+      font-weight: normal;
+    }
+
+    span {
+      display: inline;
+    }
+
+    #funcButton {
+      position: fixed;
+      bottom: 50px;
+      right: 50px;
+    }
+	
+	#classButton {
+		position: fixed;
+      bottom: 70px;
+      right: 50px;
+	}
+	
+	#commentButton {
+		position: fixed;
+      bottom: 90px;
+      right: 50px;
+	}
+	
+    .toggleClassDisplay {
+    }
+
+    .toggleMethodDisplay {
+    }
+	
+	.toggleCommentDisplay {
+    }
+  </style>
+  <script>
+      function showHideClass(className) {
+        let elems = document.getElementsByClassName(className);
+        if (elems === null) {
+          return;
+        }
+        for (let i = 0; i < elems.length; ++i) {
+          let displayProp = elems[i].style.display;
+          if (displayProp === 'none')
+            elems[i].style['display'] = "inline";
+          else
+            elems[i].style['display'] = "none";
+        }
+      }
+  </script>
+</head>
+<body>
+<h3>Utilities.cpp</h3>
+  <button onclick="showHideClass(&#39;toggleMethodDisplay&#39;)" id="funcButton">Show or Hide Method Contents</button>
+  <button onclick="showHideClass(&#39;toggleClassDisplay&#39;)" id="classButton">Show or Hide Class Contents</button>
+  <button onclick="showHideClass(&#39;toggleCommentDisplay&#39;)" id="commentButton">Show or Hide Comment Contents</button>
+<pre>
+<pre>
+<a href="../ConvertedPages/Utilities.h.html">"Utilities.h"</a>
+<span class = "toggleCommentDisplay">///////////////////////////////////////////////////////////////////////</span>
+<span class = "toggleCommentDisplay">// Utilities.cpp - small, generally usefule, helper classes          //</span>
+<span class = "toggleCommentDisplay">// ver 1.4                                                           //</span>
+<span class = "toggleCommentDisplay">// Language:    C++, Visual Studio 2015                              //</span>
+<span class = "toggleCommentDisplay">// Platform:    Dell XPS 8900, Windows 10                            //</span>
+<span class = "toggleCommentDisplay">// Application: Most Projects, CSE687 - Object Oriented Design       //</span>
+<span class = "toggleCommentDisplay">// Author:      Jim Fawcett, Syracuse University, CST 4-187          //</span>
+<span class = "toggleCommentDisplay">//              jfawcett@twcny.rr.com                                //</span>
+<span class = "toggleCommentDisplay">///////////////////////////////////////////////////////////////////////</span>
+
+<span class = "toggleCommentDisplay">//#include &lt;cctype&gt;</span>
+#include &lt;iostream&gt;
+#include &lt;iomanip&gt;
+#include &lt;locale&gt;
+#include &lt;clocale&gt;
+#include "Utilities.h"
+
+using namespace Utilities;
+
+<span class = "toggleCommentDisplay">/*
+*  Note: 
+*  The std::string src argument must be pass by value so that we can pass
+*  std::ostringstream.out() to the first argument and std::ostringstream out
+*  to the last argument, e.g., the same std::ostringstream object for both
+*  arguments.  Otherwise we attempt to insert out's string into itself.
+*/</span>
+void StringHelper::Title(std::string src, std::ostream& out)
+<span class = "toggleMethodDisplay">{
+  out &lt;&lt; "\n  " &lt;&lt; src;
+  out &lt;&lt; "\n " &lt;&lt; std::string(src.size() + 2, '=');
+}</span>
+
+void StringHelper::Title(std::string src, std::ostringstream& out)
+<span class = "toggleMethodDisplay">{
+  out.str("");
+  out &lt;&lt; "\n  " &lt;&lt; src;
+  out &lt;&lt; "\n " &lt;&lt; std::string(src.size() + 2, '=');
+}</span>
+
+void StringHelper::title(std::string src, std::ostream& out)
+<span class = "toggleMethodDisplay">{
+  out &lt;&lt; "\n  " &lt;&lt; src;
+  out &lt;&lt; "\n " &lt;&lt; std::string(src.size() + 2, '-');
+}</span>
+
+void StringHelper::title(std::string src, std::ostringstream& out)
+<span class = "toggleMethodDisplay">{
+  out.str("");
+  out &lt;&lt; "\n  " &lt;&lt; src;
+  out &lt;&lt; "\n " &lt;&lt; std::string(src.size() + 2, '-');
+}</span>
+
+void StringHelper::sTitle(std::string src, size_t offset, size_t width, std::ostream& out, char underline)
+<span class = "toggleMethodDisplay">{
+  if (width &lt; src.size())
+    width = src.size();
+  size_t lwidth = (width - src.size()) / 2;
+  out &lt;&lt; "\n  " &lt;&lt; std::setw(offset) &lt;&lt; "" &lt;&lt; std::setw(lwidth) &lt;&lt; " " &lt;&lt; src;
+  out &lt;&lt; "\n " &lt;&lt; std::setw(offset) &lt;&lt; "" &lt;&lt; std::string(width + 2, underline);
+}</span>
+
+void StringHelper::sTitle(std::string src, size_t offset, size_t width, std::ostringstream& out, char underline)
+<span class = "toggleMethodDisplay">{
+  out.str("");
+  if (width &lt; src.size())
+    width = src.size();
+  size_t lwidth = (width - src.size()) / 2;
+  out &lt;&lt; "\n  " &lt;&lt; std::setw(offset) &lt;&lt; "" &lt;&lt; std::setw(lwidth) &lt;&lt; " " &lt;&lt; src;
+  out &lt;&lt; "\n " &lt;&lt; std::setw(offset) &lt;&lt; "" &lt;&lt; std::string(width + 2, underline);
+}</span>
+
+std::vector&lt;std::string&gt; StringHelper::split(const std::string& src)
+<span class = "toggleMethodDisplay">{
+  std::vector&lt;std::string&gt; accum;
+  std::string temp;
+  std::locale loc;
+  size_t index = 0;
+  do
+  {
+    while ((isspace(src[index], loc) || src[index] == ',') && src[index] != '\n')
+    {
+      ++index;
+      if (temp.size() &gt; 0)
+      {
+        accum.push_back(temp);
+        temp.clear();
+      }
+    }
+    if(src[index] != '\0')
+      temp += src[index];
+  } while (index++ &lt; src.size());
+  if(temp.size() &gt; 0)
+    accum.push_back(temp);
+  return accum;
+}</span>
+
+void Utilities::putline()
+<span class = "toggleMethodDisplay">{
+  std::cout &lt;&lt; "\n";
+}</span>
+
+
+#ifdef TEST_UTILITIES
+
+using Utils = Utilities::StringHelper;
+
+int main()
+<span class = "toggleMethodDisplay">{
+  Utils::Title("Testing Utilities Package");
+  putline();
+
+  Utils::title("test StringHelper::split(std::string)");
+
+  std::string test = "a, \n, bc, de, efg, i, j k lm nopq rst";
+  std::cout &lt;&lt; "\n  test string = " &lt;&lt; test;
+  
+  std::vector&lt;std::string&gt; result = StringHelper::split(test);
+  
+  std::cout &lt;&lt; "\n";
+  for (auto item : result)
+  {
+    if (item == "\n")
+      std::cout &lt;&lt; "\n  " &lt;&lt; "newline";
+    else
+      std::cout &lt;&lt; "\n  " &lt;&lt; item;
+  }
+  std::cout &lt;&lt; "\n";
+
+  Utils::title("test std::string Converter&lt;T&gt;::toString(T)");
+
+  std::string conv1 = Converter&lt;double&gt;::toString(3.1415927);
+  std::string conv2 = Converter&lt;int&gt;::toString(73);
+  std::string conv3 = Converter&lt;std::string&gt;::toString("a_test_string plus more");
+
+  std::cout &lt;&lt; "\n  Converting from values to strings: ";
+  std::cout &lt;&lt; conv1 &lt;&lt; ", " &lt;&lt; conv2 &lt;&lt; ", " &lt;&lt; conv3;
+  putline();
+
+  Utils::title("test T Converter&lt;T&gt;::toValue(std::string)");
+
+  std::cout &lt;&lt; "\n  Converting from strings to values: ";
+  std::cout &lt;&lt; Converter&lt;double&gt;::toValue(conv1) &lt;&lt; ", ";
+  std::cout &lt;&lt; Converter&lt;int&gt;::toValue(conv2) &lt;&lt; ", ";
+  std::cout &lt;&lt; Converter&lt;std::string&gt;::toValue(conv3);
+
+  std::cout &lt;&lt; "\n\n";
+  return 0;
+}</span>
+#endif
+
+</pre>
+</body></html>

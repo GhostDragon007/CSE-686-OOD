@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<!-- saved from url=(0113)https://ecs.syr.edu/faculty/fawcett/handouts/CSE687/code/Project2HelpS2019/OodProject2Helper/Proj2Helper.cpp.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+  <style>
+    body {
+      padding: 15px 40px;
+      font-family: Consolas;
+      font-size: 1.25em;
+      font-weight: normal;
+    }
+
+    span {
+      display: inline;
+    }
+
+    #funcButton {
+      position: fixed;
+      bottom: 50px;
+      right: 50px;
+    }
+	
+	#classButton {
+		position: fixed;
+      bottom: 70px;
+      right: 50px;
+	}
+	
+	#commentButton {
+		position: fixed;
+      bottom: 90px;
+      right: 50px;
+	}
+	
+    .toggleClassDisplay {
+    }
+
+    .toggleMethodDisplay {
+    }
+	
+	.toggleCommentDisplay {
+    }
+  </style>
+  <script>
+      function showHideClass(className) {
+        let elems = document.getElementsByClassName(className);
+        if (elems === null) {
+          return;
+        }
+        for (let i = 0; i < elems.length; ++i) {
+          let displayProp = elems[i].style.display;
+          if (displayProp === 'none')
+            elems[i].style['display'] = "inline";
+          else
+            elems[i].style['display'] = "none";
+        }
+      }
+  </script>
+</head>
+<body>
+<h3>../Parser/Parser.h</h3>
+  <button onclick="showHideClass(&#39;toggleMethodDisplay&#39;)" id="funcButton">Show or Hide Method Contents</button>
+  <button onclick="showHideClass(&#39;toggleClassDisplay&#39;)" id="classButton">Show or Hide Class Contents</button>
+  <button onclick="showHideClass(&#39;toggleCommentDisplay&#39;)" id="commentButton">Show or Hide Comment Contents</button>
+<pre>
+<pre>
+#ifndef PARSER_H
+#define PARSER_H
+<span class = "toggleCommentDisplay">/////////////////////////////////////////////////////////////////////</span>
+<span class = "toggleCommentDisplay">//  Parser.h - Analyzes C++ and C# language constructs             //</span>
+<span class = "toggleCommentDisplay">//  ver 1.0                                                        //</span>
+<span class = "toggleCommentDisplay">//  Language:      Visual C++, Visual Studio 2015                  //</span>
+<span class = "toggleCommentDisplay">//  Platform:      Dell XPS 8920, Windows 10                       //</span>
+<span class = "toggleCommentDisplay">//  Application:   Prototype for CSE687 - OOD Projects             //</span>
+<span class = "toggleCommentDisplay">//  Author:        Jim Fawcett, CST 4-187, Syracuse University     //</span>
+<span class = "toggleCommentDisplay">//                 (315) 443-3948, jfawcett@twcny.rr.com           //</span>
+<span class = "toggleCommentDisplay">/////////////////////////////////////////////////////////////////////</span>
+<span class = "toggleCommentDisplay">/*
+  Module Operations: 
+  ==================
+  This module defines a Parser class.  Its instances collect 
+  semi-expressions from one or more files for analysis.  
+  Analysis consists of applying a set of rules to the semi-expression, 
+  and for each rule that matches, invoking a set of one or more actions.
+
+  Build Process:
+  ==============
+  Required files
+    - Parser.h, Parser.cpp, 
+    - ITokenCollection.h, 
+    - Semi.h, Semi.cpp,
+    - toker.h, toker.cpp,
+    - ActionsAndRules.h, ActionsAndRules.cpp,
+    - GrammarHelpers.h, GrammarHelpers.cpp,
+    - AbstrSynTree.h, AbstrSynTree.cpp,
+    - ScopeStack.h, ScopeStack.cpp
+    - ConfigureParser.h, ConfigureParser.cpp,
+    - FileSystem.h, FileSystem.cpp,
+    - Logger.h, Logger.cpp,
+    - Utilities.h, Utilities.cpp
+
+  Maintenance History:
+  ===================
+  ver 1.0 : 11 Feb 2019
+  - first release
+  - This is a modification of the parser used in CodeAnalyzer.
+  - The most important change is replacing its tokenizer with a 
+    State Pattern based design
+
+*/</span>
+
+#include &lt;string&gt;
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include "../SemiExpression/ITokenCollection.h"
+#include "../AbstractSyntaxTree/AbstrSynTree.h"
+
+namespace CodeAnalysis
+{
+  <span class = "toggleCommentDisplay">///////////////////////////////////////////////////////////////</span>
+  <span class = "toggleCommentDisplay">// abstract base class for parsing actions</span>
+  <span class = "toggleCommentDisplay">//   - when a rule succeeds, it invokes any registered action</span>
+
+  class Parser;
+
+  class IBuilder
+  <span class = "toggleClassDisplay">{
+  public:
+    virtual ~IBuilder() <span class = "toggleMethodDisplay">{}</span>
+    virtual Parser* Build() = 0;
+  };</span>
+
+  <span class = "toggleCommentDisplay">///////////////////////////////////////////////////////////////</span>
+  <span class = "toggleCommentDisplay">// abstract base class for parsing actions</span>
+  <span class = "toggleCommentDisplay">//   - when a rule succeeds, it invokes any registered action</span>
+
+  class IAction
+  <span class = "toggleClassDisplay">{
+  public:
+    virtual ~IAction() <span class = "toggleMethodDisplay">{}</span>
+    virtual void doAction(const Lexer::ITokenCollection* pTc) = 0;
+  };</span>
+
+  <span class = "toggleCommentDisplay">///////////////////////////////////////////////////////////////</span>
+  <span class = "toggleCommentDisplay">// abstract base class for parser language construct detections</span>
+  <span class = "toggleCommentDisplay">//   - rules are registered with the parser for use</span>
+
+  class IRule
+  <span class = "toggleClassDisplay">{
+  public:
+    static const bool Continue = true;
+    static const bool Stop = false;
+    virtual ~IRule() <span class = "toggleMethodDisplay">{}</span>
+    void addAction(IAction* pAction);
+    void doActions(const Lexer::ITokenCollection* pTc);
+    virtual bool doTest(const Lexer::ITokenCollection* pTc) = 0;
+  protected:
+    std::vector&lt;IAction*&gt; actions;
+  };</span>
+
+  class Parser
+  <span class = "toggleClassDisplay">{
+  public:
+	  Parser();
+    Parser(Lexer::ITokenCollection* pTokCollection);
+    ~Parser();
+    void addRule(IRule* pRule);
+    bool parse();
+    bool next();
+	void doParse(ASTNode& astNode, std::vector&lt;std::string&gt;& filenames);
+  private:
+    Lexer::ITokenCollection* pTokColl;
+    std::vector&lt;IRule*&gt; rules;
+	ASTNode* astNode;
+  };</span>
+  inline Parser::Parser() <span class = "toggleMethodDisplay">{}</span>
+
+  inline Parser::Parser(Lexer::ITokenCollection* pTokCollection) : pTokColl(pTokCollection) <span class = "toggleMethodDisplay">{}</span>
+
+  inline Parser::~Parser() <span class = "toggleMethodDisplay">{}</span>
+}
+#endif
+
+</pre>
+</body></html>

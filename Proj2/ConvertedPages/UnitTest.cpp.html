@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<!-- saved from url=(0113)https://ecs.syr.edu/faculty/fawcett/handouts/CSE687/code/Project2HelpS2019/OodProject2Helper/Proj2Helper.cpp.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+  <style>
+    body {
+      padding: 15px 40px;
+      font-family: Consolas;
+      font-size: 1.25em;
+      font-weight: normal;
+    }
+
+    span {
+      display: inline;
+    }
+
+    #funcButton {
+      position: fixed;
+      bottom: 50px;
+      right: 50px;
+    }
+	
+	#classButton {
+		position: fixed;
+      bottom: 70px;
+      right: 50px;
+	}
+	
+	#commentButton {
+		position: fixed;
+      bottom: 90px;
+      right: 50px;
+	}
+	
+    .toggleClassDisplay {
+    }
+
+    .toggleMethodDisplay {
+    }
+	
+	.toggleCommentDisplay {
+    }
+  </style>
+  <script>
+      function showHideClass(className) {
+        let elems = document.getElementsByClassName(className);
+        if (elems === null) {
+          return;
+        }
+        for (let i = 0; i < elems.length; ++i) {
+          let displayProp = elems[i].style.display;
+          if (displayProp === 'none')
+            elems[i].style['display'] = "inline";
+          else
+            elems[i].style['display'] = "none";
+        }
+      }
+  </script>
+</head>
+<body>
+<h3>UnitTest.cpp</h3>
+  <button onclick="showHideClass(&#39;toggleMethodDisplay&#39;)" id="funcButton">Show or Hide Method Contents</button>
+  <button onclick="showHideClass(&#39;toggleClassDisplay&#39;)" id="classButton">Show or Hide Class Contents</button>
+  <button onclick="showHideClass(&#39;toggleCommentDisplay&#39;)" id="commentButton">Show or Hide Comment Contents</button>
+<pre>
+<pre>
+<a href="../ConvertedPages/UnitTest.h.html">"UnitTest.h"</a>
+<span class = "toggleCommentDisplay">///////////////////////////////////////////////////////////////</span>
+<span class = "toggleCommentDisplay">// UnitTest.cpp - Demonstrate unit testing framework         //</span>
+<span class = "toggleCommentDisplay">// ver 1.1                                                   //</span>
+<span class = "toggleCommentDisplay">// --------------------------------------------------------- //</span>
+<span class = "toggleCommentDisplay">// copyright © Jim Fawcett, 2012, 2013                       //</span>
+<span class = "toggleCommentDisplay">// All rights granted provided that this notice is retained  //</span>
+<span class = "toggleCommentDisplay">// --------------------------------------------------------- //</span>
+<span class = "toggleCommentDisplay">// Jim Fawcett, CSE687-Object Oriented Design, Spring 2013   //</span>
+<span class = "toggleCommentDisplay">///////////////////////////////////////////////////////////////</span>
+<span class = "toggleCommentDisplay">/*
+ * This is what a test class should look like:
+ */</span>
+#include "UnitTest.h"
+#include &lt;string&gt;
+#include &lt;iostream&gt;
+using namespace Test;
+
+ class TestStdStringClass : public TestBase&lt;TestStdStringClass&gt;
+ <span class = "toggleClassDisplay">{
+ public:
+   bool TestConstruction()
+   <span class = "toggleMethodDisplay">{
+     bool t1, t2;
+     std::string s1("this is a string");
+     t1 = (s1 == "this is a string");
+     std::string s2;
+     t2 = (s2.size() == 0);
+     return checkResult(t1 && t2, "TestConstruction");
+   }</span>
+   bool TestCopy()
+   <span class = "toggleMethodDisplay">{
+     bool t1;
+     std::string orig = "a string";
+     std::string copy = orig;
+     t1 = (copy == orig && &copy != &orig);
+     return checkResult(t1, "TestCopy");
+   }</span>
+   bool TestWillThrowStdException()
+   <span class = "toggleMethodDisplay">{
+     throw std::exception("TestWillThrowStdException");
+     return true;
+   }</span>
+   bool TestWillThrowStructuredException()
+   <span class = "toggleMethodDisplay">{
+     int x=1, y=0;
+     x = x/y;
+     return true;
+   }</span>
+   bool test()  <span class = "toggleCommentDisplay">// overriding inherited test method</span>
+   <span class = "toggleMethodDisplay">{
+     bool t1, t2, t3, t4;
+     t1 = doTest(&TestStdStringClass::TestConstruction);
+     t2 = doTest(&TestStdStringClass::TestCopy);
+     t3 = doTest(&TestStdStringClass::TestWillThrowStdException);
+     t4 = doTest(&TestStdStringClass::TestWillThrowStructuredException);
+     return t1 && t2 && !t3 && !t4;
+   }</span>
+ private:
+   <span class = "toggleCommentDisplay">// save here data needed in more than one test </span>
+ };</span>
+#ifdef TEST_UNITTEST
+int main()
+<span class = "toggleMethodDisplay">{
+  Title("Demonstrating UnitTest Package");
+
+  TestStdStringClass test;
+  if(test.test())
+    std::cout &lt;&lt; "\n  all tests passed";
+  else
+    std::cout &lt;&lt; "\n  one or more tests failed";
+  std::cout &lt;&lt; "\n\n";
+}</span>
+#endif
+
+</pre>
+</body></html>

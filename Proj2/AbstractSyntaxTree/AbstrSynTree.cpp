@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////////////////////////
 //  AbstrSynTree.cpp - Represents an Abstract Syntax Tree          //
-//  ver 1.4                                                        //
+//  ver 1.5                                                        //
 //  Language:      Visual C++ 2015                                 //
 //  Platform:      Dell XPS 8900, Windows 10                       //
 //  Application:   Used to support parsing source code             //
@@ -54,7 +54,10 @@ std::string ASTNode::show(bool details)
     temp << "num statements: " << statements_.size() << ", ";
   }
   temp << "line: " << startLineCount_ << ", ";
-  temp << "size: " << endLineCount_ - startLineCount_ + 1 << ", ";
+  int size = static_cast<int>(endLineCount_ - startLineCount_ + 1);
+  if (size <= 0)
+    size = 1;
+  temp << "size: " << size << ", ";
   temp << "cplx: " << complexity_;
   //temp << "path: " << path_;
   temp << ")";

@@ -48,7 +48,6 @@
   - first release
 */
 #include <list>
-#include <vector>
 #include "../Logger/Logger.h"
 #include "../Utilities/Utilities.h"
 
@@ -177,25 +176,43 @@ namespace CodeAnalysis
   //----< walk tree of element nodes >---------------------------------
 
   template<typename element>
-  void TreeWalk(element* pItem, std::vector<std::vector<int>>& position, bool details = false)
-  {
+  void TreeWalk(element* pItem, std::vector<std::vector<int>>& funcPos,
+	  std::vector<std::vector<int>>& classPos, bool details = false){
 	  if (pItem->type_ == "function") {
-		  position[0].push_back(pItem->startLineCount_);
-		  position[1].push_back(pItem->endLineCount_);
+		  funcPos.push_back({ (int)pItem->startLineCount_, (int)pItem->endLineCount_ });
 	  }
-    static std::string path;
-    static size_t indentLevel = 0;
-    std::ostringstream out;
-    out << "\n  " << std::string(2 * indentLevel, ' ') << pItem->show();
-    std::cout << out.str();
-    auto iter = pItem->children_.begin();
-    ++indentLevel;
-    while (iter != pItem->children_.end())
-    {
-      TreeWalk(*iter, position);
-      ++iter;
-    }
-    --indentLevel;
+	  if (pItem->type_ == "class") {
+		  classPos.push_back({ (int)pItem->startLineCount_, (int)pItem->endLineCount_ });
+	  }
+	  static std::string path;
+	  static size_t indentLevel = 0;
+	  std::ostringstream out;
+	  out << "\n  " << std::string(2 * indentLevel, ' ') << pItem->show();
+	  std::cout << out.str();
+	  auto iter = pItem->children_.begin();
+	  ++indentLevel;
+	  while (iter != pItem->children_.end())
+	  {
+		  TreeWalk(*iter, funcPos, classPos);
+		  ++iter;
+	  }
+	  --indentLevel;
+  }
+  template<typename element>
+  void printInfo(element* pItem) {
+	  static std::string path;
+	  static size_t indentLevel = 0;
+	  std::ostringstream out;
+	  out << "\n  " << std::string(2 * indentLevel, ' ') << pItem->show();
+	  std::cout << out.str();
+	  auto iter = pItem->children_.begin();
+	  ++indentLevel;
+	  while (iter != pItem->children_.end())
+	  {
+		  TreeWalk(*iter, funcPos, classPos);
+		  ++iter;
+	  }
+	  --indentLevel;
   }
 }
 #endif

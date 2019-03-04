@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<!-- saved from url=(0113)https://ecs.syr.edu/faculty/fawcett/handouts/CSE687/code/Project2HelpS2019/OodProject2Helper/Proj2Helper.cpp.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+  <style>
+    body {
+      padding: 15px 40px;
+      font-family: Consolas;
+      font-size: 1.25em;
+      font-weight: normal;
+    }
+
+    span {
+      display: inline;
+    }
+
+    #funcButton {
+      position: fixed;
+      bottom: 50px;
+      right: 50px;
+    }
+	
+	#classButton {
+		position: fixed;
+      bottom: 70px;
+      right: 50px;
+	}
+	
+	#commentButton {
+		position: fixed;
+      bottom: 90px;
+      right: 50px;
+	}
+	
+    .toggleClassDisplay {
+    }
+
+    .toggleMethodDisplay {
+    }
+	
+	.toggleCommentDisplay {
+    }
+  </style>
+  <script>
+      function showHideClass(className) {
+        let elems = document.getElementsByClassName(className);
+        if (elems === null) {
+          return;
+        }
+        for (let i = 0; i < elems.length; ++i) {
+          let displayProp = elems[i].style.display;
+          if (displayProp === 'none')
+            elems[i].style['display'] = "inline";
+          else
+            elems[i].style['display'] = "none";
+        }
+      }
+  </script>
+</head>
+<body>
+<h3>Properties.h</h3>
+  <button onclick="showHideClass(&#39;toggleMethodDisplay&#39;)" id="funcButton">Show or Hide Method Contents</button>
+  <button onclick="showHideClass(&#39;toggleClassDisplay&#39;)" id="classButton">Show or Hide Class Contents</button>
+  <button onclick="showHideClass(&#39;toggleCommentDisplay&#39;)" id="commentButton">Show or Hide Comment Contents</button>
+<pre>
+<pre>
+#pragma once
+<span class = "toggleCommentDisplay">/////////////////////////////////////////////////////////////////////</span>
+<span class = "toggleCommentDisplay">// Properties.h - provides getter and setter methods               //</span>
+<span class = "toggleCommentDisplay">// ver 1.1                                                         //</span>
+<span class = "toggleCommentDisplay">// Jim Fawcett, CSE687 - Object Oriented Design, Fall 2018         //</span>
+<span class = "toggleCommentDisplay">/////////////////////////////////////////////////////////////////////</span>
+<span class = "toggleCommentDisplay">/*
+*  Package Operations:
+*  -------------------
+*  This package provides a single Property&lt;T&gt; class that provides
+*  getter and setter methods and backing store T t_ using the property 
+*  name.
+*  - Here's an example:
+*      Property&lt;int&gt; intProp;
+*      intProp(42)    Sets its internal store to 42
+*      intProp()      returns the internal store value
+*  - So one declaration creates two methods with simple syntax, using
+*    the property's instance name. 
+*  - The getter and setter methods are virtual, so you can override
+*    them to provide logic that constraints getting and setting.
+*  - Property also provides the method ref() which returns a reference
+*    to the underlying stored value.  That lets us call member functions
+*    directly on the stored type.  However, that lets users bypass
+*    setter logic, so use it with caution.
+*
+*  Required Files:
+*  ---------------
+*  Properties.h
+*
+*  Maintenance History:
+*  --------------------
+*  ver 1.1 : 30 Jan 2019
+*  - added ref()
+*  ver 1.0 : 11 Oct 2018
+*  - first release
+*/</span>
+namespace Utilities
+{
+  template &lt;typename T&gt;
+  class Property
+  <span class = "toggleClassDisplay">{
+  public:
+    virtual ~Property() <span class = "toggleMethodDisplay">{}</span>
+
+    <span class = "toggleCommentDisplay">//----&lt; setter assigns the state of t to the internal store &gt;----</span>
+
+    virtual void operator()(const T& t)
+    <span class = "toggleMethodDisplay">{
+      t_ = t;
+    }</span>
+    <span class = "toggleCommentDisplay">//----&lt; getter returns the value of the internal store &gt;---------</span>
+    <span class = "toggleCommentDisplay">/*
+    *  - Return by value is used so that clients cannot change the
+    *    internal store without using setter.
+    */</span>
+    virtual T operator()()
+    <span class = "toggleMethodDisplay">{
+      return t_;
+    }</span>
+    <span class = "toggleCommentDisplay">//----&lt; getter that returns reference &gt;--------------------------</span>
+    <span class = "toggleCommentDisplay">/*
+    *  - Allows us to call member function on stored type
+    *  - Note that this allows a user to bypass any logic
+    *    in setter.
+    */</span>
+    virtual T& ref()
+    <span class = "toggleMethodDisplay">{
+      return t_;
+    }</span>
+  private:
+    T t_;
+  };</span>
+}
+
+</pre>
+</body></html>

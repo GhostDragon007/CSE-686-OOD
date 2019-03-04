@@ -8,7 +8,7 @@
 /////////////////////////////////////////////////////////////////////////
 
 #include "GrammarHelpers.h"
-#include "../SemiExp/SemiExp.h"
+#include "../SemiExpression/Semi.h"
 #include "../Logger/Logger.h"
 #include "../Utilities/Utilities.h"
 #include <iostream>
@@ -32,26 +32,30 @@ bool GrammarHelper::isControlKeyWord(const std::string& tok)
   }
   return false;
 }
-//----< does SemiExp contain at least one control keyword ? >--------
+//----< does Semi contain at least one control keyword ? >--------
 
-bool GrammarHelper::hasControlKeyWord(const Scanner::ITokCollection& se)
+bool GrammarHelper::hasControlKeyWord(const Lexer::ITokenCollection& se)
 {
-  for (size_t i = 0; i < se.length(); ++i)
+  for (size_t i = 0; i < se.size(); ++i)
   {
     if (GrammarHelper::isControlKeyWord(se[i]))
       return true;
   }
   return false;
 }
-//----< is semiExp a function defin or declar ? >--------------------
+//----< is Semi a function defin or declar ? >--------------------
 
-bool GrammarHelper::isFunction(const Scanner::ITokCollection& se)
+bool GrammarHelper::isFunction(const Lexer::ITokenCollection& se)
 {
-  size_t len = se.find("(");
-  if (0 < len && len < se.length() && !isControlKeyWord(se[len - 1]))
+  if (se.last() != "{")
+    return false;
+  size_t len;
+  se.find("(", len);
+  if (0 < len && len < se.size() && !isControlKeyWord(se[len - 1]))
   {
-    size_t posEquals = se.findLast("=");
-    if (posEquals < se.length() - 1 && se[posEquals + 1] == ">")
+    size_t posEquals; 
+    se.findLast("=", posEquals);
+    if (posEquals < se.size() - 1 && se[posEquals + 1] == ">")
     {
       // C# lambda
       return false;
@@ -60,8 +64,9 @@ bool GrammarHelper::isFunction(const Scanner::ITokCollection& se)
   }
   if (len == 0)
   {
-    size_t posEquals = se.find("=");
-    if (posEquals < se.length() - 1 && se[posEquals + 1] == ">")
+    size_t posEquals;
+    se.find("=", posEquals);
+    if (posEquals < se.size() - 1 && se[posEquals + 1] == ">")
     {
       // C# lambda
       return true;
@@ -71,25 +76,27 @@ bool GrammarHelper::isFunction(const Scanner::ITokCollection& se)
 }
 //----< has function and function has at least one argument >--------
 
-bool GrammarHelper::hasArgs(const Scanner::ITokCollection& se)
+bool GrammarHelper::hasArgs(const Lexer::ITokenCollection& se)
 {
   if (!isFunction(se))
     return false;
 
-  size_t posOpenParen = se.find("(");
-  size_t posCloseParen = se.find(")");
-  if (posOpenParen < posCloseParen && posCloseParen < se.length())
+  size_t posOpenParen;
+  se.find("(", posOpenParen);
+  size_t posCloseParen;
+  se.find(")", posCloseParen);
+  if (posOpenParen < posCloseParen && posCloseParen < se.size())
   {
     if (posCloseParen > posOpenParen + 1)
       return true;
   }
   return false;
 }
-//----< is semiExp a function defin or declar ? >--------------------
+//----< is Semi a function defin or declar ? >--------------------
 
-bool GrammarHelper::isFunctionDefinition(const Scanner::ITokCollection& se)
+bool GrammarHelper::isFunctionDefinition(const Lexer::ITokenCollection& se)
 {
-  if (se.length() > 0 && se[se.length() - 1] != "{")
+  if (se.size() > 0 && se[se.size() - 1] != "{")
     return false;
 
   if (isFunction(se))
@@ -97,18 +104,18 @@ bool GrammarHelper::isFunctionDefinition(const Scanner::ITokCollection& se)
   
   return false;
 }
-//----< find last matching token in semiExp >------------------------
+//----< find last matching token in Semi >------------------------
 
-size_t GrammarHelper::findLast(const Scanner::ITokCollection& se, const std::string& token)
+size_t GrammarHelper::findLast(const Lexer::ITokenCollection& se, const std::string& token)
 {
-  size_t endIndex = se.length() - 1;
-  for (size_t i = 0; i < se.length(); ++i)
+  size_t endIndex = se.size() - 1;
+  for (size_t i = 0; i < se.size(); ++i)
   {
     std::string debugTok = se[endIndex - i];
     if (se[endIndex - i] == token)
       return endIndex - i;
   }
-  return se.length();
+  return se.size();
 }
 //----< is tok a type qualifier keyword ? >--------------------------
 
@@ -125,12 +132,12 @@ bool GrammarHelper::isQualifierKeyWord(const std::string& tok)
       return true;
   return false;
 }
-//----< strip qualifier keywords from semiExp >----------------------
+//----< strip qualifier keywords from Semi >----------------------
 
-void GrammarHelper::removeQualifiers(Scanner::ITokCollection& tc)
+void GrammarHelper::removeQualifiers(Lexer::ITokenCollection& tc)
 {
   size_t i = 0;
-  while (i < tc.length())
+  while (i < tc.size())
   {
     if (isQualifierKeyWord(tc[i]))
       tc.remove(i);
@@ -140,13 +147,15 @@ void GrammarHelper::removeQualifiers(Scanner::ITokCollection& tc)
 }
 //----< remove calling argument qualifiers after first paren >-------
 
-void GrammarHelper::removeCallingArgQualifiers(Scanner::ITokCollection& tc)
+void GrammarHelper::removeCallingArgQualifiers(Lexer::ITokenCollection& tc)
 {
-  std::string debug = tc.show();
+  //std::string debug = tc.show();
 
-  size_t begin = tc.find("(");
-  size_t end = tc.find(")");
-  if (begin == tc.length() || end == tc.length() || begin >= end)
+  size_t begin;
+  tc.find("(", begin);
+  size_t end;
+  tc.find(")", end);
+  if (begin == tc.size() || end == tc.size() || begin >= end)
     return;
   size_t i = begin + 1;
   while (true)
@@ -168,7 +177,7 @@ bool isScopeConnector(const std::string& tok)
 }
 //----< is first function argument a declaration ? >-----------------
 
-bool GrammarHelper::isFirstArgDeclaration(const Scanner::ITokCollection& tc, const std::string& parentType)
+bool GrammarHelper::isFirstArgDeclaration(const Lexer::ITokenCollection& tc, const std::string& parentType)
 {
   if(!isFunction(tc))
     return false;  // not a function
@@ -176,15 +185,19 @@ bool GrammarHelper::isFirstArgDeclaration(const Scanner::ITokCollection& tc, con
   if (parentType == "function")
     return false;  // functions don't declare other functions
 
-  Scanner::SemiExp se;
+  Lexer::Semi se;
   se.clone(tc);
 
   removeCallingArgQualifiers(se);
 
-  size_t posOpenParen = se.find("(");
-  size_t posComma = se.find(",");
-  size_t posEqual = se.find("=");
-  size_t posCloseParen = se.find(")");
+  size_t posOpenParen;
+  se.find("(", posOpenParen);
+  size_t posComma;
+  se.find(",", posComma);
+  size_t posEqual;
+  se.find("=", posEqual);
+  size_t posCloseParen;
+  se.find(")", posCloseParen);
   
   // must have two adjacent terms without connector, e.g., type and name
 
@@ -225,20 +238,20 @@ bool GrammarHelper::isFirstArgDeclaration(const Scanner::ITokCollection& tc, con
 }
 //----< is this a function declaration ? >---------------------------
 
-bool GrammarHelper::isFunctionDeclaration(const Scanner::ITokCollection& tc, const std::string& parentType)
+bool GrammarHelper::isFunctionDeclaration(const Lexer::ITokenCollection& tc, const std::string& parentType)
 {
-  std::string debug = tc.show();
+  //std::string debug = tc.show();
 
-  if (tc.length() == 0)
+  if (tc.size() == 0)
     return false;
 
-  if (tc.length() == 1)  // ; or {
+  if (tc.size() == 1)  // ; or {
     return false;
 
-  if (tc[tc.length() - 1] != ";")
+  if (tc[tc.size() - 1] != ";")
     return false;
 
-  std::string tok = tc[tc.length() - 2];
+  std::string tok = tc[tc.size() - 2];
   if (tok == "delete" || tok == "default")
     return true;
 
@@ -248,10 +261,12 @@ bool GrammarHelper::isFunctionDeclaration(const Scanner::ITokCollection& tc, con
   if (!isFunction(tc))
     return false;
 
-  if (tc.find("operator") < tc.length())
+  size_t posOper;
+  tc.find("operator", posOper);
+  if (posOper < tc.size())
     return true;
 
-  Scanner::SemiExp se;
+  Lexer::Semi se;
   se.clone(tc);
 
   if (isFirstArgDeclaration(se, parentType) || !hasArgs(se))
@@ -261,11 +276,11 @@ bool GrammarHelper::isFunctionDeclaration(const Scanner::ITokCollection& tc, con
 }
 //----< is this a function invocation ? >----------------------------
 /*
-*  will return false unless invocation uses first paren in SemiExp
+*  will return false unless invocation uses first paren in Semi
 */
-bool GrammarHelper::isFunctionInvocation(const Scanner::ITokCollection& tc, const std::string& parentType)
+bool GrammarHelper::isFunctionInvocation(const Lexer::ITokenCollection& tc, const std::string& parentType)
 {
-  if (tc.length() == 1)  // ; or {
+  if (tc.size() == 1)  // ; or {
     return false;
 
   if (parentType != "function")
@@ -278,29 +293,30 @@ bool GrammarHelper::isFunctionInvocation(const Scanner::ITokCollection& tc, cons
 }
 //----< has function invocation somewhere in expression ? >----------
 
-bool GrammarHelper::hasFunctionInvocation(const Scanner::ITokCollection& tc, const std::string& parentType)
+bool GrammarHelper::hasFunctionInvocation(const Lexer::ITokenCollection& tc, const std::string& parentType)
 {
-  if (tc.length() == 1)  // ; or {
+  if (tc.size() == 1)  // ; or {
     return false;
 
-  if (tc.length() > 0 && tc[tc.length() - 1] == "{")
+  if (tc.size() > 0 && tc[tc.size() - 1] == "{")
     return false;
 
   if (parentType != "function")
     return false;
 
-  size_t posParen = tc.find("(");
-  Scanner::SemiExp test;
+  size_t posParen;
+  tc.find("(", posParen);
+  Lexer::Semi test;
   test.clone(tc, posParen - 1);
   std::string debug = test.show();
   while (true)
   {
     if (isFunctionInvocation(test, parentType))
       return true;
-    posParen = test.find("(", posParen + 1);
-    if (posParen == test.length())
+    test.find("(", posParen, posParen + 1);
+    if (posParen == test.size())
       return false;
-    Scanner::SemiExp innerTest;
+    Lexer::Semi innerTest;
     innerTest.clone(test, posParen - 1);
     test = innerTest;
     std::string debug = test.show();
@@ -309,28 +325,32 @@ bool GrammarHelper::hasFunctionInvocation(const Scanner::ITokCollection& tc, con
 }
 //----< is this a data declaration ? >-------------------------------
 
-bool GrammarHelper::isDataDeclaration(const Scanner::ITokCollection& tc)
+bool GrammarHelper::isDataDeclaration(const Lexer::ITokenCollection& tc)
 {
   std::string debug3 = tc.show();
 
-  if (tc.length() == 1)  // ; or {
+  if (tc.size() == 1)  // ; or {
     return false;
 
-  if (tc.length() > 0 && tc[tc.length() - 1] != ";")
+  if (tc.size() > 0 && tc[tc.size() - 1] != ";")
     return false;
 
-  if (tc.length() > 0 && (tc[0] == "~" || tc[0] == "return"))
+  if (tc.size() > 0 && (tc[0] == "~" || tc[0] == "return"))
     return false;
 
   if(hasControlKeyWord(tc))
     return false;
 
-  if (tc.find("<<") < tc.length() || tc.find(">>") < tc.length())
+  size_t insert;
+  tc.find("<<", insert);
+  size_t extract;
+  tc.find(">>", extract);
+  if (insert < tc.size() || extract < tc.size())
     return false;
 
   std::string debug = tc.show();
 
-  Scanner::SemiExp se;
+  Lexer::Semi se;
   se.clone(tc);
   condenseTemplateTypes(se);
   removeQualifiers(se);
@@ -338,8 +358,9 @@ bool GrammarHelper::isDataDeclaration(const Scanner::ITokCollection& tc)
   
   // is this a function declaration ?
 
-  size_t posParen = se.find("(");
-  if (posParen < se.length() && (posParen == 2 || posParen == 3))
+  size_t posParen;
+  se.find("(", posParen);
+  if (posParen < se.size() && (posParen == 2 || posParen == 3))
     return false;
 
   removeFunctionArgs(se);
@@ -348,18 +369,18 @@ bool GrammarHelper::isDataDeclaration(const Scanner::ITokCollection& tc)
 
   std::string debug2 = se.show();
 
-  if (se.length() == 3)
+  if (se.size() == 3)
     return true;
-  if (se.length() == 5 && se[1] == "::")
+  if (se.size() == 5 && se[1] == "::")
     return true;
 
   return false;
 }
 //----< is this an executable statement ? >--------------------------
 
-bool GrammarHelper::isExecutable(const Scanner::ITokCollection& tc, const std::string& parentType)
+bool GrammarHelper::isExecutable(const Lexer::ITokenCollection& tc, const std::string& parentType)
 {
-  if (tc.length() == 1)  // ; or {
+  if (tc.size() == 1)  // ; or {
     return false;
 
   if (isFunctionDefinition(tc))
@@ -370,72 +391,74 @@ bool GrammarHelper::isExecutable(const Scanner::ITokCollection& tc, const std::s
     return false;
   return true;
 }
-//----< remove initializers from C++ semiExp >-----------------------
+//----< remove initializers from C++ Semi >-----------------------
 
-void GrammarHelper::removeCppInitializers(Scanner::ITokCollection& tc)
+void GrammarHelper::removeCppInitializers(Lexer::ITokenCollection& tc)
 {
   std::string debug = tc.show();
-  for (size_t i = 0; i < tc.length(); ++i)
+  for (size_t i = 0; i < tc.size(); ++i)
   {
     if (tc[i] == "=" || tc[i] == "{")
     {
       size_t j = i;
-      while (j < tc.length() && tc[j] != ";")
+      while (j < tc.size() && tc[j] != ";")
       {
         tc.remove(j);
       }
       break;
     }
   }
-  if (tc.length() > 0 && tc[tc.length() - 1] != ";")
-    tc.push_back(";");
+  if (tc.size() > 0 && tc[tc.size() - 1] != ";")
+    tc.add(";");
 }
-//----< remove initializers from C# semiExp >------------------------
+//----< remove initializers from C# Semi >------------------------
 
-void GrammarHelper::removeCSharpInitializers(Scanner::ITokCollection& tc)
+void GrammarHelper::removeCSharpInitializers(Lexer::ITokenCollection& tc)
 {
   std::string debug = tc.show();
-  for (size_t i = 0; i < tc.length(); ++i)
+  for (size_t i = 0; i < tc.size(); ++i)
   {
     if (tc[i] == "=")
     {
       size_t j = i;
-      while (j < tc.length() && tc[j] != ";")
+      while (j < tc.size() && tc[j] != ";")
       {
         tc.remove(j);
       }
       break;
     }
   }
-  if (tc.length() > 0 && tc[tc.length() - 1] != ";")
-    tc.push_back(";");
+  if (tc.size() > 0 && tc[tc.size() - 1] != ";")
+    tc.add(";");
 }
-//----< remove comments from semiExp >-------------------------------
+//----< remove comments from Semi >-------------------------------
 
-void GrammarHelper::removeComments(Scanner::ITokCollection& tc)
+void GrammarHelper::removeComments(Lexer::ITokenCollection& tc)
 {
   size_t i = 0;
   while (true)
   {
     if (tc.isComment(tc[i]))
       tc.remove(i);
-    if (++i == tc.length())
+    if (++i == tc.size())
       break;
   }
 }
 //----< condense template spec to single token >---------------------
 
-void GrammarHelper::condenseTemplateTypes(Scanner::ITokCollection& tc)
+void GrammarHelper::condenseTemplateTypes(Lexer::ITokenCollection& tc)
 {
-  size_t start = tc.find("<");
-  size_t end = tc.find(">");
+  size_t start;
+  tc.find("<", start);
+  size_t end;
+  tc.find(">", end);
   if (start >= end || start == 0)
     return;
   else
   {
-    if (end == tc.length())
-      end = tc.find(">::");
-    if (end == tc.length())
+    if (end == tc.size())
+      tc.find(">::", end);
+    if (end == tc.size())
       return;
   }
   std::string save = tc[end];
@@ -458,13 +481,15 @@ void GrammarHelper::condenseTemplateTypes(Scanner::ITokCollection& tc)
 }
 //----< remove function's formal arguments >-------------------------
 
-void GrammarHelper::removeFunctionArgs(Scanner::ITokCollection& tc)
+void GrammarHelper::removeFunctionArgs(Lexer::ITokenCollection& tc)
 {
   std::string debug = tc.show();
 
-  size_t start = tc.find("(");
-  size_t end = tc.find(")");
-  if (start >= end || end == tc.length() || start == 0)
+  size_t start;
+  tc.find("(", start);
+  size_t end;
+  tc.find(")", end);
+  if (start >= end || end == tc.size() || start == 0)
     return;
   if (GrammarHelper::isControlKeyWord(tc[start - 1]))
     return;
@@ -472,9 +497,9 @@ void GrammarHelper::removeFunctionArgs(Scanner::ITokCollection& tc)
     tc.remove(start);
   //std::cout << "\n  -- " << tc.show();
 }
-//----< show semiExp with Dbug logger >------------------------------
+//----< show Semi with Dbug logger >------------------------------
 
-void GrammarHelper::showParse(const std::string& msg, const Scanner::ITokCollection& se, bool isResult)
+void GrammarHelper::showParse(const std::string& msg, const Lexer::ITokenCollection& se, bool isResult)
 {
   using Rslt = Logging::StaticLogger<0>;
   using Dbug = Logging::StaticLogger<2>;
@@ -493,7 +518,7 @@ void GrammarHelper::showParse(const std::string& msg, const Scanner::ITokCollect
   }
 }
 
-void GrammarHelper::showParseDemo(const std::string& msg, const Scanner::ITokCollection& se)
+void GrammarHelper::showParseDemo(const std::string& msg, const Lexer::ITokenCollection& se)
 {
   using Demo = Logging::StaticLogger<1>;
   if (Demo::running())
@@ -512,24 +537,24 @@ void GrammarHelper::showParseDemo(const std::string& msg, const Scanner::ITokCol
 
 #include <vector>
 #include <iostream>
-#include "../SemiExp/SemiExp.h"
+#include "../SemiExpression/Semi.h"
 #include "../Utilities/Utilities.h"
 
-using namespace Scanner;
+using namespace Lexer;
 using Token = std::string;
 using Toks = std::vector<Token>;
 
-void load(const Toks& toks, SemiExp& se)
+void load(const Toks& toks, Semi& se)
 {
   se.clear();
   for (auto item : toks)
-    se.push_back(item);
+    se.add(item);
 }
 
-std::string showQualifiers(const SemiExp& se)
+std::string showQualifiers(const Semi& se)
 {
   std::string temp;
-  for (size_t i = 0; i < se.length(); ++i)
+  for (size_t i = 0; i < se.size(); ++i)
     if (GrammarHelper::isQualifierKeyWord(se[i]))
       temp += se[i] + " ";
   return temp;
@@ -543,17 +568,17 @@ void showPredicate(bool predicate, const std::string& msg)
     std::cout << "\n    not " << msg;
 }
 
-std::string show(const ITokCollection& se)
+std::string show(const ITokenCollection& se)
 {
   std::string temp;
-  for (size_t i = 0; i < se.length(); ++i)
+  for (size_t i = 0; i < se.size(); ++i)
     temp += se[i] + " ";
   return temp;
 }
 
-void test(const SemiExp& seIn)
+void testHelpers(const Semi& seIn)
 {
-  Scanner::SemiExp se;
+  Lexer::Semi se;
   se.clone(seIn);
 
   Utilities::StringHelper::title("Testing GrammarHelpers");
@@ -580,7 +605,7 @@ void test(const SemiExp& seIn)
   showPredicate(GrammarHelper::isDataDeclaration(se), "data declaration");
   showPredicate(GrammarHelper::hasControlKeyWord(se), "found control Keyword");
 
-  SemiExp testSE;
+  Semi testSE;
   testSE.clone(seIn);
   GrammarHelper::condenseTemplateTypes(testSE);
   std::cout << "\n    condensing template types: " << show(testSE);
@@ -606,8 +631,8 @@ int main()
 {
   Utilities::StringHelper::Title("Testing Grammar Functions");
   std::cout << "\n  Note:";
-  std::cout << "\n  - Test functions are applied to SemiExps that they should change and those they should not.";
-  std::cout << "\n  - The intent is to make sure they do what they are supposed to do without harming SemiExps";
+  std::cout << "\n  - Test functions are applied to Semis that they should change and those they should not.";
+  std::cout << "\n  - The intent is to make sure they do what they are supposed to do without harming Semis";
   std::cout << "\n  - that should not change.\n";
 
   Toks tokset0 = { "/* Test0 */", ";" };
@@ -624,43 +649,43 @@ int main()
   Toks tokset11 = { "/* Test11 */", "~", "ClassName", "(", ")", ";" };
   Toks tokset12 = { "/* Test12 */", "ClassName", "(", "int", "count", ")", ";" };
   Toks tokset13 = { "/* Test13 */", "ClassName", "(", "int", "count", ")", ":", "count_", "(", "count", ")", "{" };
-  Toks tokset14 = { "/* Test14 */", "Scanner", "::", "SemiExp", "se", "(", "nullPtr", ")", ";" };
-  Toks tokset15 = { "/* Test15 */", "public", "abstract", "void", "doAction", "(", "CSemi", ".", "CSemiExp", "semi", ")", ";" };
+  Toks tokset14 = { "/* Test14 */", "Lexer", "::", "Semi", "se", "(", "nullPtr", ")", ";" };
+  Toks tokset15 = { "/* Test15 */", "public", "abstract", "void", "doAction", "(", "CSemi", ".", "CSemi", "semi", ")", ";" };
 
-  Scanner::SemiExp se;
+  Lexer::Semi se;
 
   load(tokset0, se);
-  test(se);
+  testHelpers(se);
   load(tokset1, se);
-  test(se);
+  testHelpers(se);
   load(tokset2, se);
-  test(se);
+  testHelpers(se);
   load(tokset3, se);
-  test(se);
+  testHelpers(se);
   load(tokset4, se);
-  test(se);
+  testHelpers(se);
   load(tokset5, se);
-  test(se);
+  testHelpers(se);
   load(tokset6, se);
-  test(se);
+  testHelpers(se);
   load(tokset7, se);
-  test(se);
+  testHelpers(se);
   load(tokset8, se);
-  test(se);
+  testHelpers(se);
   load(tokset9, se);
-  test(se);
+  testHelpers(se);
   load(tokset10, se);
-  test(se);
+  testHelpers(se);
   load(tokset11, se);
-  test(se);
+  testHelpers(se);
   load(tokset12, se);
-  test(se);
+  testHelpers(se);
   load(tokset13, se);
-  test(se);
+  testHelpers(se);
   load(tokset14, se);
-  test(se);
+  testHelpers(se);
   load(tokset15, se);
-  test(se);
+  testHelpers(se);
 }
 #endif
 

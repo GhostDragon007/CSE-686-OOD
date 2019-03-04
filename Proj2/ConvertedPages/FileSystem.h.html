@@ -1,34 +1,84 @@
-<!Doctype html>
-<html>
-<head>
-<style>
-body{
-padding: 15px 40px;
-font - family: Consolas;
-font - size: 1.25em;
-font - weight: normal;
-}
-</style>
+<!DOCTYPE html>
+<!-- saved from url=(0113)https://ecs.syr.edu/faculty/fawcett/handouts/CSE687/code/Project2HelpS2019/OodProject2Helper/Proj2Helper.cpp.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+  <style>
+    body {
+      padding: 15px 40px;
+      font-family: Consolas;
+      font-size: 1.25em;
+      font-weight: normal;
+    }
+
+    span {
+      display: inline;
+    }
+
+    #funcButton {
+      position: fixed;
+      bottom: 50px;
+      right: 50px;
+    }
+	
+	#classButton {
+		position: fixed;
+      bottom: 70px;
+      right: 50px;
+	}
+	
+	#commentButton {
+		position: fixed;
+      bottom: 90px;
+      right: 50px;
+	}
+	
+    .toggleClassDisplay {
+    }
+
+    .toggleMethodDisplay {
+    }
+	
+	.toggleCommentDisplay {
+    }
+  </style>
+  <script>
+      function showHideClass(className) {
+        let elems = document.getElementsByClassName(className);
+        if (elems === null) {
+          return;
+        }
+        for (let i = 0; i < elems.length; ++i) {
+          let displayProp = elems[i].style.display;
+          if (displayProp === 'none')
+            elems[i].style['display'] = "inline";
+          else
+            elems[i].style['display'] = "none";
+        }
+      }
+  </script>
 </head>
 <body>
 <h3>FileSystem.h</h3>
+  <button onclick="showHideClass(&#39;toggleMethodDisplay&#39;)" id="funcButton">Show or Hide Method Contents</button>
+  <button onclick="showHideClass(&#39;toggleClassDisplay&#39;)" id="classButton">Show or Hide Class Contents</button>
+  <button onclick="showHideClass(&#39;toggleCommentDisplay&#39;)" id="commentButton">Show or Hide Comment Contents</button>
+<pre>
 <pre>
 #ifndef FILESYSTEM_H
 #define FILESYSTEM_H
-/////////////////////////////////////////////////////////////////////////////
-// FileSystem.h - Support file and directory operations                    //
-// ver 2.8                                                                 //
-// ----------------------------------------------------------------------- //
-// copyright © Jim Fawcett, 2012                                           //
-// All rights granted provided that this notice is retained                //
-// ----------------------------------------------------------------------- //
-// Language:    Visual C++, Visual Studio 2010                             //
-// Platform:    Dell XPS 8300, Core i7, Windows 7 SP1                      //
-// Application: Summer Projects, 2012                                      //
-// Author:      Jim Fawcett, CST 4-187, Syracuse University                //
-//              (315) 443-3948, jfawcett@twcny.rr.com                      //
-/////////////////////////////////////////////////////////////////////////////
-/*
+<span class = "toggleCommentDisplay">/////////////////////////////////////////////////////////////////////////////</span>
+<span class = "toggleCommentDisplay">// FileSystem.h - Support file and directory operations                    //</span>
+<span class = "toggleCommentDisplay">// ver 3.0                                                                 //</span>
+<span class = "toggleCommentDisplay">// ----------------------------------------------------------------------- //</span>
+<span class = "toggleCommentDisplay">// copyright ?Jim Fawcett, 2012                                           //</span>
+<span class = "toggleCommentDisplay">// All rights granted provided that this notice is retained                //</span>
+<span class = "toggleCommentDisplay">// ----------------------------------------------------------------------- //</span>
+<span class = "toggleCommentDisplay">// Language:    Visual C++, Visual Studio 2010                             //</span>
+<span class = "toggleCommentDisplay">// Platform:    Dell XPS 8300, Core i7, Windows 7 SP1                      //</span>
+<span class = "toggleCommentDisplay">// Application: Summer Projects, 2012                                      //</span>
+<span class = "toggleCommentDisplay">// Author:      Jim Fawcett, CST 4-187, Syracuse University                //</span>
+<span class = "toggleCommentDisplay">//              (315) 443-3948, jfawcett@twcny.rr.com                      //</span>
+<span class = "toggleCommentDisplay">/////////////////////////////////////////////////////////////////////////////</span>
+<span class = "toggleCommentDisplay">/*
  * Module Operations:
  * ==================
  * This module provides classes, File, FileInfo, Path, Directory, and 
@@ -95,8 +145,15 @@ font - weight: normal;
  *
  * Maintenance History:
  * ====================
- * ver 2.8 : 05 Nov 2017
- *  - modified File class in FileSystem to remove memory leak
+ * ver 3.0 : 22 Feb 2019
+ * - Fixed bugs, found by Ammar Salam and Namen Parakh in Directory::remove
+ *   and Directory::create, which returned the wrong boolean value, by
+ *   replacing == with !=.
+ * ver 2.9 : 06 Sep 2018
+ * - Fixed bug in File::isGood() by returning result of comparison, not assignment
+ * ver 2.8 : 23 Feb 2018
+ * - Fixed bug in FileSystem.cpp main() which added one
+ *   test for file open success.
  * ver 2.7 : 28 May 2017
  * - Fixed bug by closing files in FileInfo destructor.
  *   Thanks to Kaiqi Zhang for finding bug and proposing
@@ -132,7 +189,7 @@ font - weight: normal;
  *   Linux version.
  * ver 1.0 : 31 Jan 09
  * - first release
- */
+ */</span>
 #include &lt;fstream&gt;
 #include &lt;string&gt;
 #include &lt;vector&gt;
@@ -140,15 +197,15 @@ font - weight: normal;
 
 namespace FileSystem
 {
-  /////////////////////////////////////////////////////////
-  // Block
+  <span class = "toggleCommentDisplay">/////////////////////////////////////////////////////////</span>
+  <span class = "toggleCommentDisplay">// Block</span>
   
   typedef char Byte;
 
   class Block
-  {
+  <span class = "toggleClassDisplay">{
   public:
-    Block(size_t size=0) : bytes_(size) {}
+    Block(size_t size=0) : bytes_(size) <span class = "toggleMethodDisplay">{}</span>
     Block(Byte* beg, Byte* end);
     void push_back(Byte b);
     Byte& operator[](size_t i);
@@ -158,13 +215,13 @@ namespace FileSystem
     size_t size() const;
   private:
     std::vector&lt;Byte&gt; bytes_;
-  };
+  };</span>
 
-  /////////////////////////////////////////////////////////
-  // File
+  <span class = "toggleCommentDisplay">/////////////////////////////////////////////////////////</span>
+  <span class = "toggleCommentDisplay">// File</span>
   
   class File
-  {
+  <span class = "toggleClassDisplay">{
   public:
     using byte = char;
     enum direction { in, out };
@@ -194,15 +251,15 @@ namespace FileSystem
     direction dirn_;
     type typ_;
     bool good_;
-  };
+  };</span>
 
-  inline std::string File::name() { return name_; }
+  inline std::string File::name() <span class = "toggleMethodDisplay">{ return name_; }</span>
 
-  /////////////////////////////////////////////////////////
-  // FileInfo
+  <span class = "toggleCommentDisplay">/////////////////////////////////////////////////////////</span>
+  <span class = "toggleCommentDisplay">// FileInfo</span>
 
   class FileInfo
-  {
+  <span class = "toggleClassDisplay">{
   public:
     enum dateFormat { fullformat, timeformat, dateformat };
     FileInfo(const std::string& fileSpec);
@@ -235,13 +292,13 @@ namespace FileSystem
     static std::string intToString(long i);
     WIN32_FIND_DATAA data;
     HANDLE hFindFile;
-  };
+  };</span>
 
-  /////////////////////////////////////////////////////////
-  // Path
+  <span class = "toggleCommentDisplay">/////////////////////////////////////////////////////////</span>
+  <span class = "toggleCommentDisplay">// Path</span>
 
   class Path
-  {
+  <span class = "toggleClassDisplay">{
   public:
     static std::string getFullFileSpec(const std::string& fileSpec);
     static std::string getPath(const std::string& fileSpec);
@@ -250,13 +307,13 @@ namespace FileSystem
     static std::string fileSpec(const std::string& path, const std::string& name);
     static std::string toLower(const std::string& src);
     static std::string toUpper(const std::string& src);
-  };
+  };</span>
   
-  /////////////////////////////////////////////////////////
-  // Directory
+  <span class = "toggleCommentDisplay">/////////////////////////////////////////////////////////</span>
+  <span class = "toggleCommentDisplay">// Directory</span>
 
   class Directory
-  {
+  <span class = "toggleClassDisplay">{
   public:
     static bool create(const std::string& path);
     static bool remove(const std::string& path);
@@ -266,9 +323,9 @@ namespace FileSystem
     static std::vector&lt;std::string&gt; getFiles(const std::string& path=".", const std::string& pattern="*.*");
     static std::vector&lt;std::string&gt; getDirectories(const std::string& path=".", const std::string& pattern="*.*");
   private:
-    //static const int BufSize = 255;
-    //char buffer[BufSize];
-  };
+    <span class = "toggleCommentDisplay">//static const int BufSize = 255;</span>
+    <span class = "toggleCommentDisplay">//char buffer[BufSize];</span>
+  };</span>
 }
 
 #endif

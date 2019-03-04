@@ -2,7 +2,7 @@
 #define TOKER_H
 /////////////////////////////////////////////////////////////////////
 // Toker.h - Collects words from a stream                          //
-// ver 1.0                                                         //
+// ver 1.1                                                         //
 // Jim Fawcett, CSE687 - Object Oriented Design, Spring 2019       //
 /////////////////////////////////////////////////////////////////////
 /*
@@ -25,6 +25,9 @@
  * 
  * Maintenance History
  * -------------------
+ * ver 1.1 : 27 Feb 2019
+ * - fixed bugs in toker by checking for end-of-file in getTok() function
+ *   in SingleLineCommentState and MultiLineCommentState
  * ver 1.0 : 09 Feb 2019
  * - first release - port of C# design
  */
@@ -278,7 +281,7 @@ namespace Lexer
       while (true)   // stop when newline
       {
         ch = (char)pContext_->pSrc_->peek();
-        if (ch == '\n')
+        if (ch == '\n' || int(ch) == -1)
           break;
         tok += (char)pContext_->pSrc_->next();
       }
@@ -306,7 +309,7 @@ namespace Lexer
         prevCh = ch;
         ch = (char)pContext_->pSrc_->next();
         tok += ch;
-        if (prevCh == '*' && ch == '/')
+        if (prevCh == '*' && ch == '/' || int(ch) == -1)
           break;
       }
       return tok;

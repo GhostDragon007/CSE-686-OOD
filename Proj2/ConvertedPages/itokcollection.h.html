@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<!-- saved from url=(0113)https://ecs.syr.edu/faculty/fawcett/handouts/CSE687/code/Project2HelpS2019/OodProject2Helper/Proj2Helper.cpp.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+  <style>
+    body {
+      padding: 15px 40px;
+      font-family: Consolas;
+      font-size: 1.25em;
+      font-weight: normal;
+    }
+
+    span {
+      display: inline;
+    }
+
+    #funcButton {
+      position: fixed;
+      bottom: 50px;
+      right: 50px;
+    }
+	
+	#classButton {
+		position: fixed;
+      bottom: 70px;
+      right: 50px;
+	}
+	
+	#commentButton {
+		position: fixed;
+      bottom: 90px;
+      right: 50px;
+	}
+	
+    .toggleClassDisplay {
+    }
+
+    .toggleMethodDisplay {
+    }
+	
+	.toggleCommentDisplay {
+    }
+  </style>
+  <script>
+      function showHideClass(className) {
+        let elems = document.getElementsByClassName(className);
+        if (elems === null) {
+          return;
+        }
+        for (let i = 0; i < elems.length; ++i) {
+          let displayProp = elems[i].style.display;
+          if (displayProp === 'none')
+            elems[i].style['display'] = "inline";
+          else
+            elems[i].style['display'] = "none";
+        }
+      }
+  </script>
+</head>
+<body>
+<h3>itokcollection.h</h3>
+  <button onclick="showHideClass(&#39;toggleMethodDisplay&#39;)" id="funcButton">Show or Hide Method Contents</button>
+  <button onclick="showHideClass(&#39;toggleClassDisplay&#39;)" id="classButton">Show or Hide Class Contents</button>
+  <button onclick="showHideClass(&#39;toggleCommentDisplay&#39;)" id="commentButton">Show or Hide Comment Contents</button>
+<pre>
+<pre>
+#ifndef ITOKCOLLECTION_H
+#define ITOKCOLLECTION_H
+<span class = "toggleCommentDisplay">/////////////////////////////////////////////////////////////////////</span>
+<span class = "toggleCommentDisplay">//  ITokCollection.h - package for the ITokCollection interface    //</span>
+<span class = "toggleCommentDisplay">//  ver 1.4                                                        //</span>
+<span class = "toggleCommentDisplay">//  Language:      Visual C++ 2008, SP1                            //</span>
+<span class = "toggleCommentDisplay">//  Platform:      Dell XPS 8900, Windows 10                       //</span>
+<span class = "toggleCommentDisplay">//  Application:   Code analysis tools                             //</span>
+<span class = "toggleCommentDisplay">//  Author:        Jim Fawcett, CST 4-187, Syracuse University     //</span>
+<span class = "toggleCommentDisplay">//                 (315) 443-3948, jfawcett@twcny.rr.com           //</span>
+<span class = "toggleCommentDisplay">/////////////////////////////////////////////////////////////////////</span>
+<span class = "toggleCommentDisplay">/*
+  Module Purpose:
+  ===============
+  ITokCollection is an interface that supports substitution of different
+  types of scanners for parsing.  In this solution, we illustrate that
+  by binding two different types of collections, SemiExp and XmlParts,
+  to this interface.  This is illustrated in the test stubs for the
+  SemiExpression and XmlElementParts packages.
+
+  Maintenance History:
+  ====================
+  ver 1.4 : 28 Aug 2016
+  - added default parameter to trim for comment removal
+  ver 1.3 : 25 Aug 2016
+  - added begin(), end(), clone(const SemiExp&), and iterator
+  ver 1.2 : 15 Feb 2016
+  - removed merge, added non-const operator[] overload
+  ver 1.1 : 02 Jun 11
+  - added merge, remove overload, and default param in get
+  ver 1.0 : 17 Jan 09
+  - first release
+*/</span>
+#include &lt;string&gt; 
+#include &lt;vector&gt;
+
+namespace Scanner
+{
+  struct ITokCollection
+  {
+    using iterator = std::vector&lt;std::string&gt;::iterator;
+    virtual iterator begin() = 0;
+    virtual iterator end() = 0;
+    virtual bool get(bool clear = true) = 0;
+    virtual ITokCollection* clone() const = 0;
+    virtual void clone(const ITokCollection&, size_t offSet = 0) = 0;
+    virtual size_t length() const = 0;
+    virtual std::string& operator[](size_t n) = 0;
+    virtual std::string operator[](size_t n) const = 0;
+    virtual size_t find(const std::string& tok, size_t offSet = 0) const = 0;
+    virtual size_t findLast(const std::string& tok, size_t offSet = 0) const = 0;
+    virtual void push_back(const std::string& tok) = 0;
+    virtual bool remove(const std::string& tok) = 0;
+    virtual bool remove(size_t i) = 0;
+    virtual void toLower() = 0;
+    virtual void trimFront() = 0;
+    virtual void trim(bool removeComments = true) = 0;
+    virtual void clear() = 0;
+    virtual std::string show(bool showNewLines = false) const = 0;
+    virtual bool isComment(const std::string& tok) const = 0;
+    virtual ~ITokCollection() <span class = "toggleMethodDisplay">{};</span>
+  };
+}
+#endif
+
+</pre>
+</body></html>

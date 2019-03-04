@@ -1,4 +1,5 @@
-#pragma once
+#ifndef GRAMMARHELPERS_H
+#define GRAMMARHELPERS_H
 /////////////////////////////////////////////////////////////////////////
 // GrammarHelpers.h - Functions providing base grammatical analyses    //
 // ver 1.4                                                             //
@@ -11,7 +12,7 @@
 * Package Operations:
 * -------------------
 * This package provides a single class, GrammarHelper, with all static methods.
-* Each method provides a useful piece of analysis on a semiexpression, designed
+* Each method provides a useful piece of analysis on a Semiression, designed
 * to support source code parsing activities.
 *
 * The purpose of this package is to factor out of the ActionsAndRules package
@@ -22,7 +23,7 @@
 * --------------
 * Required Files:
 *   GrammarHelpers.h, GrammarHelpers.cpp,
-*   SemiExpression.h, SemiExpression.cpp, Tokenizer.h, Tokenizer.cpp,
+*   Semiression.h, Semiression.cpp, Tokenizer.h, Tokenizer.cpp,
 *   Logger.h, Logger.cpp, Utilities.h, Utilities.cpp
 *
 * Build Command: devenv Analyzer.sln /rebuild debug
@@ -44,13 +45,13 @@
 *
 * Planned Additions and Changes:
 * ------------------------------
-* - These functions may result in scanning a SemiExp instance several times.
+* - These functions may result in scanning a Semi instance several times.
 *   It should be straight forward to reduce some of that.
 */
 
 
 #include <string>
-#include "../SemiExp/itokcollection.h"
+#include "../SemiExpression/ITokenCollection.h"
 
 namespace CodeAnalysis
 {
@@ -58,27 +59,28 @@ namespace CodeAnalysis
   {
   public:
     static bool isControlKeyWord(const std::string& tok);
-    static bool hasControlKeyWord(const Scanner::ITokCollection& se);
-    static bool isFunction(const Scanner::ITokCollection& se);
-    static bool hasArgs(const Scanner::ITokCollection& se);
-    static bool isFunctionDefinition(const Scanner::ITokCollection& se);
-    static bool isFunctionDeclaration(const Scanner::ITokCollection& se, const std::string& parentType);
-    static bool isFunctionInvocation(const Scanner::ITokCollection& se, const std::string& parentType);
-    static bool hasFunctionInvocation(const Scanner::ITokCollection& se, const std::string& parentType);
-    static bool isDataDeclaration(const Scanner::ITokCollection& se);
-    static bool isExecutable(const Scanner::ITokCollection& se, const std::string& parentType);
-    static size_t findLast(const Scanner::ITokCollection& se, const std::string& token);
+    static bool hasControlKeyWord(const Lexer::ITokenCollection& se);
+    static bool isFunction(const Lexer::ITokenCollection& se);
+    static bool hasArgs(const Lexer::ITokenCollection& se);
+    static bool isFunctionDefinition(const Lexer::ITokenCollection& se);
+    static bool isFunctionDeclaration(const Lexer::ITokenCollection& se, const std::string& parentType);
+    static bool isFunctionInvocation(const Lexer::ITokenCollection& se, const std::string& parentType);
+    static bool hasFunctionInvocation(const Lexer::ITokenCollection& se, const std::string& parentType);
+    static bool isDataDeclaration(const Lexer::ITokenCollection& se);
+    static bool isExecutable(const Lexer::ITokenCollection& se, const std::string& parentType);
+    static size_t findLast(const Lexer::ITokenCollection& se, const std::string& token);
     static bool isQualifierKeyWord(const std::string& tok);
-    static void removeQualifiers(Scanner::ITokCollection& tc);
-    static void removeCallingArgQualifiers(Scanner::ITokCollection& tc);
-    static bool isFirstArgDeclaration(const Scanner::ITokCollection& tc, const std::string& parentType);
-    static bool hasReturnType(const Scanner::ITokCollection& tc);
-    static void removeCppInitializers(Scanner::ITokCollection& tc);
-    static void removeCSharpInitializers(Scanner::ITokCollection& tc);
-    static void removeComments(Scanner::ITokCollection& tc);
-    static void condenseTemplateTypes(Scanner::ITokCollection& tc);
-    static void removeFunctionArgs(Scanner::ITokCollection& tc);
-    static void showParse(const std::string& msg, const Scanner::ITokCollection& se, bool isResult = false);
-    static void showParseDemo(const std::string& msg, const Scanner::ITokCollection& se);
+    static void removeQualifiers(Lexer::ITokenCollection& tc);
+    static void removeCallingArgQualifiers(Lexer::ITokenCollection& tc);
+    static bool isFirstArgDeclaration(const Lexer::ITokenCollection& tc, const std::string& parentType);
+    static bool hasReturnType(const Lexer::ITokenCollection& tc);
+    static void removeCppInitializers(Lexer::ITokenCollection& tc);
+    static void removeCSharpInitializers(Lexer::ITokenCollection& tc);
+    static void removeComments(Lexer::ITokenCollection& tc);
+    static void condenseTemplateTypes(Lexer::ITokenCollection& tc);
+    static void removeFunctionArgs(Lexer::ITokenCollection& tc);
+    static void showParse(const std::string& msg, const Lexer::ITokenCollection& se, bool isResult = false);
+    static void showParseDemo(const std::string& msg, const Lexer::ITokenCollection& se);
   };
 }
+#endif

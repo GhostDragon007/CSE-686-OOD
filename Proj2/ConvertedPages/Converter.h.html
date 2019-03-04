@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<!-- saved from url=(0113)https://ecs.syr.edu/faculty/fawcett/handouts/CSE687/code/Project2HelpS2019/OodProject2Helper/Proj2Helper.cpp.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+  <style>
+    body {
+      padding: 15px 40px;
+      font-family: Consolas;
+      font-size: 1.25em;
+      font-weight: normal;
+    }
+
+    span {
+      display: inline;
+    }
+
+    #funcButton {
+      position: fixed;
+      bottom: 50px;
+      right: 50px;
+    }
+	
+	#classButton {
+		position: fixed;
+      bottom: 70px;
+      right: 50px;
+	}
+	
+	#commentButton {
+		position: fixed;
+      bottom: 90px;
+      right: 50px;
+	}
+	
+    .toggleClassDisplay {
+    }
+
+    .toggleMethodDisplay {
+    }
+	
+	.toggleCommentDisplay {
+    }
+  </style>
+  <script>
+      function showHideClass(className) {
+        let elems = document.getElementsByClassName(className);
+        if (elems === null) {
+          return;
+        }
+        for (let i = 0; i < elems.length; ++i) {
+          let displayProp = elems[i].style.display;
+          if (displayProp === 'none')
+            elems[i].style['display'] = "inline";
+          else
+            elems[i].style['display'] = "none";
+        }
+      }
+  </script>
+</head>
+<body>
+<h3>Converter.h</h3>
+  <button onclick="showHideClass(&#39;toggleMethodDisplay&#39;)" id="funcButton">Show or Hide Method Contents</button>
+  <button onclick="showHideClass(&#39;toggleClassDisplay&#39;)" id="classButton">Show or Hide Class Contents</button>
+  <button onclick="showHideClass(&#39;toggleCommentDisplay&#39;)" id="commentButton">Show or Hide Comment Contents</button>
+<pre>
+<pre>
+<span class = "toggleCommentDisplay">/////////////////////////////////////////////////////////////////////////////</span>
+<span class = "toggleCommentDisplay">// Converter.h - accept a vector of filenames to convert those files to    //</span>
+<span class = "toggleCommentDisplay">//               html files                                                //</span>
+<span class = "toggleCommentDisplay">// ver 1.1                                                                 //</span>
+<span class = "toggleCommentDisplay">// Language:    Visual C++, Visual Studio 2019                             //</span>
+<span class = "toggleCommentDisplay">// Platform:    Dell Latitude , Core i7, Windows 10                        //</span>
+<span class = "toggleCommentDisplay">// Application: CSE687 - OOD Project #2                                    //</span>
+<span class = "toggleCommentDisplay">// Author:      Junhao Shen                                                //</span>
+<span class = "toggleCommentDisplay">//              (315)480-4274, jshen18@syr.edu                             //</span>
+<span class = "toggleCommentDisplay">/////////////////////////////////////////////////////////////////////////////</span>
+
+<span class = "toggleCommentDisplay">/*
+ * Package Operations:
+ * -------------------
+ * Converter creates a class "Convert", in order to transform cpp/h files
+ * into html files, along with inserting dependencies, inserting &lt;span&gt;
+ * between functions and classes to make them controllable to either be
+ * seen or not by buttons.
+ *
+ * Required Files:
+ * ---------------
+ * Dependencies.h, Dependencies.cpp
+ * AbstrSynTree.h, AbstrSynTree.cpp
+ * ActionsAndRules.h, ActionsAndRules.cpp
+ * ConfigureParser.h, ConfigureParser.cpp
+ * FileSystem.h, FileSystem.cpp
+ * GrammarHelpers.h, GrammarHelpers.cpp
+ * ITokenCollection.h
+ * Logger.h, Logger.cpp
+ * Parser.h, Parser.cpp
+ * ScopeStack.h, ScopeStack.cpp
+ * Semi.h, Semi.cpp
+ * Toker.h, Toker.cpp
+ * Utilities.h, Utilities.cpp
+ *
+ * Maintenance History:
+ * --------------------
+ * ver 1.1 : 4 Mar 2019
+ * - modify 
+ * ver 1.0 : 1 Feb 2019
+ * - first release
+ *
+*/</span>
+
+#pragma once
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;fstream&gt;
+#include &lt;string&gt;
+#include &lt;map&gt;
+
+class Convert
+<span class = "toggleClassDisplay">{
+public:
+	Convert();
+	~Convert();
+	void getFuncClass(std::vector&lt;std::string&gt;& files,
+		std::vector&lt;std::vector&lt;std::vector&lt;int&gt;&gt;&gt;& funcPos, std::vector&lt;std::vector&lt;std::vector&lt;int&gt;&gt;&gt;& classPos);
+	void convertToHtml(std::vector&lt;std::string&gt;& files, std::map&lt;std::string, std::vector&lt;std::string&gt;&gt;& dependencies,
+		std::vector&lt;std::vector&lt;std::vector&lt;int&gt;&gt;&gt;& funcPos, std::vector &lt; std::vector&lt;std::vector&lt;int&gt;&gt;&gt;& classPos);
+};</span>
+
+
+</pre>
+</body></html>

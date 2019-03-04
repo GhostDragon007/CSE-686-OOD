@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<!-- saved from url=(0113)https://ecs.syr.edu/faculty/fawcett/handouts/CSE687/code/Project2HelpS2019/OodProject2Helper/Proj2Helper.cpp.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+  <style>
+    body {
+      padding: 15px 40px;
+      font-family: Consolas;
+      font-size: 1.25em;
+      font-weight: normal;
+    }
+
+    span {
+      display: inline;
+    }
+
+    #funcButton {
+      position: fixed;
+      bottom: 50px;
+      right: 50px;
+    }
+	
+	#classButton {
+		position: fixed;
+      bottom: 70px;
+      right: 50px;
+	}
+	
+	#commentButton {
+		position: fixed;
+      bottom: 90px;
+      right: 50px;
+	}
+	
+    .toggleClassDisplay {
+    }
+
+    .toggleMethodDisplay {
+    }
+	
+	.toggleCommentDisplay {
+    }
+  </style>
+  <script>
+      function showHideClass(className) {
+        let elems = document.getElementsByClassName(className);
+        if (elems === null) {
+          return;
+        }
+        for (let i = 0; i < elems.length; ++i) {
+          let displayProp = elems[i].style.display;
+          if (displayProp === 'none')
+            elems[i].style['display'] = "inline";
+          else
+            elems[i].style['display'] = "none";
+        }
+      }
+  </script>
+</head>
+<body>
+<h3>Loader.h</h3>
+  <button onclick="showHideClass(&#39;toggleMethodDisplay&#39;)" id="funcButton">Show or Hide Method Contents</button>
+  <button onclick="showHideClass(&#39;toggleClassDisplay&#39;)" id="classButton">Show or Hide Class Contents</button>
+  <button onclick="showHideClass(&#39;toggleCommentDisplay&#39;)" id="commentButton">Show or Hide Comment Contents</button>
+<pre>
+<pre>
+#pragma once
+<span class = "toggleCommentDisplay">/////////////////////////////////////////////////////////////////////</span>
+<span class = "toggleCommentDisplay">//  Loader.h - finding and loading all the files for conversion    //</span>
+<span class = "toggleCommentDisplay">//  ver 1.0                                                        //</span>
+<span class = "toggleCommentDisplay">//  Language:      Visual C++, Visual Studio 2017                  //</span>
+<span class = "toggleCommentDisplay">//  Platform:      Dell Latitude 5580, Windows 10                  //</span>
+<span class = "toggleCommentDisplay">//  Application:   CSE687 - OOD Project #2                         //</span>
+<span class = "toggleCommentDisplay">//  Author:        Junhao Shen, Syracuse University                //</span>
+<span class = "toggleCommentDisplay">//                 jshen18@syr.edu                                 //</span>
+<span class = "toggleCommentDisplay">/////////////////////////////////////////////////////////////////////</span>
+<span class = "toggleCommentDisplay">/*
+ * Package Operations:
+ * -------------------
+ * Loader uses a class, "DirExplorer", which modifies from Prof.
+ * Fawcett, that executes a depth first search of a directory tree 
+ * rooted at a specified path. Each time it enters a directory, it 
+ * invokes its member function doDir, and for every file in that 
+ * directory, it invokes doFile.
+ *
+ * We call this a "Naive Directory Explorer" because, while it carries
+ * out its assigned responsibilities well, there is no way to change
+ * what its doDir and doFile functions do, without changing the class
+ * itself.  It would be much better to provide a mechanism to allow
+ * a using application to supply this processing without changing
+ * the Directory Navigator.
+ *
+ *
+ * We'll be using this solution to illustrate techniques for building
+ * flexible software.
+ *
+ * Required Files:
+ * ---------------
+ * Loader.h, Loader.cpp
+ * FileSystem.h, FileSystem.cpp      <span class = "toggleCommentDisplay">// Directory and Path classes
+ * StringUtilities.h                 <span class = "toggleCommentDisplay">// Title function
+ * CodeUtilities.h                   <span class = "toggleCommentDisplay">// ProcessCmdLine class
+ *
+ * Maintenance History:
+ * --------------------
+ * ver 1.4 :  4 Mar 2019
+ * - Add loadFile method which accepts two parameters, one is char* []
+ *   which contains the files' position, name pattern, regular expression
+ *   and explorer's position. And another one is the length of this array.
+ * ver 1.3 : 19 Aug 2018
+ * - Removed some options to make this version simple.  Those are
+ *   implemented in the more advanced navigators, presented here.
+ * ver 1.2 : 17 Aug 2018
+ * - Moved method definitions to inlines, below the class declaration.
+ * ver 1.1 : 16 Aug 2018
+ * - Made no recursion default, added option /s for recursion.
+ * ver 1.0 : 11 Aug 2018
+ * - first release
+ *
+*/</span>
+
+#include &lt;vector&gt;
+
+namespace FileSystem
+{
+	class DirExplorerN
+	<span class = "toggleClassDisplay">{
+	public:
+		using patterns = std::vector&lt;std::string&gt;;
+
+		static std::string version() <span class = "toggleMethodDisplay">{ return "ver 1.3"; }</span>
+
+		DirExplorerN(const std::string& path);
+		DirExplorerN();
+
+		<span class = "toggleCommentDisplay">// set options for analysis</span>
+
+		void addPattern(const std::string& patt);
+		void recurse(bool doRecurse = true);
+
+		<span class = "toggleCommentDisplay">// conduct depth first search</span>
+
+		void search(const std::string& regexes_);
+		void find(const std::string& path, const std::string& regexes_);
+
+		<span class = "toggleCommentDisplay">// define what happens when a file or dir is encountered</span>
+
+		void doFile(const std::string& filename, const std::string& fullPath);
+		void doDir(const std::string& dirname);
+
+		<span class = "toggleCommentDisplay">// extract traversal statistics </span>
+
+		size_t fileCount();
+		size_t dirCount();
+		void showStats();
+		std::vector&lt;std::string&gt; loadFiles(int argc, char *argv[]);
+
+	private:
+		std::string path_;
+		patterns patterns_;
+		size_t dirCount_ = 0;
+		size_t fileCount_ = 0;
+		bool recurse_ = false;
+		std::vector&lt;std::string&gt; files;
+	};</span>
+
+	<span class = "toggleCommentDisplay">//----&lt; construct DirExplorerN instance with default pattern &gt;-----</span>
+
+
+}
+
+
+</pre>
+</body></html>

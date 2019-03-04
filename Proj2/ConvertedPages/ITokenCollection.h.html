@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<!-- saved from url=(0113)https://ecs.syr.edu/faculty/fawcett/handouts/CSE687/code/Project2HelpS2019/OodProject2Helper/Proj2Helper.cpp.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+  <style>
+    body {
+      padding: 15px 40px;
+      font-family: Consolas;
+      font-size: 1.25em;
+      font-weight: normal;
+    }
+
+    span {
+      display: inline;
+    }
+
+    #funcButton {
+      position: fixed;
+      bottom: 50px;
+      right: 50px;
+    }
+	
+	#classButton {
+		position: fixed;
+      bottom: 70px;
+      right: 50px;
+	}
+	
+	#commentButton {
+		position: fixed;
+      bottom: 90px;
+      right: 50px;
+	}
+	
+    .toggleClassDisplay {
+    }
+
+    .toggleMethodDisplay {
+    }
+	
+	.toggleCommentDisplay {
+    }
+  </style>
+  <script>
+      function showHideClass(className) {
+        let elems = document.getElementsByClassName(className);
+        if (elems === null) {
+          return;
+        }
+        for (let i = 0; i < elems.length; ++i) {
+          let displayProp = elems[i].style.display;
+          if (displayProp === 'none')
+            elems[i].style['display'] = "inline";
+          else
+            elems[i].style['display'] = "none";
+        }
+      }
+  </script>
+</head>
+<body>
+<h3>ITokenCollection.h</h3>
+  <button onclick="showHideClass(&#39;toggleMethodDisplay&#39;)" id="funcButton">Show or Hide Method Contents</button>
+  <button onclick="showHideClass(&#39;toggleClassDisplay&#39;)" id="classButton">Show or Hide Class Contents</button>
+  <button onclick="showHideClass(&#39;toggleCommentDisplay&#39;)" id="commentButton">Show or Hide Comment Contents</button>
+<pre>
+<pre>
+﻿#ifndef ITOKENCOLLECTION_H
+#define ITOKENCOLLECTION_H
+<span class = "toggleCommentDisplay">/////////////////////////////////////////////////////////////////////</span>
+<span class = "toggleCommentDisplay">// ITokenCollection.h - Lexical Scanner interface                  //</span>
+<span class = "toggleCommentDisplay">// ver 1.0   grammatical analysis                                  //</span>
+<span class = "toggleCommentDisplay">//                                                                 //</span>
+<span class = "toggleCommentDisplay">// Jim Fawcett, CSE687 - Object Oriented Design, Spring 2019       //</span>
+<span class = "toggleCommentDisplay">/////////////////////////////////////////////////////////////////////</span>
+
+#include &lt;string&gt;
+#include &lt;vector&gt;
+
+namespace Lexer
+{
+  using Token = std::string;
+  using TokColl = std::vector&lt;std::string&gt;;
+
+  class Toker;
+
+  struct ITokenCollection
+  {
+    using iterator = std::vector&lt;std::string&gt;::iterator;
+    virtual Toker* getToker() = 0;
+    virtual void setToker(Toker* pToker) = 0;
+    virtual bool open(const std::string& src) = 0;        <span class = "toggleCommentDisplay">// attach toker to source</span>
+    virtual void close() = 0;                             <span class = "toggleCommentDisplay">// close toker's source</span>
+    virtual bool get() = 0;                               <span class = "toggleCommentDisplay">// collect semi</span>
+    virtual void clone(const ITokenCollection& tc, size_t offset = 0) = 0;  <span class = "toggleCommentDisplay">// invoker clones tc</span>
+    virtual ITokenCollection* clone() const = 0;          <span class = "toggleCommentDisplay">// returns pointer to newly allocated clone</span>
+    virtual size_t size() const = 0;                      <span class = "toggleCommentDisplay">// number of tokens</span>
+    virtual Token& operator[](size_t n) = 0;              <span class = "toggleCommentDisplay">// index semi</span>
+    virtual Token operator[](size_t n) const = 0;         <span class = "toggleCommentDisplay">// index semi</span>
+    virtual iterator begin() = 0;                         <span class = "toggleCommentDisplay">// iterator start</span>
+    virtual iterator end() = 0;                           <span class = "toggleCommentDisplay">// iterator end</span>
+    virtual ITokenCollection* add(Token token) = 0;       <span class = "toggleCommentDisplay">// add a token to collection</span>
+    virtual bool remove(size_t index) = 0;                <span class = "toggleCommentDisplay">// remove token at index</span>
+    virtual bool remove(Token tok) = 0;                   <span class = "toggleCommentDisplay">// remove first tok</span>
+    virtual void addRange(TokColl tc) = 0;                <span class = "toggleCommentDisplay">// append collection of toks to semi</span>
+    virtual bool insert(size_t n, Token tok) = 0;         <span class = "toggleCommentDisplay">// insert tok at index n</span>
+    virtual void clear() = 0;                             <span class = "toggleCommentDisplay">// clear all tokens</span>
+    virtual bool contains(Token token) const = 0;         <span class = "toggleCommentDisplay">// has token?</span>
+    virtual bool find(Token tok, size_t& index, size_t offset = 0) const = 0;  <span class = "toggleCommentDisplay">// find tok if in semi</span>
+    virtual bool findLast(Token tok, size_t&index) const = 0;
+    virtual Token last() const = 0;                       <span class = "toggleCommentDisplay">// return last token in semi</span>
+    virtual void trim() = 0;                              <span class = "toggleCommentDisplay">// remove leading whitespace</span>
+    virtual Token predecessor(Token tok) = 0;             <span class = "toggleCommentDisplay">// find token before tok</span>
+    virtual bool hasSequence(TokColl tokSeq) = 0;         <span class = "toggleCommentDisplay">// does semi have this sequence of tokens?</span>
+    virtual bool hasTerminator() = 0;                     <span class = "toggleCommentDisplay">// does semi have a valid terminator</span>
+    virtual bool isDone() = 0;                            <span class = "toggleCommentDisplay">// at end of tokenSource?</span>
+    virtual size_t lineCount() = 0;                       <span class = "toggleCommentDisplay">// get number of lines processed</span>
+    virtual std::string ToString() = 0;                   <span class = "toggleCommentDisplay">// concatenate tokens with intervening spaces</span>
+    virtual std::string show() const = 0;                 <span class = "toggleCommentDisplay">// display semi in string</span>
+    virtual bool isComment(Token tok) = 0;                <span class = "toggleCommentDisplay">// is this token a comment?</span>
+  };
+}
+#endif
+
+</pre>
+</body></html>

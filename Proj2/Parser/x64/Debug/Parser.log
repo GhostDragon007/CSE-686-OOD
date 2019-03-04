@@ -1,2 +1,8 @@
-﻿  Semi.cpp
-  Parser.vcxproj -> D:\Git\CSE-687-OOD\Proj2\Parser\lib\Parser.lib
+﻿  Parser.cpp
+d:\little shen\syracuse\cse 687\code\project2starter\parser\parser.cpp(164): warning C4129: 'G': unrecognized character escape sequence
+d:\little shen\syracuse\cse 687\code\project2starter\parser\parser.cpp(164): warning C4129: 'C': unrecognized character escape sequence
+d:\little shen\syracuse\cse 687\code\project2starter\parser\parser.cpp(164): warning C4129: 'P': unrecognized character escape sequence
+d:\little shen\syracuse\cse 687\code\project2starter\parser\parser.cpp(165): warning C4129: 'G': unrecognized character escape sequence
+d:\little shen\syracuse\cse 687\code\project2starter\parser\parser.cpp(165): warning C4129: 'C': unrecognized character escape sequence
+d:\little shen\syracuse\cse 687\code\project2starter\parser\parser.cpp(165): warning C4129: 'P': unrecognized character escape sequence
+  Parser.vcxproj -> D:\little shen\Syracuse\CSE 687\Code\Project2Starter\x64\Debug\Parser.exe

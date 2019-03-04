@@ -1,27 +1,79 @@
-<!Doctype html>
-<html>
-<head>
-<style>
-body{
-padding: 15px 40px;
-font - family: Consolas;
-font - size: 1.25em;
-font - weight: normal;
-}
-</style>
+<!DOCTYPE html>
+<!-- saved from url=(0113)https://ecs.syr.edu/faculty/fawcett/handouts/CSE687/code/Project2HelpS2019/OodProject2Helper/Proj2Helper.cpp.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+  <style>
+    body {
+      padding: 15px 40px;
+      font-family: Consolas;
+      font-size: 1.25em;
+      font-weight: normal;
+    }
+
+    span {
+      display: inline;
+    }
+
+    #funcButton {
+      position: fixed;
+      bottom: 50px;
+      right: 50px;
+    }
+	
+	#classButton {
+		position: fixed;
+      bottom: 70px;
+      right: 50px;
+	}
+	
+	#commentButton {
+		position: fixed;
+      bottom: 90px;
+      right: 50px;
+	}
+	
+    .toggleClassDisplay {
+    }
+
+    .toggleMethodDisplay {
+    }
+	
+	.toggleCommentDisplay {
+    }
+  </style>
+  <script>
+      function showHideClass(className) {
+        let elems = document.getElementsByClassName(className);
+        if (elems === null) {
+          return;
+        }
+        for (let i = 0; i < elems.length; ++i) {
+          let displayProp = elems[i].style.display;
+          if (displayProp === 'none')
+            elems[i].style['display'] = "inline";
+          else
+            elems[i].style['display'] = "none";
+        }
+      }
+  </script>
 </head>
 <body>
 <h3>FileMgr.h</h3>
+  <button onclick="showHideClass(&#39;toggleMethodDisplay&#39;)" id="funcButton">Show or Hide Method Contents</button>
+  <button onclick="showHideClass(&#39;toggleClassDisplay&#39;)" id="classButton">Show or Hide Class Contents</button>
+  <button onclick="showHideClass(&#39;toggleCommentDisplay&#39;)" id="commentButton">Show or Hide Comment Contents</button>
 <pre>
+<pre>
+<a href="../ConvertedPages/IFileMgr.h.html">"IFileMgr.h"</a>
+<a href="../ConvertedPages/FileSystem.h.html">FileSystem.h"</a>
 #ifndef FILEMGR_H
 #define FILEMGR_H
-/////////////////////////////////////////////////////////////////////
-// FileMgr.h - find files matching specified patterns              //
-//             on a specified path                                 //
-// ver 2.2                                                         //
-// Jim Fawcett, CSE687 - Object Oriented Design, Spring 2016       //
-/////////////////////////////////////////////////////////////////////
-/*
+<span class = "toggleCommentDisplay">/////////////////////////////////////////////////////////////////////</span>
+<span class = "toggleCommentDisplay">// FileMgr.h - find files matching specified patterns              //</span>
+<span class = "toggleCommentDisplay">//             on a specified path                                 //</span>
+<span class = "toggleCommentDisplay">// ver 2.2                                                         //</span>
+<span class = "toggleCommentDisplay">// Jim Fawcett, CSE687 - Object Oriented Design, Spring 2016       //</span>
+<span class = "toggleCommentDisplay">/////////////////////////////////////////////////////////////////////</span>
+<span class = "toggleCommentDisplay">/*
 * Package Operations:
 * -------------------
 * This package provides a class, FileMgr, and object factory function,
@@ -57,7 +109,7 @@ font - weight: normal;
 * - reduces scope of for loop in find for efficiency
 * ver 1.0 : 11 Mar 2016
 * - first release
-*/
+*/</span>
 
 #include "IFileMgr.h"
 #include "../FileSystem/FileSystem.h"
@@ -65,7 +117,7 @@ font - weight: normal;
 namespace FileManager
 {
   class FileMgr : public IFileMgr
-  {
+  <span class = "toggleClassDisplay">{
   public:
     using patterns = std::vector&lt;std::string&gt;;
     using File = std::string;
@@ -74,68 +126,68 @@ namespace FileManager
     using dirSubscribers = std::vector&lt;IDirEventHandler*&gt;;
     using doneSubscribers = std::vector&lt;IDoneEventHandler*&gt;;
 
-    virtual ~FileMgr() {}
+    virtual ~FileMgr() <span class = "toggleMethodDisplay">{}</span>
 
-    //----&lt; set default file pattern &gt;-------------------------------
+    <span class = "toggleCommentDisplay">//----&lt; set default file pattern &gt;-------------------------------</span>
 
     FileMgr(const std::string& path) : path_(path)
-    {
+    <span class = "toggleMethodDisplay">{
       patterns_.push_back("*.*");
       pInstance_ = this;
-    }
-    //----&lt; return instance of FileMgr &gt;-----------------------------
+    }</span>
+    <span class = "toggleCommentDisplay">//----&lt; return instance of FileMgr &gt;-----------------------------</span>
 
     static IFileMgr* getInstance()
-    {
+    <span class = "toggleMethodDisplay">{
       return pInstance_;
-    }
-    //----&lt; add file pattern, removing default on first call &gt;-------
+    }</span>
+    <span class = "toggleCommentDisplay">//----&lt; add file pattern, removing default on first call &gt;-------</span>
 
     void addPattern(const std::string& patt)
-    {
+    <span class = "toggleMethodDisplay">{
       if (patterns_.size() == 1 && patterns_[0] == "*.*")
         patterns_.pop_back();
       patterns_.push_back(patt);
-    }
-    //----&lt; applications can overload this or reg for fileEvt &gt;------
+    }</span>
+    <span class = "toggleCommentDisplay">//----&lt; applications can overload this or reg for fileEvt &gt;------</span>
 
     virtual void file(const File& f)
-    {
+    <span class = "toggleMethodDisplay">{
       ++numFilesProcessed;
       for (auto pEvtHandler : fileSubscribers_)
       {
         pEvtHandler-&gt;execute(f);
       }
-    }
-    //----&lt; applications can overload this or reg for dirEvt &gt;-------
+    }</span>
+    <span class = "toggleCommentDisplay">//----&lt; applications can overload this or reg for dirEvt &gt;-------</span>
 
     virtual void dir(const Dir& fpath)
-    {
+    <span class = "toggleMethodDisplay">{
       for (auto pEvtHandler : dirSubscribers_)
       {
         pEvtHandler-&gt;execute(fpath);
       }
-    }
-    //----&lt; applications can overload this or reg for doneEvt &gt;------
+    }</span>
+    <span class = "toggleCommentDisplay">//----&lt; applications can overload this or reg for doneEvt &gt;------</span>
 
     virtual void done()
-    {
+    <span class = "toggleMethodDisplay">{
       for (auto pEvtHandler : doneSubscribers_)
       {
         pEvtHandler-&gt;execute(numFilesProcessed);
       }
-    }
-    //----&lt; start search on previously specified path &gt;--------------
+    }</span>
+    <span class = "toggleCommentDisplay">//----&lt; start search on previously specified path &gt;--------------</span>
 
     void search()
-    {
+    <span class = "toggleMethodDisplay">{
       find(path_);
       done();
-    }
-    //----&lt; search current path including subdirectories &gt;-----------
+    }</span>
+    <span class = "toggleCommentDisplay">//----&lt; search current path including subdirectories &gt;-----------</span>
 
     void find(const std::string& path)
-    {
+    <span class = "toggleMethodDisplay">{
       std::string fpath = FileSystem::Path::getFullFileSpec(path);
       dir(fpath);
       for (auto patt : patterns_)
@@ -154,25 +206,25 @@ namespace FileManager
         std::string dpath = fpath + "\\" + d;
         find(dpath);
       }
-    }
-    //----&lt; applications use this to register for notification &gt;-----
+    }</span>
+    <span class = "toggleCommentDisplay">//----&lt; applications use this to register for notification &gt;-----</span>
 
     void regForFiles(IFileEventHandler* pHandler)
-    {
+    <span class = "toggleMethodDisplay">{
       fileSubscribers_.push_back(pHandler);
-    }
-    //----&lt; applications use this to register for notification &gt;-----
+    }</span>
+    <span class = "toggleCommentDisplay">//----&lt; applications use this to register for notification &gt;-----</span>
 
     void regForDirs(IDirEventHandler* pHandler)
-    {
+    <span class = "toggleMethodDisplay">{
       dirSubscribers_.push_back(pHandler);
-    }
-    //----&lt; applications use this to register for notification &gt;-----
+    }</span>
+    <span class = "toggleCommentDisplay">//----&lt; applications use this to register for notification &gt;-----</span>
 
     void regForDone(IDoneEventHandler* pHandler)
-    {
+    <span class = "toggleMethodDisplay">{
       doneSubscribers_.push_back(pHandler);
-    }
+    }</span>
   private:
     std::string path_;
     patterns patterns_;
@@ -181,12 +233,12 @@ namespace FileManager
     dirSubscribers dirSubscribers_;
     doneSubscribers doneSubscribers_;
     static IFileMgr* pInstance_;
-  };
+  };</span>
 
   inline IFileMgr* FileMgrFactory::create(const std::string& path)
-  {
+  <span class = "toggleMethodDisplay">{
     return new FileMgr(path);
-  }
+  }</span>
 }
 #endif
 

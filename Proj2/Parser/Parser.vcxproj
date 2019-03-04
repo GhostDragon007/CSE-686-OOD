@@ -39,7 +39,7 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
@@ -71,12 +71,9 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>\lib</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>lib\</OutDir>
-    <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -90,7 +87,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);TEST_PARSER</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;TEST_PARSER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
@@ -104,7 +101,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;TEST_PARSER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
@@ -155,8 +152,6 @@
     <ClCompile Include="..\Logger\Logger.cpp" />
     <ClCompile Include="..\ScopeStack\ScopeStack.cpp" />
     <ClCompile Include="..\SemiExpression\Semi.cpp" />
-    <ClCompile Include="..\SemiExp\SemiExp.cpp" />
-    <ClCompile Include="..\Tokenizer\Tokenizer.cpp" />
     <ClCompile Include="..\Tokenizer\Toker.cpp" />
     <ClCompile Include="..\Utilities\Utilities.cpp" />
     <ClCompile Include="ActionsAndRules.cpp" />
@@ -171,9 +166,6 @@
     <ClInclude Include="..\ScopeStack\ScopeStack.h" />
     <ClInclude Include="..\SemiExpression\ITokenCollection.h" />
     <ClInclude Include="..\SemiExpression\Semi.h" />
-    <ClInclude Include="..\SemiExp\itokcollection.h" />
-    <ClInclude Include="..\SemiExp\SemiExp.h" />
-    <ClInclude Include="..\Tokenizer\Tokenizer.h" />
     <ClInclude Include="..\Tokenizer\Toker.h" />
     <ClInclude Include="..\Utilities\Utilities.h" />
     <ClInclude Include="ActionsAndRules.h" />

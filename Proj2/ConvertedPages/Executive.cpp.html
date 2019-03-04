@@ -1,51 +1,142 @@
-<!Doctype html>
-<html>
-<head>
-<style>
-body{
-padding: 15px 40px;
-font - family: Consolas;
-font - size: 1.25em;
-font - weight: normal;
-}
-</style>
+<!DOCTYPE html>
+<!-- saved from url=(0113)https://ecs.syr.edu/faculty/fawcett/handouts/CSE687/code/Project2HelpS2019/OodProject2Helper/Proj2Helper.cpp.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+  <style>
+    body {
+      padding: 15px 40px;
+      font-family: Consolas;
+      font-size: 1.25em;
+      font-weight: normal;
+    }
+
+    span {
+      display: inline;
+    }
+
+    #funcButton {
+      position: fixed;
+      bottom: 50px;
+      right: 50px;
+    }
+	
+	#classButton {
+		position: fixed;
+      bottom: 70px;
+      right: 50px;
+	}
+	
+	#commentButton {
+		position: fixed;
+      bottom: 90px;
+      right: 50px;
+	}
+	
+    .toggleClassDisplay {
+    }
+
+    .toggleMethodDisplay {
+    }
+	
+	.toggleCommentDisplay {
+    }
+  </style>
+  <script>
+      function showHideClass(className) {
+        let elems = document.getElementsByClassName(className);
+        if (elems === null) {
+          return;
+        }
+        for (let i = 0; i < elems.length; ++i) {
+          let displayProp = elems[i].style.display;
+          if (displayProp === 'none')
+            elems[i].style['display'] = "inline";
+          else
+            elems[i].style['display'] = "none";
+        }
+      }
+  </script>
 </head>
 <body>
 <h3>Executive.cpp</h3>
+  <button onclick="showHideClass(&#39;toggleMethodDisplay&#39;)" id="funcButton">Show or Hide Method Contents</button>
+  <button onclick="showHideClass(&#39;toggleClassDisplay&#39;)" id="classButton">Show or Hide Class Contents</button>
+  <button onclick="showHideClass(&#39;toggleCommentDisplay&#39;)" id="commentButton">Show or Hide Comment Contents</button>
 <pre>
-// Executive.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
+<pre>
+<a href="../ConvertedPages/CodeUtilities.h.html">CodeUtilities.h"</a>
+<a href="../ConvertedPages/StringUtilities.h.html">StringUtilities.h"</a>
+<a href="../ConvertedPages/FileSystem.h.html">FileSystem.h"</a>
+<a href="../ConvertedPages/Loader.h.html">Loader.h"</a>
+<a href="../ConvertedPages/Dependencies.h.html">Dependencies.h"</a>
+<a href="../ConvertedPages/Parser.h.html">Parser.h"</a>
+<a href="../ConvertedPages/Utilities.h.html">Utilities.h"</a>
+<a href="../ConvertedPages/Toker.h.html">Toker.h"</a>
+<a href="../ConvertedPages/Semi.h.html">Semi.h"</a>
+<a href="../ConvertedPages/ActionsAndRules.h.html">ActionsAndRules.h"</a>
+<a href="../ConvertedPages/ConfigureParser.h.html">ConfigureParser.h"</a>
+<a href="../ConvertedPages/Converter.h.html">Converter.h"</a>
+<a href="../ConvertedPages/Display.h.html">Display.h"</a>
+<span class = "toggleCommentDisplay">/////////////////////////////////////////////////////////////////////</span>
+<span class = "toggleCommentDisplay">//  Executive.cpp - Starter code for Project #2                    //</span>
+<span class = "toggleCommentDisplay">//  ver 1.0                                                        //</span>
+<span class = "toggleCommentDisplay">//  Language:      Visual C++, Visual Studio 2017                  //</span>
+<span class = "toggleCommentDisplay">//  Platform:      Dell Latitude 5580, Windows 10                  //</span>
+<span class = "toggleCommentDisplay">//  Application:   CSE687 - OOD Project #2                         //</span>
+<span class = "toggleCommentDisplay">//  Author:        Junhao Shen, Syracuse University                //</span>
+<span class = "toggleCommentDisplay">//                 jshen18@syr.edu                                 //</span>
+<span class = "toggleCommentDisplay">/////////////////////////////////////////////////////////////////////</span>
 
-#include "pch.h"
 #include &lt;iostream&gt;
-#include "Parser.h"
+#include &lt;vector&gt;
+#include &lt;string&gt;
+#include &lt;map&gt;
+#include "../Utilities/CodeUtilities.h"
+#include "../Utilities/StringUtilities.h"
+#include "../FileSystem/FileSystem.h"
+#include "../Loader/Loader.h"
+#include "../Dependencies/Dependencies.h"
+#include "../Parser/Parser.h"
+#include "../Utilities/Utilities.h"
+#include "../Tokenizer/Toker.h"
+#include "../SemiExpression/Semi.h"
+#include "../Parser/ActionsAndRules.h"
+#include "../Parser/ConfigureParser.h"
+#include "../Converter/Converter.h"
+#include "../Display/Display.h"
+
 using namespace std;
+using namespace Utilities;
+using namespace FileSystem;
+using namespace Lexer;
+using namespace CodeAnalysis;
+using namespace CodeUtilities;
+<span class = "toggleCommentDisplay">//using Demo = Logging::StaticLogger&lt;1&gt;;</span>
 
 int main(int argc, char** argv)
-{
-	FileSystem::DirExplorerN dir;
-	vector&lt;vector&lt;string&gt;&gt; vec;
-	vec = dir.doDirExplore(argc, argv);
-	CodeAnalysis::Parser parser;
-	//parser.doParse(vec[1]);
-	Convert con;
-	con.doConvert(vec);
-	/*Process pro;
-	pro.doDisplay(vec, argv[6]);*/
-    
+<span class = "toggleMethodDisplay">{
+	<span class = "toggleCommentDisplay">//Loader: find and load files from file system</span>
+	DirExplorerN dir;
+	vector&lt;string&gt; files = dir.loadFiles(argc, argv);
+
+	<span class = "toggleCommentDisplay">//Dependencies: Records file dependencies for each processed file</span>
+	Dependencies depend;
+	map&lt;string, vector&lt;string&gt;&gt; dependencies = depend.findDependencies(files);
+
+	<span class = "toggleCommentDisplay">//Converter: accept filenames to convert those files to html</span>
+	Convert convert;
+	std::vector&lt;std::vector&lt;std::vector&lt;int&gt;&gt;&gt; funcPos(files.size());
+	std::vector&lt;std::vector&lt;std::vector&lt;int&gt;&gt;&gt; classPos(files.size());
+	convert.getFuncClass(files, funcPos, classPos);
+	convert.convertToHtml(files, dependencies, funcPos, classPos);
+
+	<span class = "toggleCommentDisplay">//Display: display converted html pages in user's browser</span>
+	Process process;
+	string appPath = argv[argc - 1];
+	process.pop_out(files, appPath);
+
 	return 0;
-}
+}</span>
 
-// Run program: Ctrl + F5 or Debug &gt; Start Without Debugging menu
-// Debug program: F5 or Debug &gt; Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project &gt; Add New Item to create new code files, or Project &gt; Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File &gt; Open &gt; Project and select the .sln file
 
 </pre>
 </body></html>

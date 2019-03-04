@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<!-- saved from url=(0113)https://ecs.syr.edu/faculty/fawcett/handouts/CSE687/code/Project2HelpS2019/OodProject2Helper/Proj2Helper.cpp.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+  <style>
+    body {
+      padding: 15px 40px;
+      font-family: Consolas;
+      font-size: 1.25em;
+      font-weight: normal;
+    }
+
+    span {
+      display: inline;
+    }
+
+    #funcButton {
+      position: fixed;
+      bottom: 50px;
+      right: 50px;
+    }
+	
+	#classButton {
+		position: fixed;
+      bottom: 70px;
+      right: 50px;
+	}
+	
+	#commentButton {
+		position: fixed;
+      bottom: 90px;
+      right: 50px;
+	}
+	
+    .toggleClassDisplay {
+    }
+
+    .toggleMethodDisplay {
+    }
+	
+	.toggleCommentDisplay {
+    }
+  </style>
+  <script>
+      function showHideClass(className) {
+        let elems = document.getElementsByClassName(className);
+        if (elems === null) {
+          return;
+        }
+        for (let i = 0; i < elems.length; ++i) {
+          let displayProp = elems[i].style.display;
+          if (displayProp === 'none')
+            elems[i].style['display'] = "inline";
+          else
+            elems[i].style['display'] = "none";
+        }
+      }
+  </script>
+</head>
+<body>
+<h3>ScopeStack.h</h3>
+  <button onclick="showHideClass(&#39;toggleMethodDisplay&#39;)" id="funcButton">Show or Hide Method Contents</button>
+  <button onclick="showHideClass(&#39;toggleClassDisplay&#39;)" id="classButton">Show or Hide Class Contents</button>
+  <button onclick="showHideClass(&#39;toggleCommentDisplay&#39;)" id="commentButton">Show or Hide Comment Contents</button>
+<pre>
+<pre>
+<a href="../ConvertedPages/Logger.h.html">Logger.h"</a>
+<a href="../ConvertedPages/Utilities.h.html">Utilities.h"</a>
+#ifndef SCOPESTACK_H
+#define SCOPESTACK_H
+<span class = "toggleCommentDisplay">/////////////////////////////////////////////////////////////////////////////</span>
+<span class = "toggleCommentDisplay">// ScopeStack.h - implements template stack holding specified element type //</span>
+<span class = "toggleCommentDisplay">// ver 2.2                                                                 //</span>
+<span class = "toggleCommentDisplay">// Language:      Visual C++ 2010, SP1                                     //</span>
+<span class = "toggleCommentDisplay">// Platform:      Dell Precision T7400, Win 7 Pro SP1                      //</span>
+<span class = "toggleCommentDisplay">// Application:   Code Analysis Research                                   //</span>
+<span class = "toggleCommentDisplay">// Author:        Jim Fawcett, CST 4-187, Syracuse University              //</span>
+<span class = "toggleCommentDisplay">//                (315) 443-3948, jfawcett@twcny.rr.com                    //</span>
+<span class = "toggleCommentDisplay">/////////////////////////////////////////////////////////////////////////////</span>
+<span class = "toggleCommentDisplay">/*
+  Package Operations:
+  ===================
+  This package contains one class: ScopeStack&lt;element&gt;.  The element type
+  is an application specific type designed to hold whatever information you
+  need to stack.
+
+  Throws std::exception if stack is popped or peeked when empty.
+
+  Public Interface:
+  =================
+  ScopeStack&lt;element&gt; stack;
+  <span class = "toggleCommentDisplay">// define some element type
+  element elem;
+  stack.push(elem);
+  element popped = stack.pop();
+
+  Required Files:
+  ===============
+  ScopeStack.h, ScopeStack.cpp
+
+  Build Command:
+  ==============
+  devenv ScopeStack.sln /rebuild debug
+
+  Maintenance History:
+  ====================
+  ver 2.2 : 29 Oct 2016
+  - added throw when popping or peeking empty stack
+  ver 2.1 : 02 Jun 2011
+  - changed ScopeStack type to single template argument intended to be
+    an application specific type (usually a struct that holds whatever
+    is needed)
+  ver 2.0 : 02 Feb 2011
+  - fixed bug in pop() method found by Drumil Bhattad
+  ver 1.0 : 31 Jan 2011
+  - first release
+*/</span>
+#include &lt;list&gt;
+#include "../Logger/Logger.h"
+#include "../Utilities/Utilities.h"
+
+<span class = "toggleCommentDisplay">// element is a application specific type.  It must provide a function:</span>
+<span class = "toggleCommentDisplay">// std::string show() that returns a string display of its parts. see</span>
+<span class = "toggleCommentDisplay">// test stub for an example.</span>
+
+namespace CodeAnalysis
+{
+  template&lt;typename element&gt;
+  class ScopeStack <span class = "toggleClassDisplay">{
+  public:
+    using Rslt = Logging::StaticLogger&lt;0&gt;;    <span class = "toggleCommentDisplay">// show program results</span>
+    using Demo = Logging::StaticLogger&lt;1&gt;;    <span class = "toggleCommentDisplay">// show demonstration outputs</span>
+    using Dbug = Logging::StaticLogger&lt;2&gt;;    <span class = "toggleCommentDisplay">// show debugging outputs</span>
+    typename typedef std::list&lt;element&gt;::iterator iterator;
+
+    ScopeStack();
+    void push(const element& item);
+    element pop();
+    element& top();
+    element& predOfTop();
+    size_t size();
+    iterator begin();
+    iterator end();
+  private:
+    std::list&lt;element&gt; stack;
+    element dbElement;
+  };</span>
+
+  template&lt;typename element&gt;
+  ScopeStack&lt;element&gt;::ScopeStack() <span class = "toggleMethodDisplay">{}</span>
+
+  template&lt;typename element&gt;
+  typename inline size_t ScopeStack&lt;element&gt;::size() <span class = "toggleMethodDisplay">{ return stack.size(); }</span>
+
+  template&lt;typename element&gt;
+  typename inline ScopeStack&lt;element&gt;::iterator ScopeStack&lt;element&gt;::begin() <span class = "toggleMethodDisplay">{ return stack.begin(); }</span>
+
+  template&lt;typename element&gt;
+  typename inline ScopeStack&lt;element&gt;::iterator ScopeStack&lt;element&gt;::end() <span class = "toggleMethodDisplay">{ return stack.end(); }</span>
+
+  template&lt;typename element&gt;
+  void ScopeStack&lt;element&gt;::push(const element& item)
+  <span class = "toggleMethodDisplay">{
+    Demo::flush();
+    stack.push_back(item);
+    Dbug::write("\n--- stack size = " + Utilities::Converter&lt;size_t&gt;::toString(size()) + " ---");
+    Dbug::flush();
+  }</span>
+
+  template&lt;typename element&gt;
+  element ScopeStack&lt;element&gt;::pop()
+  <span class = "toggleMethodDisplay">{
+    if (stack.size() == 0)
+    {
+      throw std::exception("-- attempting to pop empty stack --");
+    }
+    element item = stack.back();
+    stack.pop_back();    
+    Dbug::write("\n--- stack size = " + Utilities::Converter&lt;size_t&gt;::toString(size()) + " ---");
+    Dbug::flush();
+
+    return item;
+  }</span>
+
+  template&lt;typename element&gt;
+  element& ScopeStack&lt;element&gt;::top()
+  <span class = "toggleMethodDisplay">{
+    if (stack.size() == 0)
+    {
+      throw std::exception("-- attempting to peek top on empty stack --");
+    }
+    return stack.back();
+  }</span>
+
+  template&lt;typename element&gt;
+  element& ScopeStack&lt;element&gt;::predOfTop()
+  <span class = "toggleMethodDisplay">{
+    if (size() &lt; 2)
+    {
+      throw std::exception("-- predOfTop() called on stack with less than two elements --");
+    }
+    iterator iter = --(--end());
+    return *iter;
+  }</span>
+
+  template&lt;typename element&gt;
+  void showStack(ScopeStack&lt;element&gt;& stack, bool indent = true)
+  <span class = "toggleMethodDisplay">{
+    if (stack.size() == 0)
+    {
+      std::cout &lt;&lt; "\n  ScopeStack is empty";
+      return;
+    }
+    ScopeStack&lt;element&gt;::iterator iter = stack.begin();
+    while (iter != stack.end())
+    {
+      std::string strIndent = std::string(2 * stack.size(), ' ');
+      if (!indent)
+        strIndent = "";
+      element temp = *iter;
+      std::cout &lt;&lt; "\n  " &lt;&lt; strIndent &lt;&lt; temp-&gt;show();
+      ++iter;
+    }
+  }</span>
+
+  template&lt;typename element&gt;
+  void showStack(ScopeStack&lt;element*&gt;& stack, bool indent = true)
+  <span class = "toggleMethodDisplay">{
+    if (stack.size() == 0)
+    {
+      std::cout &lt;&lt; "\n  ScopeStack is empty";
+      return;
+    }
+    ScopeStack&lt;element*&gt;::iterator iter = stack.begin();
+    while (iter != stack.end())
+    {
+      std::string strIndent = std::string(2 * stack.size(), ' ');
+      if (!indent)
+        strIndent = "";
+      std::cout &lt;&lt; "\n  " &lt;&lt; strIndent &lt;&lt; ((*iter)-&gt;show());
+      ++iter;
+    }
+  }</span>
+  <span class = "toggleCommentDisplay">//----&lt; walk tree of element nodes &gt;---------------------------------</span>
+
+  template&lt;typename element&gt;
+  void TreeWalk(element* pItem, std::vector&lt;std::vector&lt;int&gt;&gt;& funcPos,
+	  std::vector&lt;std::vector&lt;int&gt;&gt;& classPos, bool details = false)<span class = "toggleMethodDisplay">{
+	  if (pItem-&gt;type_ == "function") {
+		  funcPos.push_back({ (int)pItem-&gt;startLineCount_, (int)pItem-&gt;endLineCount_ });
+	  }
+	  if (pItem-&gt;type_ == "class") {
+		  classPos.push_back({ (int)pItem-&gt;startLineCount_, (int)pItem-&gt;endLineCount_ });
+	  }
+	  static std::string path;
+	  static size_t indentLevel = 0;
+	  std::ostringstream out;
+	  out &lt;&lt; "\n  " &lt;&lt; std::string(2 * indentLevel, ' ') &lt;&lt; pItem-&gt;show();
+	  std::cout &lt;&lt; out.str();
+	  auto iter = pItem-&gt;children_.begin();
+	  ++indentLevel;
+	  while (iter != pItem-&gt;children_.end())
+	  {
+		  TreeWalk(*iter, funcPos, classPos);
+		  ++iter;
+	  }
+	  --indentLevel;
+  }</span>
+  template&lt;typename element&gt;
+  void printInfo(element* pItem) <span class = "toggleMethodDisplay">{
+	  static std::string path;
+	  static size_t indentLevel = 0;
+	  std::ostringstream out;
+	  out &lt;&lt; "\n  " &lt;&lt; std::string(2 * indentLevel, ' ') &lt;&lt; pItem-&gt;show();
+	  std::cout &lt;&lt; out.str();
+	  auto iter = pItem-&gt;children_.begin();
+	  ++indentLevel;
+	  while (iter != pItem-&gt;children_.end())
+	  {
+		  TreeWalk(*iter, funcPos, classPos);
+		  ++iter;
+	  }
+	  --indentLevel;
+  }</span>
+}
+#endif
+
+</pre>
+</body></html>

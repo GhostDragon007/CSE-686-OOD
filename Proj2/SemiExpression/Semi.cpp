@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////////////////////////
 // Semi.cpp - Collects groups of tokens that are useful for        //
-// ver 1.0    grammatical analysis                                 //
+// ver 1.2    grammatical analysis                                 //
 //                                                                 //
 // Jim Fawcett, CSE687 - Object Oriented Design, Spring 2019       //
 /////////////////////////////////////////////////////////////////////
@@ -185,7 +185,10 @@ namespace Lexer
 
   void Semi::fold()
   {
-    TokColl tc{ "for", "(", ";" };
+    TokColl tc1{ "for", "(", ":" };  // range-based for
+    if (hasSequence(tc1))
+      return;
+    TokColl tc{ "for", "(", ";" };   // conventional for
     if (hasSequence(tc))
     {
       Semi temp;
@@ -208,6 +211,8 @@ namespace Lexer
       Token tok = pToker_->getTok();
       if (tok != "\n")
         toks.push_back(tok);
+      if (isComment(tok))
+        return true;
       if (isTerminator(tok))
       {
         fold();
@@ -362,12 +367,16 @@ int main()
 
   ITokenCollection* pSemi = Factory::create(true);  // true creates toker
 
-  std::string source = "../SemiExpression/semi.h";
+  //std::string source = "../SemiExpression/semi.h";
+  std::string source = "../TestFiles/DirExplorerN.h";
   if (!pSemi->open(source))
   {
     std::cout << "\n  Can't open \"" + source + "\"";
     return 1;
   }
+  Toker* pToker = pSemi->getToker();
+  pToker->doReturnComments(true);
+
   while (!pSemi->isDone())
   {
     pSemi->get();

@@ -1,3 +1,2 @@
-﻿  Convert.cpp
-d:\git\cse-687-ood\proj2\display\convert.cpp(66): warning C4551: function call missing argument list
-  Display.vcxproj -> D:\Git\CSE-687-OOD\Proj2\Display\lib\Converter.lib
+﻿  Display.cpp
+  Display.vcxproj -> D:\little shen\Syracuse\CSE 687\Code\Project2Starter\x64\Debug\Display.exe

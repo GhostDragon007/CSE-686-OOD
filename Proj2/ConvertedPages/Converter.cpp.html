@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<!-- saved from url=(0113)https://ecs.syr.edu/faculty/fawcett/handouts/CSE687/code/Project2HelpS2019/OodProject2Helper/Proj2Helper.cpp.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+  <style>
+    body {
+      padding: 15px 40px;
+      font-family: Consolas;
+      font-size: 1.25em;
+      font-weight: normal;
+    }
+
+    span {
+      display: inline;
+    }
+
+    #funcButton {
+      position: fixed;
+      bottom: 50px;
+      right: 50px;
+    }
+	
+	#classButton {
+		position: fixed;
+      bottom: 70px;
+      right: 50px;
+	}
+	
+	#commentButton {
+		position: fixed;
+      bottom: 90px;
+      right: 50px;
+	}
+	
+    .toggleClassDisplay {
+    }
+
+    .toggleMethodDisplay {
+    }
+	
+	.toggleCommentDisplay {
+    }
+  </style>
+  <script>
+      function showHideClass(className) {
+        let elems = document.getElementsByClassName(className);
+        if (elems === null) {
+          return;
+        }
+        for (let i = 0; i < elems.length; ++i) {
+          let displayProp = elems[i].style.display;
+          if (displayProp === 'none')
+            elems[i].style['display'] = "inline";
+          else
+            elems[i].style['display'] = "none";
+        }
+      }
+  </script>
+</head>
+<body>
+<h3>Converter.cpp</h3>
+  <button onclick="showHideClass(&#39;toggleMethodDisplay&#39;)" id="funcButton">Show or Hide Method Contents</button>
+  <button onclick="showHideClass(&#39;toggleClassDisplay&#39;)" id="classButton">Show or Hide Class Contents</button>
+  <button onclick="showHideClass(&#39;toggleCommentDisplay&#39;)" id="commentButton">Show or Hide Comment Contents</button>
+<pre>
+<pre>
+<a href="../ConvertedPages/Converter.h.html">"Converter.h"</a>
+<a href="../ConvertedPages/StringUtilities.h.html">StringUtilities.h"</a>
+<a href="../ConvertedPages/CodeUtilities.h.html">CodeUtilities.h"</a>
+<a href="../ConvertedPages/FileSystem.h.html">FileSystem.h"</a>
+<a href="../ConvertedPages/Parser.h.html">Parser.h"</a>
+<a href="../ConvertedPages/Utilities.h.html">Utilities.h"</a>
+<a href="../ConvertedPages/Toker.h.html">Toker.h"</a>
+<a href="../ConvertedPages/Semi.h.html">Semi.h"</a>
+<a href="../ConvertedPages/ActionsAndRules.h.html">ActionsAndRules.h"</a>
+<a href="../ConvertedPages/ConfigureParser.h.html">ConfigureParser.h"</a>
+<span class = "toggleCommentDisplay">/////////////////////////////////////////////////////////////////////////////</span>
+<span class = "toggleCommentDisplay">// Converter.cpp - accept a vector of filenames to convert those files to  //</span>
+<span class = "toggleCommentDisplay">//                 html files                                              //</span>
+<span class = "toggleCommentDisplay">// ver 1.1                                                                 //</span>
+<span class = "toggleCommentDisplay">// Language:    Visual C++, Visual Studio 2019                             //</span>
+<span class = "toggleCommentDisplay">// Platform:    Dell Latitude , Core i7, Windows 10                        //</span>
+<span class = "toggleCommentDisplay">// Application: CSE687 - OOD Project #2                                    //</span>
+<span class = "toggleCommentDisplay">// Author:      Junhao Shen                                                //</span>
+<span class = "toggleCommentDisplay">//              (315)480-4274, jshen18@syr.edu                             //</span>
+<span class = "toggleCommentDisplay">/////////////////////////////////////////////////////////////////////////////</span>
+
+#include "Converter.h"
+#include &lt;iostream&gt;
+#include "../Utilities/StringUtilities.h"
+#include "../Utilities/CodeUtilities.h"
+#include "../FileSystem/FileSystem.h"
+#include "../Parser/Parser.h"
+#include "../Utilities/Utilities.h"
+#include "../Tokenizer/Toker.h"
+#include "../SemiExpression/Semi.h"
+#include "../Parser/ActionsAndRules.h"
+#include "../Parser/ConfigureParser.h"
+
+using namespace Lexer;
+using namespace Utilities;
+using Demo = Logging::StaticLogger&lt;1&gt;;
+using namespace CodeAnalysis;
+
+Convert::Convert() <span class = "toggleMethodDisplay">{}</span>
+Convert::~Convert() <span class = "toggleMethodDisplay">{}</span>
+
+<span class = "toggleCommentDisplay">//----&lt; get links to all the files in the directory tree, on which it depends &gt;-----</span>
+
+#define Util StringHelper
+
+void Convert::getFuncClass(std::vector&lt;std::string&gt;& files,
+	std::vector&lt;std::vector&lt;std::vector&lt;int&gt;&gt;&gt;& funcPos, std::vector&lt;std::vector&lt;std::vector&lt;int&gt;&gt;&gt;& classPos)
+<span class = "toggleMethodDisplay">{
+	for (int i = 0; i &lt; files.size(); ++i)
+	{
+		std::string fileSpec = FileSystem::Path::getFullFileSpec(files[i]);
+		std::string msg = "Processing file " + fileSpec;
+		Util::title(msg);
+
+		ConfigParseForCodeAnal configure;
+		Parser* pParser = configure.Build();
+		try
+		{
+			if (pParser)
+			{
+				if (!configure.Attach(fileSpec))
+				{
+					std::string name = files[i];
+					std::cout &lt;&lt; "\n  could not open file " &lt;&lt; name &lt;&lt; std::endl;
+					continue;
+				}
+			}
+			else
+			{
+				std::cout &lt;&lt; "\n\n  Parser not built\n\n";
+				return;
+			}
+			<span class = "toggleCommentDisplay">// now that parser is built, use it</span>
+
+			while (pParser-&gt;next())
+				pParser-&gt;parse();
+			std::cout &lt;&lt; "\n";
+
+			<span class = "toggleCommentDisplay">// show AST</span>
+			Repository* pRepo = Repository::getInstance();
+			ASTNode* pGlobalScope = pRepo-&gt;getGlobalScope();
+			TreeWalk(pGlobalScope, funcPos[i], classPos[i]);
+			<span class = "toggleCommentDisplay">//putline();</span>
+		}
+		catch (std::exception& ex)
+		{
+			std::cout &lt;&lt; "\n\n    " &lt;&lt; ex.what() &lt;&lt; "\n\n";
+			std::cout &lt;&lt; "\n  exception thrown at line " &lt;&lt; __LINE__;
+		}
+	}
+}</span>
+
+<span class = "toggleCommentDisplay">//----&lt; convert cpp/h files to html &gt;------------------------------------------</span>
+<span class = "toggleCommentDisplay">//convertToHtml: accept filenames outputed by DirExplorer to convert those files to html files,</span>
+<span class = "toggleCommentDisplay">//			 then store them in a folder named "ConvertedPages"</span>
+
+void Convert::convertToHtml(std::vector&lt;std::string&gt;& files, std::map&lt;std::string, std::vector&lt;std::string&gt;&gt;& dependencies,
+	std::vector&lt;std::vector&lt;std::vector&lt;int&gt;&gt;&gt;& funcPos, std::vector &lt; std::vector&lt;std::vector&lt;int&gt;&gt;&gt;& classPos) <span class = "toggleMethodDisplay">{
+	<span class = "toggleCommentDisplay">//Starting processing</span>
+	for (int i = 0; i &lt; files.size(); i++) {
+		std::string input = FileSystem::Path::getFullFileSpec(files[i]);
+		std::vector&lt;std::vector&lt;int&gt;&gt; funcP = funcPos[i];
+		std::vector&lt;std::vector&lt;int&gt;&gt; classP = classPos[i];
+		std::vector&lt;std::string &gt; dependency = dependencies[files[i]];
+		std::string filename = FileSystem::Path::getName(files[i]);
+		std::string outputPath = "../ConvertedPages/" + filename + ".html";
+		std::string inputPath = FileSystem::Path::getFullFileSpec(files[i]);
+		std::ofstream fout(outputPath);
+		std::fstream iout(inputPath);
+		std::fstream preOut("../sample.cpp.html");
+
+		<span class = "toggleCommentDisplay">//Fail to open ifstream or ofstream</span>
+		if (!fout || !iout || !preOut)
+		{
+			std::cout &lt;&lt; "\nFail to convert!" &lt;&lt; std::endl;
+			return;
+		}
+		else {
+			char ch[256];
+			while (!preOut.eof()) {
+				preOut.getline(ch, sizeof(ch));
+				if (ch[0] == '&lt;' && ch[1] == 'h' && ch[2] == '3') {
+					fout &lt;&lt; "&lt;h3&gt;" &lt;&lt; filename &lt;&lt; "&lt;/h3&gt;" &lt;&lt; std::endl;
+					continue;
+				}
+				fout &lt;&lt; ch &lt;&lt; std::endl;
+				if (ch[0] == '&lt;' && ch[1] == 'p' && ch[2] == 'r' && ch[3] == 'e')
+					break;
+			}
+			fout &lt;&lt; "&lt;pre&gt;" &lt;&lt; std::endl;
+			for (auto depend : dependency) {
+				std::string name = FileSystem::Path::getName(depend);
+				name.pop_back();
+				if (name[0] == '\"')
+					name.erase(0, 1);
+				fout &lt;&lt; "&lt;a href=\"../ConvertedPages/" + name + ".html\"&gt;" + FileSystem::Path::getName(depend) + "&lt;/a&gt;" &lt;&lt; std::endl;
+			}
+			int rowCount = 1;
+			int func_beginCount = 0, func_endCount = 0, class_beginCount = 0, class_endCount = 0;
+			int isDoubleComment = 0;
+			<span class = "toggleCommentDisplay">/*int isSingleComment = 0;*/</span>
+			while (!iout.eof()) {
+				
+				iout.getline(ch, sizeof(ch));
+
+				char newCh[256];
+				int i = 0, j = 0, isComment = 0;
+				int isFunc = 0, isClass = 0;
+				if (func_beginCount &lt; funcP.size()) {
+					if (rowCount == funcP[func_beginCount][0]) {
+						isFunc = 1;
+						func_beginCount++;
+					}
+				}
+				if (class_beginCount &lt; classP.size()) {
+					if (rowCount == classP[class_beginCount][0]) {
+						isClass = 1;
+						class_beginCount++;
+					}
+				}
+				while (ch[i] != '\0') {
+					if (ch[i] == '&lt;') {
+						newCh[j] = '&';
+						newCh[j + 1] = 'l';
+						newCh[j + 2] = 't';
+						newCh[j + 3] = ';';
+						i++;
+						j += 4;
+					}
+					else if (ch[i] == '&gt;') {
+						newCh[j] = '&';
+						newCh[j + 1] = 'g';
+						newCh[j + 2] = 't';
+						newCh[j + 3] = ';';
+						i++;
+						j += 4;
+					}
+					else
+					{
+						if (isComment == 0 && ch[i] == '/') {
+							if (ch[i + 1] == '/') {
+								std::string str = "&lt;span class = \"toggleCommentDisplay\"&gt;";
+								int k = j;
+								for (; k - j &lt; str.length(); k++)
+									newCh[k] = str[k - j];
+								j = k;
+								isComment = 1;
+							}
+							if (ch[i + 1] == '*') {
+								std::string str = "&lt;span class = \"toggleCommentDisplay\"&gt;";
+								int k = j;
+								for (; k - j &lt; str.length(); k++)
+									newCh[k] = str[k - j];
+								j = k;
+								isDoubleComment = 1;
+							}
+						}
+						if (isFunc == 1 && ch[i] == '{') {
+							std::string str = "&lt;span class = \"toggleMethodDisplay\"&gt;";
+							int k = j;
+							for (; k - j &lt; str.length(); k++)
+								newCh[k] = str[k - j];
+							j = k;
+							isFunc = 0;
+						}
+						if (isClass == 1 && ch[i] == '{') {
+							std::string str = "&lt;span class = \"toggleClassDisplay\"&gt;";
+							int k = j;
+							for (; k - j &lt; str.length(); k++)
+								newCh[k] = str[k - j];
+							j = k;
+							isClass = 0;
+						}
+						if (isDoubleComment == 1 && ch[i] == '*' && ch[i + 1] == '/') {
+							newCh[j++] = ch[i++];
+							newCh[j++] = ch[i++];
+							std::string str = "&lt;/span&gt;";
+							int k = j;
+							for (; k - j &lt; str.length(); k++)
+								newCh[k] = str[k - j];
+							j = k;
+							isComment = 0;
+							isDoubleComment = 0;
+						}
+						newCh[j] = ch[i];
+						i++;
+						j++;
+					}
+				}
+				newCh[j] = '\0';
+				fout &lt;&lt; newCh;
+				if (isComment == 1 && isDoubleComment == 0)
+					fout &lt;&lt; "&lt;/span&gt;";
+				if (func_endCount &lt; funcP.size()) {
+					if (rowCount == funcP[func_endCount][1]) {
+						fout &lt;&lt; "&lt;/span&gt;";
+						func_endCount++;
+					}
+				}
+				if (class_endCount &lt; classP.size()) {
+					if (rowCount == classP[class_endCount][1]-1) {
+						fout &lt;&lt; "&lt;/span&gt;";
+						class_endCount++;
+					}
+				}
+				fout &lt;&lt; std::endl;
+				<span class = "toggleCommentDisplay">/*if (isSingleComment == 1) {
+					fout &lt;&lt; "&lt;/span&gt;";
+					isSingleComment = 0;
+				}*/</span>
+				rowCount++;
+			}
+			fout &lt;&lt; "&lt;/pre&gt;" &lt;&lt; std::endl;
+			fout &lt;&lt; "&lt;/body&gt;&lt;/html&gt;" &lt;&lt; std::endl;
+		}
+
+		fout.close();
+		iout.close();
+		preOut.close();
+	}
+	std::cout &lt;&lt; "\n\n  Convert successfully!\n\n";
+}</span>
+
+#ifdef TEST_CONVERTER
+<span class = "toggleCommentDisplay">//----&lt; CONVERT TEST TUB &gt;------------------------------------------</span>
+int main() <span class = "toggleMethodDisplay">{
+	Utilities::Title("Converter: accept filenames to convert those files to html files");
+	std::vector&lt;std::string&gt; files = { "../Parser/Parser.cpp", "../Parser/Parser.h" };
+	std::map&lt;std::string, std::vector&lt;std::string&gt;&gt; dependencies;
+	dependencies["Parser.cpp"] = { "../Utilities/Utilities.h", "../Tokenizer/Toker.h",
+								   "../SemiExpression/Semi.h", "Parser.h", "ActionsAndRules.h",
+								   "ConfigureParser.h", "../FileSystem/FileSystem.h" };
+	dependencies["Parser.h"] = { "../SemiExpression/ITokenCollection.h",
+								 "../AbstractSyntaxTree/AbstrSynTree.h" };
+	Convert con;
+	std::vector&lt;std::vector&lt;std::vector&lt;int&gt;&gt;&gt; funcPos(files.size());
+	std::vector&lt;std::vector&lt;std::vector&lt;int&gt;&gt;&gt; classPos(files.size());
+	std::cout &lt;&lt; "\n\n  1. getFuncClass: get links to all the files in the directory tree, on which it depends" &lt;&lt; std::endl;
+	con.getFuncClass(files, funcPos, classPos);
+	std::cout &lt;&lt; "\n\n  2. convertToHtml: convertToHtml: convert cpp/h files to html" &lt;&lt; std::endl;
+	con.convertToHtml(files, dependencies, funcPos, classPos);
+
+	return 0;
+}</span>
+#endif
+</pre>
+</body></html>

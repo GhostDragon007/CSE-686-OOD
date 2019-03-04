@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<!-- saved from url=(0113)https://ecs.syr.edu/faculty/fawcett/handouts/CSE687/code/Project2HelpS2019/OodProject2Helper/Proj2Helper.cpp.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+  <style>
+    body {
+      padding: 15px 40px;
+      font-family: Consolas;
+      font-size: 1.25em;
+      font-weight: normal;
+    }
+
+    span {
+      display: inline;
+    }
+
+    #funcButton {
+      position: fixed;
+      bottom: 50px;
+      right: 50px;
+    }
+	
+	#classButton {
+		position: fixed;
+      bottom: 70px;
+      right: 50px;
+	}
+	
+	#commentButton {
+		position: fixed;
+      bottom: 90px;
+      right: 50px;
+	}
+	
+    .toggleClassDisplay {
+    }
+
+    .toggleMethodDisplay {
+    }
+	
+	.toggleCommentDisplay {
+    }
+  </style>
+  <script>
+      function showHideClass(className) {
+        let elems = document.getElementsByClassName(className);
+        if (elems === null) {
+          return;
+        }
+        for (let i = 0; i < elems.length; ++i) {
+          let displayProp = elems[i].style.display;
+          if (displayProp === 'none')
+            elems[i].style['display'] = "inline";
+          else
+            elems[i].style['display'] = "none";
+        }
+      }
+  </script>
+</head>
+<body>
+<h3>AbstrSynTree.cpp</h3>
+  <button onclick="showHideClass(&#39;toggleMethodDisplay&#39;)" id="funcButton">Show or Hide Method Contents</button>
+  <button onclick="showHideClass(&#39;toggleClassDisplay&#39;)" id="classButton">Show or Hide Class Contents</button>
+  <button onclick="showHideClass(&#39;toggleCommentDisplay&#39;)" id="commentButton">Show or Hide Comment Contents</button>
+<pre>
+<pre>
+<a href="../ConvertedPages/AbstrSynTree.h.html">"AbstrSynTree.h"</a>
+<a href="../ConvertedPages/Utilities.h.html">Utilities.h"</a>
+<span class = "toggleCommentDisplay">/////////////////////////////////////////////////////////////////////</span>
+<span class = "toggleCommentDisplay">//  AbstrSynTree.cpp - Represents an Abstract Syntax Tree          //</span>
+<span class = "toggleCommentDisplay">//  ver 1.5                                                        //</span>
+<span class = "toggleCommentDisplay">//  Language:      Visual C++ 2015                                 //</span>
+<span class = "toggleCommentDisplay">//  Platform:      Dell XPS 8900, Windows 10                       //</span>
+<span class = "toggleCommentDisplay">//  Application:   Used to support parsing source code             //</span>
+<span class = "toggleCommentDisplay">//  Author:        Jim Fawcett, CST 4-187, Syracuse University     //</span>
+<span class = "toggleCommentDisplay">//                 (315) 443-3948, jfawcett@twcny.rr.com           //</span>
+<span class = "toggleCommentDisplay">/////////////////////////////////////////////////////////////////////</span>
+
+#include "AbstrSynTree.h"
+#include "../Utilities/Utilities.h"
+
+using namespace CodeAnalysis;
+
+<span class = "toggleCommentDisplay">//----&lt; default initialization for ASTNodes &gt;------------------------</span>
+
+ASTNode::ASTNode() 
+  : type_("anonymous"), parentType_("namespace"), name_("none"), startLineCount_(0), endLineCount_(0), complexity_(0) <span class = "toggleMethodDisplay">{}</span>
+
+<span class = "toggleCommentDisplay">//----&lt; initialization accepting type and name &gt;---------------------</span>
+
+ASTNode::ASTNode(const Type& type, const Name& name) 
+  : type_(type), parentType_("namespace"), name_(name), startLineCount_(0), endLineCount_(0), complexity_(0) <span class = "toggleMethodDisplay">{}</span>
+
+<span class = "toggleCommentDisplay">//----&lt; destructor deletes children, statements, declarations &gt;------</span>
+
+ASTNode::~ASTNode()
+<span class = "toggleMethodDisplay">{
+  for (auto pNode : children_)
+    delete pNode;
+  for (auto pNode : statements_)
+    delete pNode;
+  for (auto node : decl_)
+  {
+    delete node.pTc;
+  }
+}</span>
+<span class = "toggleCommentDisplay">//----&lt; returns string with ASTNode description &gt;--------------------</span>
+
+std::string ASTNode::show(bool details)
+<span class = "toggleMethodDisplay">{
+  std::ostringstream temp;
+  temp &lt;&lt; "(";
+  temp &lt;&lt; type_ &lt;&lt; ", ";
+  temp &lt;&lt; parentType_ &lt;&lt; ", ";
+  if(name_ != "none")
+    temp &lt;&lt; name_ &lt;&lt; ", ";
+  if(type_ == "namespace" || type_ == "class" || type_ == "interface" || type_ == "struct" || type_ == "function")
+    temp &lt;&lt; package_ &lt;&lt; ", ";
+  if (details)
+  {
+    temp &lt;&lt; "num children: " &lt;&lt; children_.size() &lt;&lt; ", ";
+    temp &lt;&lt; "num statements: " &lt;&lt; statements_.size() &lt;&lt; ", ";
+  }
+  temp &lt;&lt; "line: " &lt;&lt; startLineCount_ &lt;&lt; ", ";
+  int size = static_cast&lt;int&gt;(endLineCount_ - startLineCount_ + 1);
+  if (size &lt;= 0)
+    size = 1;
+  temp &lt;&lt; "size: " &lt;&lt; size &lt;&lt; ", ";
+  temp &lt;&lt; "cplx: " &lt;&lt; complexity_;
+  <span class = "toggleCommentDisplay">//temp &lt;&lt; "path: " &lt;&lt; path_;</span>
+  temp &lt;&lt; ")";
+  return temp.str();
+}</span>
+<span class = "toggleCommentDisplay">//----&lt; create instance and initialize first element &gt;---------------</span>
+<span class = "toggleCommentDisplay">/*
+*  - Every AST holds an ASTNode representing the global namespace
+*  - Its children will be namespaces, classes, and global data
+*/</span>
+AbstrSynTree::AbstrSynTree(ScopeStack&lt;ASTNode*&gt;& stack) : stack_(stack)
+<span class = "toggleMethodDisplay">{
+  pGlobalNamespace_ = new ASTNode("namespace", "Global Namespace");
+  pGlobalNamespace_-&gt;startLineCount_ = 1;
+  pGlobalNamespace_-&gt;endLineCount_ = 1;
+  stack_.push(pGlobalNamespace_);
+}</span>
+<span class = "toggleCommentDisplay">//----&lt; destroy instance and all it's ASTNodes &gt;---------------------</span>
+<span class = "toggleCommentDisplay">/*
+*  AST destructor only has to delete its root.  The root will then
+*  delete its children, causing the children to delete their children,
+*  yada, yada, yada
+*/</span>
+AbstrSynTree::~AbstrSynTree()
+<span class = "toggleMethodDisplay">{
+  delete pGlobalNamespace_;
+}</span>
+<span class = "toggleCommentDisplay">//----&lt; return or accept pointer to global namespace &gt;---------------</span>
+
+ASTNode*& AbstrSynTree::root()
+<span class = "toggleMethodDisplay">{
+  return pGlobalNamespace_;
+}</span>
+<span class = "toggleCommentDisplay">//----&lt; return AST typemap &gt;-----------------------------------------</span>
+<span class = "toggleCommentDisplay">/*
+*  Type map holds ClassName keys linked to each class's ASTNode
+*/</span>
+AbstrSynTree::TypeMap& AbstrSynTree::typeMap()
+<span class = "toggleMethodDisplay">{
+  return typeMap_;
+}</span>
+<span class = "toggleCommentDisplay">//----&lt; add ASTNode ptr to stack top element's children and push &gt;---</span>
+<span class = "toggleCommentDisplay">/*
+ * - Add new scope to ScopeStack after linking to its parent scope
+ * - If type is a class or struct, add to typeMap
+ */</span>
+void AbstrSynTree::add(ASTNode* pNode)
+<span class = "toggleMethodDisplay">{
+  if (stack_.size() &gt; 0)
+  {
+    pNode-&gt;parentType_ = stack_.top()-&gt;type_;
+    stack_.top()-&gt;children_.push_back(pNode);  <span class = "toggleCommentDisplay">// add as child of stack top</span>
+  }
+  else
+  {
+    pNode-&gt;parentType_ = "";
+  }
+  stack_.push(pNode);                        <span class = "toggleCommentDisplay">// push onto stack</span>
+  if (pNode-&gt;type_ == "class" || pNode-&gt;type_ == "struct" || pNode-&gt;type_ == "interface")
+    typeMap_[pNode-&gt;name_] = pNode;
+}</span>
+<span class = "toggleCommentDisplay">//----&lt; pop stack's top element &gt;------------------------------------</span>
+<span class = "toggleCommentDisplay">/*
+ *  - called at end of scope
+ *  - pop'd ASTNode is still linked to AST
+ */</span>
+ASTNode* AbstrSynTree::pop()
+<span class = "toggleMethodDisplay">{
+  if(stack_.size() &gt; 0)
+    return stack_.pop();
+  return nullptr;
+}</span>
+<span class = "toggleCommentDisplay">//----&lt; find a type node using typeMap &gt;-----------------------------</span>
+<span class = "toggleCommentDisplay">/*
+*  Retrieve ASTNode of class if it exists
+*/</span>
+ASTNode* AbstrSynTree::find(const ClassName& className)
+<span class = "toggleMethodDisplay">{
+  auto iter = typeMap_.find(className);
+  if (iter != typeMap_.end())
+  {
+    return iter-&gt;second;
+  }
+  return nullptr;
+}</span>
+
+<span class = "toggleCommentDisplay">//----&lt; Test Stub &gt;--------------------------------------------------</span>
+<span class = "toggleCommentDisplay">/*
+*  Demonstrates that AbstrSynTree can build a simple Abstract
+*  Syntax Tree and display its contents.
+*/</span>
+#ifdef TEST_ABSTRSYNTREE
+
+#include &lt;functional&gt;
+#include &lt;iostream&gt;
+
+using Utils = Utilities::StringHelper;
+
+int main()
+<span class = "toggleMethodDisplay">{
+  Utils::Title("Testing AbstrSynTree and ASTNode");
+
+  ScopeStack&lt;ASTNode*&gt; stack;
+  AbstrSynTree ast(stack);
+  ASTNode* pX = new ASTNode("class", "X");
+  ast.add(pX);                                        <span class = "toggleCommentDisplay">// add X scope</span>
+  ASTNode* pf1 = new ASTNode("function", "f1");
+  ast.add(pf1);                                       <span class = "toggleCommentDisplay">// add f1 scope</span>
+  ASTNode* pc1 = new ASTNode("control", "if");
+  ast.add(pc1);                                       <span class = "toggleCommentDisplay">// add c1 scope</span>
+  ast.pop();                                          <span class = "toggleCommentDisplay">// end c1 scope</span>
+  ast.pop();                                          <span class = "toggleCommentDisplay">// end f1 scope</span>
+  ASTNode* pf2 = new ASTNode("function", "f2");
+  ast.add(pf2);                                       <span class = "toggleCommentDisplay">// add f2 scope</span>
+  ast.pop();                                          <span class = "toggleCommentDisplay">// end f2 scope</span>
+  ast.pop();                                          <span class = "toggleCommentDisplay">// end X scope</span>
+
+  std::function&lt;void(ASTNode*, size_t)&gt; co = [](ASTNode* pNode, size_t indentLevel) 
+  {
+    std::cout &lt;&lt; "\n  " &lt;&lt; std::string(2 * indentLevel, ' ') &lt;&lt; pNode-&gt;show();
+  };
+
+  ASTWalk(ast.root(), co);
+  std::cout &lt;&lt; "\n";
+
+  Utils::title("testing AbstrSynTree::find");
+
+  ASTNode* pFind = ast.find("X");
+  if (pFind != nullptr)
+    std::cout &lt;&lt; "\n  " &lt;&lt; pFind-&gt;show();
+  else
+    std::cout &lt;&lt; "\n  could not find ASTNode for class X";
+
+  std::cout &lt;&lt; "\n\n";
+}</span>
+
+#endif
+
+</pre>
+</body></html>

@@ -1,7 +1,7 @@
 #pragma once
 /////////////////////////////////////////////////////////////////////
 //  AbstrSynTree.h - Represents an Abstract Syntax Tree            //
-//  ver 1.4                                                        //
+//  ver 1.5                                                        //
 //  Language:      Visual C++ 2015                                 //
 //  Platform:      Dell XPS 8900, Windows 10                       //
 //  Application:   Used to support parsing source code             //
@@ -34,6 +34,8 @@
 
   Maintenance History:
   ====================
+  ver 1.5 : 03 Mar 2019
+  - fixed size calculation which overflowed on certain namespaces
   ver 1.4 : 26 Feb 2017
   - added parentType_ member to support better grammar analysis
   ver 1.3 : 29 Oct 2016
@@ -54,7 +56,7 @@
 #include <sstream>
 #include <unordered_map>
 #include <functional>
-#include "../SemiExp/itokcollection.h"
+#include "../SemiExpression/ITokenCollection.h"
 #include "../ScopeStack/ScopeStack.h"
 
 namespace CodeAnalysis
@@ -71,7 +73,7 @@ namespace CodeAnalysis
 
   struct DeclarationNode
   {
-    Scanner::ITokCollection* pTc = nullptr;
+    Lexer::ITokenCollection* pTc = nullptr;
     Access access_;
     DeclType declType_;
     std::string package_;
@@ -98,7 +100,7 @@ namespace CodeAnalysis
     size_t complexity_;
     std::vector<ASTNode*> children_;
     std::vector<DeclarationNode> decl_;
-    std::vector<Scanner::ITokCollection*> statements_;
+    std::vector<Lexer::ITokenCollection*> statements_;
     std::string show(bool details = false);
   };
 

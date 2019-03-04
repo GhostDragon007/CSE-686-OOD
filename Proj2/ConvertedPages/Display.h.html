@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<!-- saved from url=(0113)https://ecs.syr.edu/faculty/fawcett/handouts/CSE687/code/Project2HelpS2019/OodProject2Helper/Proj2Helper.cpp.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+  <style>
+    body {
+      padding: 15px 40px;
+      font-family: Consolas;
+      font-size: 1.25em;
+      font-weight: normal;
+    }
+
+    span {
+      display: inline;
+    }
+
+    #funcButton {
+      position: fixed;
+      bottom: 50px;
+      right: 50px;
+    }
+	
+	#classButton {
+		position: fixed;
+      bottom: 70px;
+      right: 50px;
+	}
+	
+	#commentButton {
+		position: fixed;
+      bottom: 90px;
+      right: 50px;
+	}
+	
+    .toggleClassDisplay {
+    }
+
+    .toggleMethodDisplay {
+    }
+	
+	.toggleCommentDisplay {
+    }
+  </style>
+  <script>
+      function showHideClass(className) {
+        let elems = document.getElementsByClassName(className);
+        if (elems === null) {
+          return;
+        }
+        for (let i = 0; i < elems.length; ++i) {
+          let displayProp = elems[i].style.display;
+          if (displayProp === 'none')
+            elems[i].style['display'] = "inline";
+          else
+            elems[i].style['display'] = "none";
+        }
+      }
+  </script>
+</head>
+<body>
+<h3>Display.h</h3>
+  <button onclick="showHideClass(&#39;toggleMethodDisplay&#39;)" id="funcButton">Show or Hide Method Contents</button>
+  <button onclick="showHideClass(&#39;toggleClassDisplay&#39;)" id="classButton">Show or Hide Class Contents</button>
+  <button onclick="showHideClass(&#39;toggleCommentDisplay&#39;)" id="commentButton">Show or Hide Comment Contents</button>
+<pre>
+<pre>
+#pragma once
+<span class = "toggleCommentDisplay">/////////////////////////////////////////////////////////////////////////////</span>
+<span class = "toggleCommentDisplay">// Display.h  - display converted html pages in user's browser             //</span>
+<span class = "toggleCommentDisplay">// ver 1.1                                                                 //</span>
+<span class = "toggleCommentDisplay">// Language:    Visual C++, Visual Studio 2019                             //</span>
+<span class = "toggleCommentDisplay">// Platform:    Dell Latitude , Core i7, Windows 10                        //</span>
+<span class = "toggleCommentDisplay">// Application: CSE687 - OOD Project #2                                    //</span>
+<span class = "toggleCommentDisplay">// Author:      Junhao Shen                                                //</span>
+<span class = "toggleCommentDisplay">//              (315)480-4274, jshen18@syr.edu                             //</span>
+<span class = "toggleCommentDisplay">/////////////////////////////////////////////////////////////////////////////</span>
+<span class = "toggleCommentDisplay">/*
+*  Package Operations:
+*  -------------------
+*  This package provides a class, Display, used to start named processes.
+*  It has a lot of potential, mostly unrealized by this simple beginning.
+*
+*  Possible future features include:
+*  - interprocess communication between parent and child using pipes
+*  - handling multiple process, perhaps in a process pool
+*  - killing processes
+*  - enumerating running processes that match a regular expression
+*  - yada, yada, yada
+*
+*  Required Files:
+*  ---------------
+*  Display.h, Display.cpp
+*  FileSystem.h, FileSystem.cpp
+*
+*  Maintenance History:
+*  --------------------
+*  ver 1.1 :  4 Mar 2019
+*  - add pop_out method to display a file
+*  ver 1.0 : 19 Feb 2018
+*  - first release
+*/</span>
+#include &lt;windows.h&gt;
+#include &lt;string&gt;
+#include &lt;iostream&gt;
+#include &lt;functional&gt;
+#include &lt;vector&gt;
+#include &lt;fstream&gt;
+#include &lt;conio.h&gt;
+
+
+using CBP = std::function&lt;void(void)&gt;;
+
+class Process
+<span class = "toggleClassDisplay">{
+public:
+	Process();
+	virtual ~Process() <span class = "toggleMethodDisplay">{}</span>
+	bool create(const std::string& path = "");
+	void title(const std::string& title);
+	void application(const std::string& app);
+	void commandLine(const std::string& cmdLine);
+	void registerCallback();
+	void setCallBackProcessing(CBP cbp);
+	void callback();
+	HANDLE getProcessHandle();
+	
+	void pop_out(std::vector&lt;std::string&gt; input, std::string explorerPath);
+
+private:
+	STARTUPINFO startInfo_;
+	PROCESS_INFORMATION procInfo_;
+	std::wstring title_;
+	std::wstring appName_;
+	std::wstring commandLine_;
+	static CBP cbp_;
+};</span>
+
+
+<span class = "toggleCommentDisplay">//----&lt; helper function to convert strings &gt;---------------------------</span>
+
+std::string wToS(const std::wstring& ws);
+
+<span class = "toggleCommentDisplay">//----&lt; helper function to convert strings &gt;---------------------------</span>
+
+std::wstring sToW(const std::string& s);
+
+<span class = "toggleCommentDisplay">//----&lt; define application new process runs &gt;--------------------------</span>
+
+
+<span class = "toggleCommentDisplay">//----&lt; Windows API declared function type for callbacks &gt;-------------</span>
+
+void CALLBACK WaitOrTimerCallback(_In_ PVOID lpParameter, _In_ BOOLEAN TimerOrWaitFired);
+
+
+
+</pre>
+</body></html>

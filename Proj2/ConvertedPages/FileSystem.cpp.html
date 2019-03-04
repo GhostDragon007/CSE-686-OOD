@@ -1,31 +1,82 @@
-<!Doctype html>
-<html>
-<head>
-<style>
-body{
-padding: 15px 40px;
-font - family: Consolas;
-font - size: 1.25em;
-font - weight: normal;
-}
-</style>
+<!DOCTYPE html>
+<!-- saved from url=(0113)https://ecs.syr.edu/faculty/fawcett/handouts/CSE687/code/Project2HelpS2019/OodProject2Helper/Proj2Helper.cpp.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+  <style>
+    body {
+      padding: 15px 40px;
+      font-family: Consolas;
+      font-size: 1.25em;
+      font-weight: normal;
+    }
+
+    span {
+      display: inline;
+    }
+
+    #funcButton {
+      position: fixed;
+      bottom: 50px;
+      right: 50px;
+    }
+	
+	#classButton {
+		position: fixed;
+      bottom: 70px;
+      right: 50px;
+	}
+	
+	#commentButton {
+		position: fixed;
+      bottom: 90px;
+      right: 50px;
+	}
+	
+    .toggleClassDisplay {
+    }
+
+    .toggleMethodDisplay {
+    }
+	
+	.toggleCommentDisplay {
+    }
+  </style>
+  <script>
+      function showHideClass(className) {
+        let elems = document.getElementsByClassName(className);
+        if (elems === null) {
+          return;
+        }
+        for (let i = 0; i < elems.length; ++i) {
+          let displayProp = elems[i].style.display;
+          if (displayProp === 'none')
+            elems[i].style['display'] = "inline";
+          else
+            elems[i].style['display'] = "none";
+        }
+      }
+  </script>
 </head>
 <body>
 <h3>FileSystem.cpp</h3>
+  <button onclick="showHideClass(&#39;toggleMethodDisplay&#39;)" id="funcButton">Show or Hide Method Contents</button>
+  <button onclick="showHideClass(&#39;toggleClassDisplay&#39;)" id="classButton">Show or Hide Class Contents</button>
+  <button onclick="showHideClass(&#39;toggleCommentDisplay&#39;)" id="commentButton">Show or Hide Comment Contents</button>
 <pre>
-/////////////////////////////////////////////////////////////////////////////
-// FileSystem.cpp - Support file and directory operations                  //
-// ver 2.8                                                                 //
-// ----------------------------------------------------------------------- //
-// copyright © Jim Fawcett, 2012                                           //
-// All rights granted provided that this notice is retained                //
-// ----------------------------------------------------------------------- //
-// Language:    Visual C++, Visual Studio 2010                             //
-// Platform:    Dell XPS 8300, Core i7, Windows 7 SP1                      //
-// Application: Summer Projects, 2012                                      //
-// Author:      Jim Fawcett, CST 4-187, Syracuse University                //
-//              (315) 443-3948, jfawcett@twcny.rr.com                      //
-/////////////////////////////////////////////////////////////////////////////
+<pre>
+<a href="../ConvertedPages/FileSystem.h.html">"FileSystem.h"</a>
+<span class = "toggleCommentDisplay">/////////////////////////////////////////////////////////////////////////////</span>
+<span class = "toggleCommentDisplay">// FileSystem.cpp - Support file and directory operations                  //</span>
+<span class = "toggleCommentDisplay">// ver 3.0                                                                 //</span>
+<span class = "toggleCommentDisplay">// ----------------------------------------------------------------------- //</span>
+<span class = "toggleCommentDisplay">// copyright ?Jim Fawcett, 2012                                           //</span>
+<span class = "toggleCommentDisplay">// All rights granted provided that this notice is retained                //</span>
+<span class = "toggleCommentDisplay">// ----------------------------------------------------------------------- //</span>
+<span class = "toggleCommentDisplay">// Language:    Visual C++, Visual Studio 2010                             //</span>
+<span class = "toggleCommentDisplay">// Platform:    Dell XPS 8300, Core i7, Windows 7 SP1                      //</span>
+<span class = "toggleCommentDisplay">// Application: Summer Projects, 2012                                      //</span>
+<span class = "toggleCommentDisplay">// Author:      Jim Fawcett, CST 4-187, Syracuse University                //</span>
+<span class = "toggleCommentDisplay">//              (315) 443-3948, jfawcett@twcny.rr.com                      //</span>
+<span class = "toggleCommentDisplay">/////////////////////////////////////////////////////////////////////////////</span>
 
 #include &lt;iostream&gt;
 #include &lt;string&gt;
@@ -38,11 +89,11 @@ font - weight: normal;
 
 using namespace FileSystem;
 
-/////////////////////////////////////////////////////////
-// helper FileSystemSearch
+<span class = "toggleCommentDisplay">/////////////////////////////////////////////////////////</span>
+<span class = "toggleCommentDisplay">// helper FileSystemSearch</span>
 
 class FileSystemSearch
-{
+<span class = "toggleClassDisplay">{
 public:
   FileSystemSearch();
   ~FileSystemSearch();
@@ -55,23 +106,23 @@ private:
   HANDLE hFindFile;
   WIN32_FIND_DATAA FindFileData;
   WIN32_FIND_DATAA* pFindFileData;
-};
+};</span>
 
-FileSystemSearch::FileSystemSearch() : pFindFileData(&FindFileData) {}
-FileSystemSearch::~FileSystemSearch() { ::FindClose(hFindFile); }
-void FileSystemSearch::close() { ::FindClose(hFindFile); }
+FileSystemSearch::FileSystemSearch() : pFindFileData(&FindFileData) <span class = "toggleMethodDisplay">{}</span>
+FileSystemSearch::~FileSystemSearch() <span class = "toggleMethodDisplay">{ ::FindClose(hFindFile); }</span>
+void FileSystemSearch::close() <span class = "toggleMethodDisplay">{ ::FindClose(hFindFile); }</span>
 
-//----&lt; block constructor taking array iterators &gt;-------------------------
+<span class = "toggleCommentDisplay">//----&lt; block constructor taking array iterators &gt;-------------------------</span>
 
 Block::Block(Byte* beg, Byte* end) : bytes_(beg, end) {}
 
-//----&lt; push back block byte &gt;---------------------------------------------
+<span class = "toggleCommentDisplay">//----&lt; push back block byte &gt;---------------------------------------------</span>
 
 void Block::push_back(Byte b)
 {
   bytes_.push_back(b);
 }
-//----&lt; non-const indexer &gt;------------------------------------------------
+<span class = "toggleCommentDisplay">//----&lt; non-const indexer &gt;------------------------------------------------</span>
 
 Byte& Block::operator[](size_t i)
 {
@@ -79,7 +130,7 @@ Byte& Block::operator[](size_t i)
     throw std::runtime_error("index out of range in Block");
   return bytes_[i];
 }
-//----&lt; const indexer &gt;----------------------------------------------------
+<span class = "toggleCommentDisplay">//----&lt; const indexer &gt;----------------------------------------------------</span>
 
 Byte Block::operator[](size_t i) const
 {
@@ -87,32 +138,32 @@ Byte Block::operator[](size_t i) const
     throw std::runtime_error("index out of range in Block");
   return bytes_[i];
 }
-//----&lt; equality comparison &gt;----------------------------------------------
+<span class = "toggleCommentDisplay">//----&lt; equality comparison &gt;----------------------------------------------</span>
 
 bool Block::operator==(const Block& block) const
 {
   return bytes_ == block.bytes_;
 }
-//----&lt; inequality comparison &gt;--------------------------------------------
+<span class = "toggleCommentDisplay">//----&lt; inequality comparison &gt;--------------------------------------------</span>
 
 bool Block::operator!=(const Block& block) const
 {
   return bytes_ != block.bytes_;
 }
-//----&lt; return number of bytes in block &gt;----------------------------------
+<span class = "toggleCommentDisplay">//----&lt; return number of bytes in block &gt;----------------------------------</span>
 
 size_t Block::size() const
 {
   return bytes_.size();
 }
 
-//----&lt; File constructor opens file stream &gt;-------------------------------
+<span class = "toggleCommentDisplay">//----&lt; File constructor opens file stream &gt;-------------------------------</span>
 
 File::File(const std::string& filespec) 
     : name_(filespec), pIStream(nullptr), pOStream(nullptr), dirn_(in), typ_(text), good_(true)
 {
 }
-//----&lt; File destructor closes file stream &gt;-------------------------------
+<span class = "toggleCommentDisplay">//----&lt; File destructor closes file stream &gt;-------------------------------</span>
 
 File::~File() 
 { 
@@ -131,7 +182,7 @@ File::~File()
     good_ = false;
   }
 }
-//----&lt; open for reading or writing &gt;--------------------------------------
+<span class = "toggleCommentDisplay">//----&lt; open for reading or writing &gt;--------------------------------------</span>
 
 bool File::open(direction dirn, type typ)
 {
@@ -148,9 +199,8 @@ bool File::open(direction dirn, type typ)
     if (!(*pIStream).good())
     {
       good_ = false;
-      delete pIStream;
       pIStream = nullptr;
-      //throw std::runtime_error("\n  open for input failed in File constructor");
+      <span class = "toggleCommentDisplay">//throw std::runtime_error("\n  open for input failed in File constructor");</span>
     }
   }
   else
@@ -163,14 +213,13 @@ bool File::open(direction dirn, type typ)
     if (!(*pOStream).good())
     {
       good_ = false;
-      delete pOStream;
       pOStream = nullptr;
-      //throw std::runtime_error("\n  open for output failed in File constructor");
+      <span class = "toggleCommentDisplay">//throw std::runtime_error("\n  open for output failed in File constructor");</span>
     }
   }
   return good_;
 }
-//----&lt; reads one line of a text file &gt;------------------------------------
+<span class = "toggleCommentDisplay">//----&lt; reads one line of a text file &gt;------------------------------------</span>
 
 std::string File::getLine(bool keepNewLines)
 {
@@ -196,7 +245,7 @@ std::string File::getLine(bool keepNewLines)
     store += ch;
   }
 }
-//----&lt; read all lines of text file into one string &gt;----------------------
+<span class = "toggleCommentDisplay">//----&lt; read all lines of text file into one string &gt;----------------------</span>
 
 std::string File::readAll(bool keepNewLines)
 {
@@ -212,7 +261,7 @@ std::string File::readAll(bool keepNewLines)
   }
   return store;
 }
-//----&lt; writes one line of a text to a file &gt;------------------------------
+<span class = "toggleCommentDisplay">//----&lt; writes one line of a text to a file &gt;------------------------------</span>
 
 void File::putLine(const std::string& s, bool wantReturn)
 {
@@ -228,7 +277,7 @@ void File::putLine(const std::string& s, bool wantReturn)
     pOStream-&gt;put('\n');
   pOStream-&gt;flush();
 }
-//----&lt; reads a block of bytes from binary file &gt;--------------------------
+<span class = "toggleCommentDisplay">//----&lt; reads a block of bytes from binary file &gt;--------------------------</span>
 
 Block File::getBlock(size_t size)
 {
@@ -253,7 +302,7 @@ Block File::getBlock(size_t size)
   }
   return blk;
 }
-//----&lt; writes a block of bytes to binary file &gt;---------------------------
+<span class = "toggleCommentDisplay">//----&lt; writes a block of bytes to binary file &gt;---------------------------</span>
 
 void File::putBlock(const Block& blk)
 {
@@ -270,7 +319,7 @@ void File::putBlock(const Block& blk)
     pOStream-&gt;put(blk[i]);
   }
 }
-//----&lt; read buffer of bytes from binary file &gt;----------------------------
+<span class = "toggleCommentDisplay">//----&lt; read buffer of bytes from binary file &gt;----------------------------</span>
 
 size_t File::getBuffer(size_t bufLen, File::byte* buffer)
 {
@@ -287,11 +336,11 @@ size_t File::getBuffer(size_t bufLen, File::byte* buffer)
       if (count == bufLen)
         break;
   }
-  if (!pIStream-&gt;good())  // don't write EOF char
+  if (!pIStream-&gt;good())  <span class = "toggleCommentDisplay">// don't write EOF char</span>
     --count;
   return count;
 }
-//----&lt; write buffer of bytes to binary file &gt;-------------------------------
+<span class = "toggleCommentDisplay">//----&lt; write buffer of bytes to binary file &gt;-------------------------------</span>
 
 void File::putBuffer(size_t bufLen, File::byte* buffer)
 {
@@ -311,7 +360,7 @@ void File::putBuffer(size_t bufLen, File::byte* buffer)
       break;
   }
 }
-//----&lt; tests for error free stream state &gt;--------------------------------
+<span class = "toggleCommentDisplay">//----&lt; tests for error free stream state &gt;--------------------------------</span>
 
 bool File::isGood()
 {
@@ -321,16 +370,16 @@ bool File::isGood()
     return (good_ = pIStream-&gt;good());
   if(pOStream != nullptr)
     return (good_ = pOStream-&gt;good());
-  return (good_ = false);
+  return (good_ == false);
 }
-//----&lt; flushes output stream to its file &gt;--------------------------------
+<span class = "toggleCommentDisplay">//----&lt; flushes output stream to its file &gt;--------------------------------</span>
 
 void File::flush()
 {
   if(pOStream != nullptr && pOStream-&gt;good())
     pOStream-&gt;flush();
 }
-//----&lt; clears error state enabling operations again &gt;---------------------
+<span class = "toggleCommentDisplay">//----&lt; clears error state enabling operations again &gt;---------------------</span>
 
 void File::clear()
 {
@@ -339,7 +388,7 @@ void File::clear()
   if(pOStream != nullptr)
     pOStream-&gt;clear();
 }
-//----&lt; close file handle &gt;------------------------------------------------
+<span class = "toggleCommentDisplay">//----&lt; close file handle &gt;------------------------------------------------</span>
 
 void File::close()
 {
@@ -347,37 +396,35 @@ void File::close()
   if (pIStream != nullptr)
   {
     pIStream-&gt;close();
-    delete pIStream;
     pIStream = nullptr;
     good_ = false;
   }
   if (pOStream)
   {
     pOStream-&gt;close();
-    delete pOStream;
     pOStream = nullptr;
     good_ = false;
   }
 }
-//----&lt; file exists &gt;--------------------------------------------------
+<span class = "toggleCommentDisplay">//----&lt; file exists &gt;--------------------------------------------------</span>
 
 bool File::exists(const std::string& file)
 {
   return ::GetFileAttributesA(file.c_str()) != INVALID_FILE_ATTRIBUTES;
 }
-//----&lt; copy file &gt;----------------------------------------------------
+<span class = "toggleCommentDisplay">//----&lt; copy file &gt;----------------------------------------------------</span>
 
 bool File::copy(const std::string& src, const std::string& dst, bool failIfExists)
 {
   return ::CopyFileA(src.c_str(), dst.c_str(), failIfExists) != 0;
 }
-//----&lt; remove file &gt;--------------------------------------------------
+<span class = "toggleCommentDisplay">//----&lt; remove file &gt;--------------------------------------------------</span>
 
 bool File::remove(const std::string& file)
 {
   return ::DeleteFileA(file.c_str()) != 0;
 }
-//----&lt; constructor &gt;--------------------------------------------------
+<span class = "toggleCommentDisplay">//----&lt; constructor &gt;--------------------------------------------------</span>
 
 FileInfo::FileInfo(const std::string& fileSpec)
 {
@@ -387,25 +434,25 @@ FileInfo::FileInfo(const std::string& fileSpec)
   else
     good_ = true;
 }
-//----&lt; destructor &gt;---------------------------------------------------
+<span class = "toggleCommentDisplay">//----&lt; destructor &gt;---------------------------------------------------</span>
 
 FileInfo::~FileInfo()
 {
   ::FindClose(hFindFile);
 }
-//----&lt; is passed filespec valid? &gt;------------------------------------
+<span class = "toggleCommentDisplay">//----&lt; is passed filespec valid? &gt;------------------------------------</span>
 
 bool FileInfo::good()
 {
   return good_;
 }
-//----&lt; return file name &gt;---------------------------------------------
+<span class = "toggleCommentDisplay">//----&lt; return file name &gt;---------------------------------------------</span>
 
 std::string FileInfo::name() const
 {
   return Path::getName(data.cFileName);
 }
-//----&lt; conversion helper &gt;--------------------------------------------
+<span class = "toggleCommentDisplay">//----&lt; conversion helper &gt;--------------------------------------------</span>
 
 std::string FileInfo::intToString(long i)
 {
@@ -414,7 +461,7 @@ std::string FileInfo::intToString(long i)
   out &lt;&lt; std::setw(2) &lt;&lt; i;
   return out.str();
 }
-//----&lt; return file date &gt;---------------------------------------------
+<span class = "toggleCommentDisplay">//----&lt; return file date &gt;---------------------------------------------</span>
 
 std::string FileInfo::date(dateFormat df) const
 {
@@ -431,91 +478,91 @@ std::string FileInfo::date(dateFormat df) const
     return timeStr;
   return dateStr + " " + timeStr;
 }
-//----&lt; return file size &gt;---------------------------------------------
+<span class = "toggleCommentDisplay">//----&lt; return file size &gt;---------------------------------------------</span>
 
 size_t FileInfo::size() const
 {
   return (size_t)(data.nFileSizeLow + (data.nFileSizeHigh &lt;&lt; 8));
 }
-//----&lt; is type archive? &gt;---------------------------------------------
+<span class = "toggleCommentDisplay">//----&lt; is type archive? &gt;---------------------------------------------</span>
 
 bool FileInfo::isArchive() const
 {
   return (data.dwFileAttributes & FILE_ATTRIBUTE_ARCHIVE) != 0;
 }
-//----&lt; is type compressed? &gt;------------------------------------------
+<span class = "toggleCommentDisplay">//----&lt; is type compressed? &gt;------------------------------------------</span>
 
 bool FileInfo::isCompressed() const
 {
   return (data.dwFileAttributes & FILE_ATTRIBUTE_COMPRESSED) != 0;
 }
-//----&lt; is type directory? &gt;-------------------------------------------
+<span class = "toggleCommentDisplay">//----&lt; is type directory? &gt;-------------------------------------------</span>
 
 bool FileInfo::isDirectory() const
 {
   return (data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0;
 }
-//----&lt; is type encrypted? &gt;---------------------------------------------
+<span class = "toggleCommentDisplay">//----&lt; is type encrypted? &gt;---------------------------------------------</span>
 
 bool FileInfo::isEncrypted() const
 {
   return (data.dwFileAttributes & FILE_ATTRIBUTE_ENCRYPTED) != 0;
 }
-//----&lt; is type hiddent? &gt;---------------------------------------------
+<span class = "toggleCommentDisplay">//----&lt; is type hiddent? &gt;---------------------------------------------</span>
 
 bool FileInfo::isHidden() const
 {
   return (data.dwFileAttributes & FILE_ATTRIBUTE_HIDDEN) != 0;
 }
-//----&lt; is type normal? &gt;---------------------------------------------
+<span class = "toggleCommentDisplay">//----&lt; is type normal? &gt;---------------------------------------------</span>
 
 bool FileInfo::isNormal() const
 {
   return (data.dwFileAttributes & FILE_ATTRIBUTE_NORMAL) != 0;
 }
-//----&lt; is type offline? &gt;---------------------------------------------
+<span class = "toggleCommentDisplay">//----&lt; is type offline? &gt;---------------------------------------------</span>
 
 bool FileInfo::isOffLine() const
 {
   return (data.dwFileAttributes & FILE_ATTRIBUTE_OFFLINE) != 0;
 }
-//----&lt; is type readonly? &gt;--------------------------------------------
+<span class = "toggleCommentDisplay">//----&lt; is type readonly? &gt;--------------------------------------------</span>
 
 bool FileInfo::isReadOnly() const
 {
   return (data.dwFileAttributes & FILE_ATTRIBUTE_READONLY) != 0;
 }
-//----&lt; is type system? &gt;----------------------------------------------
+<span class = "toggleCommentDisplay">//----&lt; is type system? &gt;----------------------------------------------</span>
 
 bool FileInfo::isSystem() const
 {
   return (data.dwFileAttributes & FILE_ATTRIBUTE_SYSTEM  ) != 0;
 }
-//----&lt; is type temporary? &gt;-------------------------------------------
+<span class = "toggleCommentDisplay">//----&lt; is type temporary? &gt;-------------------------------------------</span>
 
 bool FileInfo::isTemporary() const
 {
   return (data.dwFileAttributes & FILE_ATTRIBUTE_TEMPORARY) != 0;
 }
-//----&lt; compare names alphabetically &gt;---------------------------------
+<span class = "toggleCommentDisplay">//----&lt; compare names alphabetically &gt;---------------------------------</span>
 
 bool FileInfo::operator&lt;(const FileInfo& fi) const
 {
   return strcmp(data.cFileName, fi.data.cFileName) == -1;
 }
-//----&lt; compare names alphabetically &gt;---------------------------------
+<span class = "toggleCommentDisplay">//----&lt; compare names alphabetically &gt;---------------------------------</span>
 
 bool FileInfo::operator==(const FileInfo& fi) const
 {
   return strcmp(data.cFileName, fi.data.cFileName) == 0;
 }
-//----&lt; compare names alphabetically &gt;---------------------------------
+<span class = "toggleCommentDisplay">//----&lt; compare names alphabetically &gt;---------------------------------</span>
 
 bool FileInfo::operator&gt;(const FileInfo& fi) const
 {
   return strcmp(data.cFileName, fi.data.cFileName) == 1;
 }
-//----&lt; compare file times &gt;-------------------------------------------
+<span class = "toggleCommentDisplay">//----&lt; compare file times &gt;-------------------------------------------</span>
 
 bool FileInfo::earlier(const FileInfo& fi) const
 {
@@ -523,7 +570,7 @@ bool FileInfo::earlier(const FileInfo& fi) const
   FILETIME ft2 = fi.data.ftLastWriteTime;
   return ::CompareFileTime(&ft1, &ft2) == -1;
 }
-//----&lt; compare file times &gt;-------------------------------------------
+<span class = "toggleCommentDisplay">//----&lt; compare file times &gt;-------------------------------------------</span>
 
 bool FileInfo::later(const FileInfo& fi) const
 {
@@ -531,19 +578,19 @@ bool FileInfo::later(const FileInfo& fi) const
   FILETIME ft2 = fi.data.ftLastWriteTime;
   return ::CompareFileTime(&ft1, &ft2) == 1;
 }
-//----&lt; smaller &gt;------------------------------------------------------
+<span class = "toggleCommentDisplay">//----&lt; smaller &gt;------------------------------------------------------</span>
 
 bool FileInfo::smaller(const FileInfo &fi) const
 {
   return size() &lt; fi.size();
 }
-//----&lt; larger &gt;-------------------------------------------------------
+<span class = "toggleCommentDisplay">//----&lt; larger &gt;-------------------------------------------------------</span>
 
 bool FileInfo::larger(const FileInfo &fi) const
 {
   return size() &gt; fi.size();
 }
-//----&lt; convert string to lower case chars &gt;---------------------------
+<span class = "toggleCommentDisplay">//----&lt; convert string to lower case chars &gt;---------------------------</span>
 
 std::string Path::toLower(const std::string& src)
 {
@@ -552,7 +599,7 @@ std::string Path::toLower(const std::string& src)
     temp += tolower(src[i]);
   return temp;
 }
-//----&lt; convert string to upper case chars &gt;---------------------------
+<span class = "toggleCommentDisplay">//----&lt; convert string to upper case chars &gt;---------------------------</span>
 
   
 std::string Path::toUpper(const std::string& src)
@@ -562,7 +609,7 @@ std::string Path::toUpper(const std::string& src)
     temp += toupper(src[i]);
   return temp;
 }
-//----&lt; get path from fileSpec &gt;---------------------------------------
+<span class = "toggleCommentDisplay">//----&lt; get path from fileSpec &gt;---------------------------------------</span>
 
 std::string Path::getName(const std::string &fileSpec, bool withExt)
 {
@@ -572,12 +619,12 @@ std::string Path::getName(const std::string &fileSpec, bool withExt)
     pos = fileSpec.find_last_of("\\");
     if(pos &gt;= fileSpec.length())
     {
-      // no path prepended
+      <span class = "toggleCommentDisplay">// no path prepended</span>
       if(withExt)
         return fileSpec;
       else
       {
-        // remove ext
+        <span class = "toggleCommentDisplay">// remove ext</span>
         size_t pos = fileSpec.find(".");
         if(pos &gt; fileSpec.size())
           return fileSpec;
@@ -589,33 +636,33 @@ std::string Path::getName(const std::string &fileSpec, bool withExt)
     return fileSpec.substr(pos+1,fileSpec.length()-pos);
   else
   {
-    // remove ext
+    <span class = "toggleCommentDisplay">// remove ext</span>
     size_t pos2 = fileSpec.find(".", pos);
     if(pos2 &gt; fileSpec.size())
-      // no ext
+      <span class = "toggleCommentDisplay">// no ext</span>
       return fileSpec.substr(pos+1);
     return fileSpec.substr(pos+1, pos2-pos-1);
   }
 }
-//----&lt; get extension from fileSpec &gt;----------------------------------
+<span class = "toggleCommentDisplay">//----&lt; get extension from fileSpec &gt;----------------------------------</span>
   
 std::string Path::getExt(const std::string& fileSpec)
 {
   size_t pos1 = fileSpec.find_last_of('/');
   size_t pos2 = fileSpec.find_last_of('\\');
   size_t pos = fileSpec.find_last_of('.');
-  // handle ../ or ..\\ with no extension
+  <span class = "toggleCommentDisplay">// handle ../ or ..\\ with no extension</span>
   if(pos1 &lt; fileSpec.length() || pos2 &lt; fileSpec.length())
   {
     if(pos &lt; min(pos1, pos2))
       return std::string("");
   }
-  // only . is extension delimiter
+  <span class = "toggleCommentDisplay">// only . is extension delimiter</span>
   if(0 &lt;= pos && pos &lt; fileSpec.length())
     return toLower(fileSpec.substr(pos+1,fileSpec.length()-pos));
   return std::string("");
 }
-//----&lt; get path from fileSpec &gt;---------------------------------------
+<span class = "toggleCommentDisplay">//----&lt; get path from fileSpec &gt;---------------------------------------</span>
 
 std::string Path::getPath(const std::string &fileSpec)
 {
@@ -628,18 +675,18 @@ std::string Path::getPath(const std::string &fileSpec)
     return fileSpec.substr(0,pos+1);
   return fileSpec;
 }
-//----&lt; get absoluth path from fileSpec &gt;------------------------------
+<span class = "toggleCommentDisplay">//----&lt; get absoluth path from fileSpec &gt;------------------------------</span>
 
 std::string Path::getFullFileSpec(const std::string &fileSpec)
 {
   const size_t BufSize = 256;
   char buffer[BufSize];
-  char filebuffer[BufSize];  // don't use but GetFullPathName will
+  char filebuffer[BufSize];  <span class = "toggleCommentDisplay">// don't use but GetFullPathName will</span>
   char* name = filebuffer;
   ::GetFullPathNameA(fileSpec.c_str(),BufSize, buffer, &name);
   return std::string(buffer);
 }
-//----&lt; create file spec from path and name &gt;--------------------------
+<span class = "toggleCommentDisplay">//----&lt; create file spec from path and name &gt;--------------------------</span>
 
 std::string Path::fileSpec(const std::string &path, const std::string &name)
 {
@@ -658,7 +705,7 @@ std::string Path::fileSpec(const std::string &path, const std::string &name)
   }
   return fs;
 }
-//----&lt; return name of the current directory &gt;-----------------------------
+<span class = "toggleCommentDisplay">//----&lt; return name of the current directory &gt;-----------------------------</span>
 
 std::string Directory::getCurrentDirectory()
 {
@@ -666,13 +713,13 @@ std::string Directory::getCurrentDirectory()
   ::GetCurrentDirectoryA(MAX_PATH,buffer);
   return std::string(buffer);
 }
-//----&lt; change the current directory to path &gt;-----------------------------
+<span class = "toggleCommentDisplay">//----&lt; change the current directory to path &gt;-----------------------------</span>
 
 bool Directory::setCurrentDirectory(const std::string& path)
 {
   return ::SetCurrentDirectoryA(path.c_str()) != 0;
 }
-//----&lt; get names of all the files matching pattern (path:name) &gt;----------
+<span class = "toggleCommentDisplay">//----&lt; get names of all the files matching pattern (path:name) &gt;----------</span>
 
 std::vector&lt;std::string&gt; Directory::getFiles(const std::string& path, const std::string& pattern)
 {
@@ -691,7 +738,7 @@ std::vector&lt;std::string&gt; Directory::getFiles(const std::string& path, cons
   }
   return files;
 }
-//----&lt; get names of all directories matching pattern (path:name) &gt;--------
+<span class = "toggleCommentDisplay">//----&lt; get names of all directories matching pattern (path:name) &gt;--------</span>
 
 std::vector&lt;std::string&gt; Directory::getDirectories(const std::string& path, const std::string& pattern)
 {
@@ -710,13 +757,13 @@ std::vector&lt;std::string&gt; Directory::getDirectories(const std::string& path
   }
   return dirs;
 }
-//----&lt; create directory &gt;-------------------------------------------------
+<span class = "toggleCommentDisplay">//----&lt; create directory &gt;-------------------------------------------------</span>
 
 bool Directory::create(const std::string& path)
 {
   return ::CreateDirectoryA(path.c_str(), NULL) == 0;
 }
-//----&lt; does directory exist? &gt;--------------------------------------------
+<span class = "toggleCommentDisplay">//----&lt; does directory exist? &gt;--------------------------------------------</span>
 
 bool Directory::exists(const std::string& path)
 {
@@ -725,16 +772,16 @@ bool Directory::exists(const std::string& path)
   return (dwAttrib != INVALID_FILE_ATTRIBUTES && 
          (dwAttrib & FILE_ATTRIBUTE_DIRECTORY));
 }
-//----&lt; remove directory &gt;-------------------------------------------------
+<span class = "toggleCommentDisplay">//----&lt; remove directory &gt;-------------------------------------------------</span>
 
 bool Directory::remove(const std::string& path)
 {
   return ::RemoveDirectoryA(path.c_str()) == 0;
 }
-//----&lt; find first file &gt;--------------------------------------------------
+<span class = "toggleCommentDisplay">//----&lt; find first file &gt;--------------------------------------------------</span>
 
 std::string FileSystemSearch::firstFile(const std::string& path, const std::string& pattern)
-{
+<span class = "toggleMethodDisplay">{
   hFindFile = ::FindFirstFileA(Path::fileSpec(path, pattern).c_str(), pFindFileData);
   if(hFindFile != INVALID_HANDLE_VALUE)
   {
@@ -746,20 +793,20 @@ std::string FileSystemSearch::firstFile(const std::string& path, const std::stri
           return pFindFileData-&gt;cFileName;
   }
   return "";
-}
-//----&lt; find next file &gt;---------------------------------------------------
+}</span>
+<span class = "toggleCommentDisplay">//----&lt; find next file &gt;---------------------------------------------------</span>
 
 std::string FileSystemSearch::nextFile()
-{
+<span class = "toggleMethodDisplay">{
   while(::FindNextFileA(hFindFile, pFindFileData))
     if(!(pFindFileData-&gt;dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY))
       return pFindFileData-&gt;cFileName;
   return "";
-}
-//----&lt; find first file &gt;--------------------------------------------------
+}</span>
+<span class = "toggleCommentDisplay">//----&lt; find first file &gt;--------------------------------------------------</span>
 
 std::string FileSystemSearch::firstDirectory(const std::string& path, const std::string& pattern)
-{
+<span class = "toggleMethodDisplay">{
   hFindFile = ::FindFirstFileA(Path::fileSpec(path, pattern).c_str(), pFindFileData);
   if(hFindFile != INVALID_HANDLE_VALUE)
   {
@@ -771,17 +818,17 @@ std::string FileSystemSearch::firstDirectory(const std::string& path, const std:
           return pFindFileData-&gt;cFileName;
   }
   return "";
-}
-//----&lt; find next file &gt;---------------------------------------------------
+}</span>
+<span class = "toggleCommentDisplay">//----&lt; find next file &gt;---------------------------------------------------</span>
 
 std::string FileSystemSearch::nextDirectory()
-{
+<span class = "toggleMethodDisplay">{
   while(::FindNextFileA(hFindFile, pFindFileData))
     if(pFindFileData-&gt;dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
       return pFindFileData-&gt;cFileName;
   return "";
-}
-//----&lt; test stub &gt;--------------------------------------------------------
+}</span>
+<span class = "toggleCommentDisplay">//----&lt; test stub &gt;--------------------------------------------------------</span>
 
 #ifdef TEST_FILESYSTEM
 
@@ -815,60 +862,17 @@ int main(int argc, char* argv[])
   std::string lower = Path::toLower("Temp.Txt");
   std::cout &lt;&lt; "\n  Path::toLower(\"Temp.Txt\") = " &lt;&lt; lower;
   std::cout &lt;&lt; std::endl;
-  /*
-  title("Demonstrate FileSystemSearch class");
 
-  const size_t PathSetSize = 2;
-  std::string home = ::getenv("HOMEDRIVE");
-  std::string pathSet[] = { home+"\\\\", "." };
-  FileSystemSearch fss;
-  for(size_t i = 0; i&lt;PathSetSize; ++i)
-  {
-    std::cout &lt;&lt; "\n  searching for files on \"" &lt;&lt; pathSet[i] &lt;&lt; "\"";
-    std::cout &lt;&lt; "\n " &lt;&lt; std::string(27 + pathSet[i].size(), '-');
-    std::string searchPath = pathSet[i];
-    std::string fileName = fss.firstFile(searchPath);
-    if(fileName.size() &gt; 0)
-      std::cout &lt;&lt; "\n  " &lt;&lt; fileName;
-    else
-      std::cout &lt;&lt; "\n  no files match search";
-    while(true) {
-      fileName = fss.nextFile();
-      if(fileName.size() &gt; 0)
-        std::cout &lt;&lt; "\n  " &lt;&lt; fileName;
-      else
-        break;
-    }
-    std::cout &lt;&lt; std::endl;
-
-    std::cout &lt;&lt; "\n  searching for directories on \"" &lt;&lt; pathSet[i] &lt;&lt; "\"";
-    std::cout &lt;&lt; "\n " &lt;&lt; std::string(33 + pathSet[i].size(), '-');
-    std::string dirName = fss.firstDirectory(searchPath);
-    if(dirName.size() &gt; 0)
-      std::cout &lt;&lt; "\n  " &lt;&lt; dirName;
-    else
-      std::cout &lt;&lt; "\n  no directories match search";
-    while(true)
-    {
-      dirName = fss.nextDirectory();
-      if(dirName.size() &gt; 0)
-        std::cout &lt;&lt; "\n  " &lt;&lt; dirName;
-      else
-        break;
-    }
-    std::cout &lt;&lt; std::endl;
-  }
-  */
   title("Demonstrate Directory class");
 
-  // Display contents of current directory
+  <span class = "toggleCommentDisplay">// Display contents of current directory</span>
 
   std::cout &lt;&lt; "\n  current directory is:\n    " &lt;&lt; Directory::getCurrentDirectory();
   std::cout &lt;&lt; "\n  It contains files:";
   std::vector&lt;std::string&gt; currfiles = Directory::getFiles();
-  ///////////////////////////////////////////////////////
-  // This works too
-  // std::vector&lt;std::string&gt; currfiles = d.getFiles();  
+  <span class = "toggleCommentDisplay">///////////////////////////////////////////////////////</span>
+  <span class = "toggleCommentDisplay">// This works too</span>
+  <span class = "toggleCommentDisplay">// std::vector&lt;std::string&gt; currfiles = d.getFiles();  </span>
   for(size_t i=0; i&lt;currfiles.size(); ++i)
     std::cout &lt;&lt; "\n    " &lt;&lt; currfiles[i].c_str();
   std::cout &lt;&lt; "\n  and contains directories:";
@@ -877,14 +881,14 @@ int main(int argc, char* argv[])
     std::cout &lt;&lt; "\n    " &lt;&lt; currdirs[i].c_str();
   std::cout &lt;&lt; "\n";
 
-  // Display contents of non-current directory
+  <span class = "toggleCommentDisplay">// Display contents of non-current directory</span>
 
   std::cout &lt;&lt; "\n  .txt files residing in C:/temp are:";
   currfiles = Directory::getFiles("c:/temp/", "*.txt");
 
-  // if we want fully qualified file names, we have to
-  // set the current directory to the path on which the files
-  // reside, if it isn't already so set
+  <span class = "toggleCommentDisplay">// if we want fully qualified file names, we have to</span>
+  <span class = "toggleCommentDisplay">// set the current directory to the path on which the files</span>
+  <span class = "toggleCommentDisplay">// reside, if it isn't already so set</span>
 
   std::string currDir = Directory::getCurrentDirectory();
   Directory::setCurrentDirectory("c:/temp/");
@@ -892,11 +896,11 @@ int main(int argc, char* argv[])
     std::cout &lt;&lt; "\n    " &lt;&lt; Path::getFullFileSpec(currfiles[i]).c_str();
   Directory::setCurrentDirectory(currDir);
 
-  // we have to restore the current directory so the
-  // remaining tests work
+  <span class = "toggleCommentDisplay">// we have to restore the current directory so the</span>
+  <span class = "toggleCommentDisplay">// remaining tests work</span>
 
-  // it's probably easier just to use Path::fileSpec(path, filename)
-  // like this:
+  <span class = "toggleCommentDisplay">// it's probably easier just to use Path::fileSpec(path, filename)</span>
+  <span class = "toggleCommentDisplay">// like this:</span>
 
   for (size_t i = 0; i&lt;currfiles.size(); ++i)
     std::cout &lt;&lt; "\n    " &lt;&lt; Path::fileSpec("c:\\temp\\", currfiles[i]).c_str();
@@ -908,7 +912,7 @@ int main(int argc, char* argv[])
     std::cout &lt;&lt; "\n    " &lt;&lt; currdirs[i].c_str();
   std::cout &lt;&lt; "\n";
 
-  // Create directory
+  <span class = "toggleCommentDisplay">// Create directory</span>
 
   title("Demonstrate FileInfo Class Operations", '=');
   std::cout &lt;&lt; "\n";
@@ -1021,7 +1025,7 @@ int main(int argc, char* argv[])
   title("Demonstrate File class operations", '=');
   std::cout &lt;&lt; "\n";
 
-  // copy binary file from one directory to another
+  <span class = "toggleCommentDisplay">// copy binary file from one directory to another</span>
 
   File me("../debug/filesystemdemo.exe");
   me.open(File::in, File::binary);
@@ -1059,7 +1063,7 @@ int main(int argc, char* argv[])
     }
   }
 
-  // save some filespecs of text files in a vector for File demonstrations
+  <span class = "toggleCommentDisplay">// save some filespecs of text files in a vector for File demonstrations</span>
 
   std::vector&lt;std::string&gt; files;
   if(argc == 1)
@@ -1071,12 +1075,12 @@ int main(int argc, char* argv[])
   {
     files.push_back(argv[i]);
   }
-  files.push_back("FileSystem.cpp");                     // file not on current path
-  files.push_back("../FileSystemDemo/FileSystem.cpp");   // file from project directory
-  files.push_back("../FileSystemTest.txt");              // file in solution directory
-  files.push_back("foobar");                             // doesn't exist
+  files.push_back("FileSystem.cpp");                     <span class = "toggleCommentDisplay">// file not on current path</span>
+  files.push_back("../FileSystemDemo/FileSystem.cpp");   <span class = "toggleCommentDisplay">// file from project directory</span>
+  files.push_back("../FileSystemTest.txt");              <span class = "toggleCommentDisplay">// file in solution directory</span>
+  files.push_back("foobar");                             <span class = "toggleCommentDisplay">// doesn't exist</span>
 
-  // open each file and display a few lines of text
+  <span class = "toggleCommentDisplay">// open each file and display a few lines of text</span>
 
   for(size_t i=0; i&lt;files.size(); ++i)
   {
@@ -1100,7 +1104,7 @@ int main(int argc, char* argv[])
   }
   std::cout &lt;&lt; "\n";
 
-  // read all lines of text file into string
+  <span class = "toggleCommentDisplay">// read all lines of text file into string</span>
 
   title("testing File::readAll()", '-');
   std::cout &lt;&lt; "\n";
@@ -1124,29 +1128,33 @@ int main(int argc, char* argv[])
   }
   testAllTrue.close();
 
-  // test reading non-text files
+  <span class = "toggleCommentDisplay">// test reading non-text files</span>
 
   title("test reading non-text files", '-');
+  std::cout &lt;&lt; "\n  Attempting to open Visual Studio files.";
+  std::cout &lt;&lt; "\n  These are locked by VS when running from IDE.";
+  std::cout &lt;&lt; "\n  They will open if you run FileSystemDemo from the debug folder,";
+  std::cout &lt;&lt; "\n  provided you've closed the solution in VS.\n";
   std::cout &lt;&lt; "\n";
-  std::string testPath = "./debug";  // run from project directory (what Visual Studio does)
+  std::string testPath = "./debug";  <span class = "toggleCommentDisplay">// run from project directory (what Visual Studio does)</span>
   if (!Directory::exists(testPath))
-    testPath = ".";                  // run from solution debug directory
+    testPath = ".";                  <span class = "toggleCommentDisplay">// run from solution debug directory</span>
   std::vector&lt;std::string&gt; testFiles = Directory::getFiles(testPath);
   for (auto file : testFiles)
   {
     try
     {
       std::string ext = Path::getExt(file);
-      if (ext == "exe" || ext == "dll" || file == "run.dat")
+      if (ext == "exe" || ext == "obj" || ext == "dll" || file == "run.dat")
       {
-        /* reading binary file works, but generates a lot of garbage */
-        /* I use run.dat to capture this output so including will make output confusing */
+        <span class = "toggleCommentDisplay">/* reading binary file works, but generates a lot of garbage */</span>
+        <span class = "toggleCommentDisplay">/* I use run.dat to capture this output so including will make output confusing */</span>
 
         std::cout &lt;&lt; "  skipping binary file " &lt;&lt; file &lt;&lt; "\n";
         continue;
       }
       File test(file);
-      test.open(File::in);  // open as text file
+      test.open(File::in);  <span class = "toggleCommentDisplay">// open as text file</span>
       std::cout &lt;&lt; "\n  processing \"" &lt;&lt; file &lt;&lt; "\"\n";
       if (test.isGood())
       {
@@ -1164,29 +1172,29 @@ int main(int argc, char* argv[])
     }
   }
 
-  // read text file and write to another text file
+  <span class = "toggleCommentDisplay">// read text file and write to another text file</span>
 
   title("writing to c:/temp/test.txt", '-');
   File in("../FileSystemDemo/FileSystem.h");
   in.open(File::in, File::text);
   File out("c:/temp/test.txt");
   out.open(File::out, File::text);
-  while(in.isGood())
+  while(in.isGood() && out.isGood())
   {
     std::string temp = in.getLine();
-    //std::cout &lt;&lt; "\n  " &lt;&lt; temp.c_str();
+    <span class = "toggleCommentDisplay">//std::cout &lt;&lt; "\n  " &lt;&lt; temp.c_str();</span>
     out.putLine(temp);
     out.putLine("\n");
   }
   std::cout &lt;&lt; "\n  check c:/temp/test.txt to validate";
   std::cout &lt;&lt; "\n\n";
 
-  // read and write buffers
+  <span class = "toggleCommentDisplay">// read and write buffers</span>
 
   title("reading and writing buffers");
   std::cout &lt;&lt; "\n  " &lt;&lt; FileSystem::Directory::getCurrentDirectory();
-  std::string fileIn = "TestFileSystem/UnitTest.h";
-  std::string fileOut = "TestFileSystem/CopyOfUnitTest.h";
+  std::string fileIn = "../TestFileSystem/UnitTest.h";
+  std::string fileOut = "../TestFileSystem/CopyOfUnitTest.h";
   File bufferIn(fileIn);
   bufferIn.open(File::in, File::binary);
   if (!bufferIn.isGood())
@@ -1215,10 +1223,10 @@ int main(int argc, char* argv[])
   while (true)
   {
     size_t resultSize = bufferIn.getBuffer(bufLen, buffer);
-    //std::cout &lt;&lt; "\n  reading buffer of size " &lt;&lt; resultSize &lt;&lt; " bytes";
+    <span class = "toggleCommentDisplay">//std::cout &lt;&lt; "\n  reading buffer of size " &lt;&lt; resultSize &lt;&lt; " bytes";</span>
     std::string temp1(buffer, resultSize);
     std::cout &lt;&lt; temp1;
-    //std::cout &lt;&lt; "\n  writing buffer of size " &lt;&lt; resultSize &lt;&lt; "bytes";
+    <span class = "toggleCommentDisplay">//std::cout &lt;&lt; "\n  writing buffer of size " &lt;&lt; resultSize &lt;&lt; "bytes";</span>
     bufferOut.putBuffer(resultSize, buffer);
     if (resultSize &lt; bufLen || !bufferIn.isGood() || !bufferOut.isGood())
     {
