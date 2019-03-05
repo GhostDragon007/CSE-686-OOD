@@ -1,4 +1,4 @@
-﻿#ifndef ITOKENCOLLECTION_H
+#ifndef ITOKENCOLLECTION_H
 #define ITOKENCOLLECTION_H
 /////////////////////////////////////////////////////////////////////
 // ITokenCollection.h - Lexical Scanner interface                  //

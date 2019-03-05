@@ -184,11 +184,11 @@ namespace CodeAnalysis
 	  if (pItem->type_ == "class") {
 		  classPos.push_back({ (int)pItem->startLineCount_, (int)pItem->endLineCount_ });
 	  }
-	  static std::string path;
+	  /*static std::string path;*/
 	  static size_t indentLevel = 0;
-	  std::ostringstream out;
+	  /*std::ostringstream out;
 	  out << "\n  " << std::string(2 * indentLevel, ' ') << pItem->show();
-	  std::cout << out.str();
+	  std::cout << out.str();*/
 	  auto iter = pItem->children_.begin();
 	  ++indentLevel;
 	  while (iter != pItem->children_.end())

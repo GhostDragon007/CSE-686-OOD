@@ -63,74 +63,76 @@
   <button onclick="showHideClass(&#39;toggleCommentDisplay&#39;)" id="commentButton">Show or Hide Comment Contents</button>
 <pre>
 <pre>
-ÿþ/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<a href="../ConvertedPages/Properties.h.html">Properties.h</a>
+<a href="../ConvertedPages/StringUtilities.h.html">StringUtilities.h</a>
+<span class = "toggleCommentDisplay">/////////////////////////////////////////////////////////////////////</span>
+<span class = "toggleCommentDisplay">// Properties.cpp - provides getter and setter methods             //</span>
+<span class = "toggleCommentDisplay">// ver 1.0                                                         //</span>
+<span class = "toggleCommentDisplay">// Jim Fawcett, CSE687 - Object Oriented Design, Fall 2018         //</span>
+<span class = "toggleCommentDisplay">/////////////////////////////////////////////////////////////////////</span>
+
+#ifdef TEST_PROPERTIES
+
+#include "Properties.h"
+#include "../Utilities/StringUtilities/StringUtilities.h"
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+
+using namespace Utilities;
+
+class Widget
+<span class = "toggleClassDisplay">{
+public:
+  Widget(const std::string& msg = "widget here") : msg_(msg) <span class = "toggleMethodDisplay">{}</span>
+  void say() <span class = "toggleMethodDisplay">{
+    std::cout &lt;&lt; "\n  " &lt;&lt; msg_;
+  }</span>
+private:
+  std::string msg_;
+};</span>
+
+class X
+<span class = "toggleClassDisplay">{
+public:
+  Property&lt;int&gt; intProp;
+  Property&lt;double&gt; dblProp;
+  Property&lt;Widget&gt; wgtProp;
+};</span>
+
+int main()
+<span class = "toggleMethodDisplay">{
+  Title("Demonstrating Properties");
+  
+  X x;
+  Widget widget;
+  x.intProp(3);
+  x.dblProp(3.14159);
+  x.wgtProp(widget);
+
+  std::cout &lt;&lt; "\n  x.intProp = " &lt;&lt; x.intProp();
+  std::cout &lt;&lt; "\n  x.dblProp = " &lt;&lt; x.dblProp();
+  std::cout &lt;&lt; "\n  x.wgtProp().say() emits: ";
+  x.wgtProp().say();
+  putline();
+  
+  title("after modifying X's properties:");
+  x.intProp(-2);
+  x.dblProp(0.33333);
+  Widget newWgt("newWgt here");
+  x.wgtProp(newWgt);
+  std::cout &lt;&lt; "\n  x.intProp = " &lt;&lt; x.intProp();
+  std::cout &lt;&lt; "\n  x.dblProp = " &lt;&lt; x.dblProp();
+  std::cout &lt;&lt; "\n  x.wgtProp().say() emits: ";
+  x.wgtProp().say();
+
+  Property&lt;std::string&gt; strProp;
+  strProp("a string");
+  std::cout &lt;&lt; "\n  value of strProp(\"a string\") is: " &lt;&lt; strProp();
+  strProp.ref() += " with some more text";
+  std::cout &lt;&lt; "\n  after appending to strProp.ref(), strProp() yields: " &lt;&lt; strProp();
+  std::cout &lt;&lt; "\n\n";
+}</span>
+#endif
 
 </pre>
 </body></html>

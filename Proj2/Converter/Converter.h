@@ -1,14 +1,14 @@
+#pragma once
 /////////////////////////////////////////////////////////////////////////////
 // Converter.h - accept a vector of filenames to convert those files to    //
 //               html files                                                //
 // ver 1.1                                                                 //
 // Language:    Visual C++, Visual Studio 2019                             //
-// Platform:    Dell Latitude , Core i7, Windows 10                        //
+// Platform:    Dell Latitude 5580, Core i7, Windows 10                    //
 // Application: CSE687 - OOD Project #2                                    //
 // Author:      Junhao Shen                                                //
 //              (315)480-4274, jshen18@syr.edu                             //
 /////////////////////////////////////////////////////////////////////////////
-
 /*
  * Package Operations:
  * -------------------
@@ -42,7 +42,6 @@
  *
 */
 
-#pragma once
 #include <iostream>
 #include <vector>
 #include <fstream>

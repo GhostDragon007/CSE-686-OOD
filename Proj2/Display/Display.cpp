@@ -146,8 +146,6 @@ void CALLBACK WaitOrTimerCallback(_In_ PVOID lpParameter, _In_ BOOLEAN TimerOrWa
 
 void Process::pop_out(std::vector<std::string> files, std::string explorerPath)
 {
-	std::cout << "\n  Display: Demonstrating code pop-up in Chrome";
-	std::cout << "\n ======================================";
 	Process p;
 	p.title("test application");
 	std::string appPath = explorerPath;
@@ -155,7 +153,7 @@ void Process::pop_out(std::vector<std::string> files, std::string explorerPath)
 	p.application(appPath);
 
 	std::cout << "\n  You need to kill each window (upper right button) to continue.\n\n";
-	std::cout << "  MAKE SURE YOU HAVE CLOSED YOUR EXPLORER!!!\n";
+	std::cout << "  MAKE SURE YOU HAVE CLOSED YOUR BROWSER!!!\n";
 	std::cout << "\n  Press key to start";
 	_getche();
 
@@ -186,6 +184,8 @@ void Process::pop_out(std::vector<std::string> files, std::string explorerPath)
 
 #ifdef TEST_DISPLAY
 int main() {
+	std::cout << "\n  Display: Demonstrating code pop-up in Chrome";
+	std::cout << "\n ======================================";
 	std::vector<std::string> files = { "../Parser/Parser.cpp", "../Parser/Parser.h"};
 	std::string appPath = "C:/Users/47221/AppData/Local/Google/Chrome/Application/chrome.exe";
 	Process pro;

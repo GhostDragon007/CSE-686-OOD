@@ -63,8 +63,8 @@
   <button onclick="showHideClass(&#39;toggleCommentDisplay&#39;)" id="commentButton">Show or Hide Comment Contents</button>
 <pre>
 <pre>
-<a href="../ConvertedPages/ITokenCollection.h.html">ITokenCollection.h"</a>
-<a href="../ConvertedPages/ScopeStack.h.html">ScopeStack.h"</a>
+<a href="../ConvertedPages/ITokenCollection.h.html">ITokenCollection.h</a>
+<a href="../ConvertedPages/ScopeStack.h.html">ScopeStack.h</a>
 #pragma once
 <span class = "toggleCommentDisplay">/////////////////////////////////////////////////////////////////////</span>
 <span class = "toggleCommentDisplay">//  AbstrSynTree.h - Represents an Abstract Syntax Tree            //</span>
@@ -84,11 +84,11 @@
 
   Public Interface:
   =================
-  AbstrSynTree ast(scopeStack);       <span class = "toggleCommentDisplay">// create instance, passing in ScopeStack
-  ASTNode* pNode = ast.root();        <span class = "toggleCommentDisplay">// get or set root of AST
-  ast.add(pNode);                     <span class = "toggleCommentDisplay">// add ASTNode to tree, linked to current scope
-  ASTNode* pNode = ast.find(myType);  <span class = "toggleCommentDisplay">// retrieve ptr to ASTNode representing myType
-  ast.pop();                          <span class = "toggleCommentDisplay">// close current scope by poping top of scopeStack
+  AbstrSynTree ast(scopeStack);       <span class = "toggleCommentDisplay">// create instance, passing in ScopeStack</span>
+  ASTNode* pNode = ast.root();        <span class = "toggleCommentDisplay">// get or set root of AST</span>
+  ast.add(pNode);                     <span class = "toggleCommentDisplay">// add ASTNode to tree, linked to current scope</span>
+  ASTNode* pNode = ast.find(myType);  <span class = "toggleCommentDisplay">// retrieve ptr to ASTNode representing myType</span>
+  ast.pop();                          <span class = "toggleCommentDisplay">// close current scope by poping top of scopeStack</span>
 
   Build Process:
   ==============

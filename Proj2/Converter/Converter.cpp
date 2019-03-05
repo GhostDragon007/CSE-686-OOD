@@ -3,7 +3,7 @@
 //                 html files                                              //
 // ver 1.1                                                                 //
 // Language:    Visual C++, Visual Studio 2019                             //
-// Platform:    Dell Latitude , Core i7, Windows 10                        //
+// Platform:    Dell Latitude 5580, Core i7, Windows 10                    //
 // Application: CSE687 - OOD Project #2                                    //
 // Author:      Junhao Shen                                                //
 //              (315)480-4274, jshen18@syr.edu                             //
@@ -70,6 +70,7 @@ void Convert::getFuncClass(std::vector<std::string>& files,
 			Repository* pRepo = Repository::getInstance();
 			ASTNode* pGlobalScope = pRepo->getGlobalScope();
 			TreeWalk(pGlobalScope, funcPos[i], classPos[i]);
+			int i = 0;
 			//putline();
 		}
 		catch (std::exception& ex)
@@ -81,7 +82,7 @@ void Convert::getFuncClass(std::vector<std::string>& files,
 }
 
 //----< convert cpp/h files to html >------------------------------------------
-//convertToHtml: accept filenames outputed by DirExplorer to convert those files to html files,
+//convertToHtml: accept filenames outputed by Loader to convert those files to html files,
 //			 then store them in a folder named "ConvertedPages"
 
 void Convert::convertToHtml(std::vector<std::string>& files, std::map<std::string, std::vector<std::string>>& dependencies,
@@ -123,16 +124,14 @@ void Convert::convertToHtml(std::vector<std::string>& files, std::map<std::strin
 				name.pop_back();
 				if (name[0] == '\"')
 					name.erase(0, 1);
-				fout << "<a href=\"../ConvertedPages/" + name + ".html\">" + FileSystem::Path::getName(depend) + "</a>" << std::endl;
+				fout << "<a href=\"../ConvertedPages/" + name + ".html\">" + name + "</a>" << std::endl;
 			}
 			int rowCount = 1;
 			int func_beginCount = 0, func_endCount = 0, class_beginCount = 0, class_endCount = 0;
 			int isDoubleComment = 0;
 			/*int isSingleComment = 0;*/
 			while (!iout.eof()) {
-				
 				iout.getline(ch, sizeof(ch));
-
 				char newCh[256];
 				int i = 0, j = 0, isComment = 0;
 				int isFunc = 0, isClass = 0;
@@ -219,7 +218,7 @@ void Convert::convertToHtml(std::vector<std::string>& files, std::map<std::strin
 				}
 				newCh[j] = '\0';
 				fout << newCh;
-				if (isComment == 1 && isDoubleComment == 0)
+				if (isComment == 1)
 					fout << "</span>";
 				if (func_endCount < funcP.size()) {
 					if (rowCount == funcP[func_endCount][1]) {
@@ -234,10 +233,6 @@ void Convert::convertToHtml(std::vector<std::string>& files, std::map<std::strin
 					}
 				}
 				fout << std::endl;
-				/*if (isSingleComment == 1) {
-					fout << "</span>";
-					isSingleComment = 0;
-				}*/
 				rowCount++;
 			}
 			fout << "</pre>" << std::endl;
@@ -248,7 +243,7 @@ void Convert::convertToHtml(std::vector<std::string>& files, std::map<std::strin
 		iout.close();
 		preOut.close();
 	}
-	std::cout << "\n\n  Convert successfully!\n\n";
+	std::cout << "\n  Convert successfully!\n\n";
 }
 
 #ifdef TEST_CONVERTER
@@ -267,7 +262,7 @@ int main() {
 	std::vector<std::vector<std::vector<int>>> classPos(files.size());
 	std::cout << "\n\n  1. getFuncClass: get links to all the files in the directory tree, on which it depends" << std::endl;
 	con.getFuncClass(files, funcPos, classPos);
-	std::cout << "\n\n  2. convertToHtml: convertToHtml: convert cpp/h files to html" << std::endl;
+	std::cout << "\n\n  2. convertToHtml: convert cpp/h files to html" << std::endl;
 	con.convertToHtml(files, dependencies, funcPos, classPos);
 
 	return 0;

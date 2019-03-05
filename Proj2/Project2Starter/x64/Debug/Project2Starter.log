@@ -1,21 +1,3 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(391,5): warning MSB8028: The intermediate directory (x64\Debug\) contains files shared from another project (Project2Starter.vcxproj).  This can lead to incorrect clean and rebuild behavior.
-  AbstrSynTree.cpp
   Converter.cpp
-  Dependencies.cpp
-  Display.cpp
-  FileSystem.cpp
-  GrammarHelpers.cpp
-  Loader.cpp
-  Logger.cpp
-  ScopeStack.cpp
-  Semi.cpp
-  Toker.cpp
-  CodeUtilities.cpp
-  StringUtilities.cpp
-  Utilities.cpp
-  ActionsAndRules.cpp
-  ConfigureParser.cpp
-  Executive.cpp
-  Parser.cpp
-  Generating Code...
   Project2Starter.vcxproj -> D:\Git\CSE-687-OOD\Proj2\x64\Debug\Executive.exe

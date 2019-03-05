@@ -63,22 +63,22 @@
   <button onclick="showHideClass(&#39;toggleCommentDisplay&#39;)" id="commentButton">Show or Hide Comment Contents</button>
 <pre>
 <pre>
-<a href="../ConvertedPages/Converter.h.html">"Converter.h"</a>
-<a href="../ConvertedPages/StringUtilities.h.html">StringUtilities.h"</a>
-<a href="../ConvertedPages/CodeUtilities.h.html">CodeUtilities.h"</a>
-<a href="../ConvertedPages/FileSystem.h.html">FileSystem.h"</a>
-<a href="../ConvertedPages/Parser.h.html">Parser.h"</a>
-<a href="../ConvertedPages/Utilities.h.html">Utilities.h"</a>
-<a href="../ConvertedPages/Toker.h.html">Toker.h"</a>
-<a href="../ConvertedPages/Semi.h.html">Semi.h"</a>
-<a href="../ConvertedPages/ActionsAndRules.h.html">ActionsAndRules.h"</a>
-<a href="../ConvertedPages/ConfigureParser.h.html">ConfigureParser.h"</a>
+<a href="../ConvertedPages/Converter.h.html">Converter.h</a>
+<a href="../ConvertedPages/StringUtilities.h.html">StringUtilities.h</a>
+<a href="../ConvertedPages/CodeUtilities.h.html">CodeUtilities.h</a>
+<a href="../ConvertedPages/FileSystem.h.html">FileSystem.h</a>
+<a href="../ConvertedPages/Parser.h.html">Parser.h</a>
+<a href="../ConvertedPages/Utilities.h.html">Utilities.h</a>
+<a href="../ConvertedPages/Toker.h.html">Toker.h</a>
+<a href="../ConvertedPages/Semi.h.html">Semi.h</a>
+<a href="../ConvertedPages/ActionsAndRules.h.html">ActionsAndRules.h</a>
+<a href="../ConvertedPages/ConfigureParser.h.html">ConfigureParser.h</a>
 <span class = "toggleCommentDisplay">/////////////////////////////////////////////////////////////////////////////</span>
 <span class = "toggleCommentDisplay">// Converter.cpp - accept a vector of filenames to convert those files to  //</span>
 <span class = "toggleCommentDisplay">//                 html files                                              //</span>
 <span class = "toggleCommentDisplay">// ver 1.1                                                                 //</span>
 <span class = "toggleCommentDisplay">// Language:    Visual C++, Visual Studio 2019                             //</span>
-<span class = "toggleCommentDisplay">// Platform:    Dell Latitude , Core i7, Windows 10                        //</span>
+<span class = "toggleCommentDisplay">// Platform:    Dell Latitude 5580, Core i7, Windows 10                    //</span>
 <span class = "toggleCommentDisplay">// Application: CSE687 - OOD Project #2                                    //</span>
 <span class = "toggleCommentDisplay">// Author:      Junhao Shen                                                //</span>
 <span class = "toggleCommentDisplay">//              (315)480-4274, jshen18@syr.edu                             //</span>
@@ -145,6 +145,7 @@ void Convert::getFuncClass(std::vector&lt;std::string&gt;& files,
 			Repository* pRepo = Repository::getInstance();
 			ASTNode* pGlobalScope = pRepo-&gt;getGlobalScope();
 			TreeWalk(pGlobalScope, funcPos[i], classPos[i]);
+			int i = 0;
 			<span class = "toggleCommentDisplay">//putline();</span>
 		}
 		catch (std::exception& ex)
@@ -156,7 +157,7 @@ void Convert::getFuncClass(std::vector&lt;std::string&gt;& files,
 }</span>
 
 <span class = "toggleCommentDisplay">//----&lt; convert cpp/h files to html &gt;------------------------------------------</span>
-<span class = "toggleCommentDisplay">//convertToHtml: accept filenames outputed by DirExplorer to convert those files to html files,</span>
+<span class = "toggleCommentDisplay">//convertToHtml: accept filenames outputed by Loader to convert those files to html files,</span>
 <span class = "toggleCommentDisplay">//			 then store them in a folder named "ConvertedPages"</span>
 
 void Convert::convertToHtml(std::vector&lt;std::string&gt;& files, std::map&lt;std::string, std::vector&lt;std::string&gt;&gt;& dependencies,
@@ -198,16 +199,14 @@ void Convert::convertToHtml(std::vector&lt;std::string&gt;& files, std::map&lt;s
 				name.pop_back();
 				if (name[0] == '\"')
 					name.erase(0, 1);
-				fout &lt;&lt; "&lt;a href=\"../ConvertedPages/" + name + ".html\"&gt;" + FileSystem::Path::getName(depend) + "&lt;/a&gt;" &lt;&lt; std::endl;
+				fout &lt;&lt; "&lt;a href=\"../ConvertedPages/" + name + ".html\"&gt;" + name + "&lt;/a&gt;" &lt;&lt; std::endl;
 			}
 			int rowCount = 1;
 			int func_beginCount = 0, func_endCount = 0, class_beginCount = 0, class_endCount = 0;
 			int isDoubleComment = 0;
 			<span class = "toggleCommentDisplay">/*int isSingleComment = 0;*/</span>
 			while (!iout.eof()) {
-				
 				iout.getline(ch, sizeof(ch));
-
 				char newCh[256];
 				int i = 0, j = 0, isComment = 0;
 				int isFunc = 0, isClass = 0;
@@ -294,7 +293,7 @@ void Convert::convertToHtml(std::vector&lt;std::string&gt;& files, std::map&lt;s
 				}
 				newCh[j] = '\0';
 				fout &lt;&lt; newCh;
-				if (isComment == 1 && isDoubleComment == 0)
+				if (isComment == 1)
 					fout &lt;&lt; "&lt;/span&gt;";
 				if (func_endCount &lt; funcP.size()) {
 					if (rowCount == funcP[func_endCount][1]) {
@@ -309,10 +308,6 @@ void Convert::convertToHtml(std::vector&lt;std::string&gt;& files, std::map&lt;s
 					}
 				}
 				fout &lt;&lt; std::endl;
-				<span class = "toggleCommentDisplay">/*if (isSingleComment == 1) {
-					fout &lt;&lt; "&lt;/span&gt;";
-					isSingleComment = 0;
-				}*/</span>
 				rowCount++;
 			}
 			fout &lt;&lt; "&lt;/pre&gt;" &lt;&lt; std::endl;
@@ -323,7 +318,7 @@ void Convert::convertToHtml(std::vector&lt;std::string&gt;& files, std::map&lt;s
 		iout.close();
 		preOut.close();
 	}
-	std::cout &lt;&lt; "\n\n  Convert successfully!\n\n";
+	std::cout &lt;&lt; "\n  Convert successfully!\n\n";
 }</span>
 
 #ifdef TEST_CONVERTER
@@ -342,7 +337,7 @@ int main() <span class = "toggleMethodDisplay">{
 	std::vector&lt;std::vector&lt;std::vector&lt;int&gt;&gt;&gt; classPos(files.size());
 	std::cout &lt;&lt; "\n\n  1. getFuncClass: get links to all the files in the directory tree, on which it depends" &lt;&lt; std::endl;
 	con.getFuncClass(files, funcPos, classPos);
-	std::cout &lt;&lt; "\n\n  2. convertToHtml: convertToHtml: convert cpp/h files to html" &lt;&lt; std::endl;
+	std::cout &lt;&lt; "\n\n  2. convertToHtml: convert cpp/h files to html" &lt;&lt; std::endl;
 	con.convertToHtml(files, dependencies, funcPos, classPos);
 
 	return 0;

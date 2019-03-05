@@ -63,8 +63,8 @@
   <button onclick="showHideClass(&#39;toggleCommentDisplay&#39;)" id="commentButton">Show or Hide Comment Contents</button>
 <pre>
 <pre>
-<a href="../ConvertedPages/Display.h.html">"Display.h"</a>
-<a href="../ConvertedPages/FileSystem.h.html">FileSystem.h"</a>
+<a href="../ConvertedPages/Display.h.html">Display.h</a>
+<a href="../ConvertedPages/FileSystem.h.html">FileSystem.h</a>
 <span class = "toggleCommentDisplay">/////////////////////////////////////////////////////////////////////////////</span>
 <span class = "toggleCommentDisplay">// Display.cpp - display converted html pages in user's browser            //</span>
 <span class = "toggleCommentDisplay">// ver 1.1                                                                 //</span>
@@ -213,8 +213,6 @@ void CALLBACK WaitOrTimerCallback(_In_ PVOID lpParameter, _In_ BOOLEAN TimerOrWa
 
 void Process::pop_out(std::vector&lt;std::string&gt; files, std::string explorerPath)
 <span class = "toggleMethodDisplay">{
-	std::cout &lt;&lt; "\n  Display: Demonstrating code pop-up in Chrome";
-	std::cout &lt;&lt; "\n ======================================";
 	Process p;
 	p.title("test application");
 	std::string appPath = explorerPath;
@@ -222,7 +220,7 @@ void Process::pop_out(std::vector&lt;std::string&gt; files, std::string explorer
 	p.application(appPath);
 
 	std::cout &lt;&lt; "\n  You need to kill each window (upper right button) to continue.\n\n";
-	std::cout &lt;&lt; "  MAKE SURE YOU HAVE CLOSED YOUR EXPLORER!!!\n";
+	std::cout &lt;&lt; "  MAKE SURE YOU HAVE CLOSED YOUR BROWSER!!!\n";
 	std::cout &lt;&lt; "\n  Press key to start";
 	_getche();
 
@@ -253,6 +251,8 @@ void Process::pop_out(std::vector&lt;std::string&gt; files, std::string explorer
 
 #ifdef TEST_DISPLAY
 int main() <span class = "toggleMethodDisplay">{
+	std::cout &lt;&lt; "\n  Display: Demonstrating code pop-up in Chrome";
+	std::cout &lt;&lt; "\n ======================================";
 	std::vector&lt;std::string&gt; files = { "../Parser/Parser.cpp", "../Parser/Parser.h"};
 	std::string appPath = "C:/Users/47221/AppData/Local/Google/Chrome/Application/chrome.exe";
 	Process pro;

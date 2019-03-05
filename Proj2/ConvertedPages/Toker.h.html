@@ -92,13 +92,13 @@
  * 
  * Public Interface
  * ================
- * CToker toker = new CToker();       <span class = "toggleCommentDisplay">// constructs CToker object
- * if(toker.openFile(fileName)) ...   <span class = "toggleCommentDisplay">// attaches toker to specified file
- * if(toker.openString(str)) ...      <span class = "toggleCommentDisplay">// attaches toker to specified string
- * toker.close();                     <span class = "toggleCommentDisplay">// closes stream
- * string tok = toker.getTok();       <span class = "toggleCommentDisplay">// extracts next token from stream
- * string tok = toker.peekNextTok();  <span class = "toggleCommentDisplay">// peeks but does not extract
- * toker.pushBack(tok);               <span class = "toggleCommentDisplay">// puts token back on stream
+ * CToker toker = new CToker();       <span class = "toggleCommentDisplay">// constructs CToker object</span>
+ * if(toker.openFile(fileName)) ...   <span class = "toggleCommentDisplay">// attaches toker to specified file</span>
+ * if(toker.openString(str)) ...      <span class = "toggleCommentDisplay">// attaches toker to specified string</span>
+ * toker.close();                     <span class = "toggleCommentDisplay">// closes stream</span>
+ * string tok = toker.getTok();       <span class = "toggleCommentDisplay">// extracts next token from stream</span>
+ * string tok = toker.peekNextTok();  <span class = "toggleCommentDisplay">// peeks but does not extract</span>
+ * toker.pushBack(tok);               <span class = "toggleCommentDisplay">// puts token back on stream</span>
  * 
  */</span></span>
 <span class = "toggleCommentDisplay">/*
@@ -351,7 +351,7 @@ namespace CStoker
       int posDQuote  = lineRemainder.IndexOf('\"');
       int posSQuote  = lineRemainder.IndexOf('\'');
 
-      <span class = "toggleCommentDisplay">// find first of the above
+      <span class = "toggleCommentDisplay">// find first of the above</span>
 
       int[] positions = { posCppComm, posCComm, posDQuote, posSQuote };
       for(int i=0; i&lt;positions.Length; ++i)
@@ -359,7 +359,7 @@ namespace CStoker
           positions[i] = Int32.MaxValue;
       Array.Sort(positions);
       
-      if(positions[0] == Int32.MaxValue)    <span class = "toggleCommentDisplay">// nothing to extract
+      if(positions[0] == Int32.MaxValue)    <span class = "toggleCommentDisplay">// nothing to extract</span>
       {
         string retStr = lineRemainder;
         lineRemainder = "";
@@ -373,8 +373,8 @@ namespace CStoker
         return extractSQuote(ref lineRemainder);
       throw new Exception("extract failed");
     }</span>
-    <span class = "toggleCommentDisplay">//
-    <span class = "toggleCommentDisplay">//----&lt; convert @ style string to old style &gt;--------------------
+    <span class = "toggleCommentDisplay">//</span>
+    <span class = "toggleCommentDisplay">//----&lt; convert @ style string to old style &gt;--------------------</span>
 
     string mapToOldDoubleQuoteStyle(string str)
     <span class = "toggleMethodDisplay">{
@@ -401,8 +401,8 @@ namespace CStoker
         temp.Append(str[j]);
       return temp.ToString();
     }</span>
-    <span class = "toggleCommentDisplay">//
-    <span class = "toggleCommentDisplay">//----&lt; extract double quote &gt;-------------------------------------
+    <span class = "toggleCommentDisplay">//</span>
+    <span class = "toggleCommentDisplay">//----&lt; extract double quote &gt;-------------------------------------</span>
 
     string extractDQuote(ref string lineRemainder)
     <span class = "toggleMethodDisplay">{
@@ -432,11 +432,11 @@ namespace CStoker
         lineRemainder = lineRemainder.Remove(0,pos);
         return retStr;
       }
-      <span class = "toggleCommentDisplay">//throw new Exception("extractDQuote failed");
+      <span class = "toggleCommentDisplay">//throw new Exception("extractDQuote failed");</span>
       return retStr;
     }</span>
-    <span class = "toggleCommentDisplay">//
-    <span class = "toggleCommentDisplay">//----&lt; extract single quote &gt;-------------------------------------
+    <span class = "toggleCommentDisplay">//</span>
+    <span class = "toggleCommentDisplay">//----&lt; extract single quote &gt;-------------------------------------</span>
 
     string extractSQuote(ref string lineRemainder)
     <span class = "toggleMethodDisplay">{
@@ -468,15 +468,15 @@ namespace CStoker
       }
       throw new Exception("extractSQuote failed");
     }</span>
-    <span class = "toggleCommentDisplay">//
-    <span class = "toggleCommentDisplay">//----&lt; extract comment &gt;------------------------------------------
+    <span class = "toggleCommentDisplay">//</span>
+    <span class = "toggleCommentDisplay">//----&lt; extract comment &gt;------------------------------------------</span>
 
     string extractComment(ref string lineRemainder)
     <span class = "toggleMethodDisplay">{
       char[] WhiteChars = { ' ', '\t', '\r' };
       string line;
-      int pos = lineRemainder.IndexOf("<span class = "toggleCommentDisplay">//");
-      if(pos == 0)                          <span class = "toggleCommentDisplay">// whole line is C++ comment
+      int pos = lineRemainder.IndexOf("<span class = "toggleCommentDisplay">//");</span>
+      if(pos == 0)                          <span class = "toggleCommentDisplay">// whole line is C++ comment</span>
       {
         if(lineRemainder[lineRemainder.Length-1] == '\n')
         {
@@ -492,19 +492,19 @@ namespace CStoker
         }
         return lineRemainder;
       }
-      if(pos &gt; -1)                          <span class = "toggleCommentDisplay">// end of line is C++ comment
+      if(pos &gt; -1)                          <span class = "toggleCommentDisplay">// end of line is C++ comment</span>
       {
         int posEnd = lineRemainder.IndexOf("\n");
         line = lineRemainder.Remove(pos, posEnd - pos).TrimEnd(WhiteChars);
         lineRemainder = lineRemainder.Remove(0, pos);
-        <span class = "toggleCommentDisplay">//////////////////////////////////////////////////////////////////////////////////////////////
-        <span class = "toggleCommentDisplay">// This code appears to be responsible for a bug in handling end of line C++ style comments
-        <span class = "toggleCommentDisplay">//    line = lineRemainder.Remove(pos, lineRemainder.Length - pos).TrimEnd(WhiteChars);
-        <span class = "toggleCommentDisplay">//    lineRemainder = lineRemainder.Remove(0,pos);
-        <span class = "toggleCommentDisplay">// It will stay here until I'm confident that the Toker now works correctly
+        <span class = "toggleCommentDisplay">//////////////////////////////////////////////////////////////////////////////////////////////</span>
+        <span class = "toggleCommentDisplay">// This code appears to be responsible for a bug in handling end of line C++ style comments</span>
+        <span class = "toggleCommentDisplay">//    line = lineRemainder.Remove(pos, lineRemainder.Length - pos).TrimEnd(WhiteChars);</span>
+        <span class = "toggleCommentDisplay">//    lineRemainder = lineRemainder.Remove(0,pos);</span>
+        <span class = "toggleCommentDisplay">// It will stay here until I'm confident that the Toker now works correctly</span>
         return line;
       }
-      pos = lineRemainder.IndexOf("<span class = "toggleCommentDisplay">/*");    <span class = "toggleCommentDisplay">// line contains C comment
+      pos = lineRemainder.IndexOf("<span class = "toggleCommentDisplay">/*");    <span class = "toggleCommentDisplay">// line contains C comment</span>
       if(pos &gt; -1)
       {
         if(pos == 0)
@@ -519,13 +519,13 @@ namespace CStoker
           return retStr;
         }
       }
-      <span class = "toggleCommentDisplay">// if we get here there is no comment in line
+      <span class = "toggleCommentDisplay">// if we get here there is no comment in line</span>
 
       line = lineRemainder;
       lineRemainder = "";
       return line;
     }</span>
-    <span class = "toggleCommentDisplay">//----&lt; eat C comment - may consume more lines &gt;---------------------
+    <span class = "toggleCommentDisplay">//----&lt; eat C comment - may consume more lines &gt;---------------------</span>
 
     void eatCComment()
     <span class = "toggleMethodDisplay">{

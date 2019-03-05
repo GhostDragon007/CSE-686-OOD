@@ -1,12 +1,12 @@
 #pragma once
 /////////////////////////////////////////////////////////////////////
-//  Executive.h  - Starter code for Project #2                     //
+//  Executive.h - Starter code for Project #2                      //
 //  ver 1.0                                                        //
-//  Language:      Visual C++, Visual Studio 2015                  //
-//  Platform:      Dell XPS 8920, Windows 10                       //
-//  Application:   Prototype for CSE687 - OOD Projects             //
-//  Author:        Jim Fawcett, CST 4-187, Syracuse University     //
-//                 (315) 443-3948, jfawcett@twcny.rr.com           //
+//  Language:      Visual C++, Visual Studio 2017                  //
+//  Platform:      Dell Latitude 5580, Windows 10                  //
+//  Application:   CSE687 - OOD Project #2                         //
+//  Author:        Junhao Shen, Syracuse University                //
+//                 jshen18@syr.edu                                 //
 /////////////////////////////////////////////////////////////////////
 
 // nothing here for now

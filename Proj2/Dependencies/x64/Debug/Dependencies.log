@@ -1,7 +1,14 @@
 ﻿  AbstrSynTree.cpp
+  FileSystem.cpp
+  GrammarHelpers.cpp
+  Logger.cpp
   ActionsAndRules.cpp
   ConfigureParser.cpp
   Parser.cpp
+  ScopeStack.cpp
+  Semi.cpp
+  Toker.cpp
+  Utilities.cpp
   Dependencies.cpp
   Generating Code...
-  Dependencies.vcxproj -> D:\little shen\Syracuse\CSE 687\Code\Project2Starter\x64\Debug\Dependencies.exe
+  Dependencies.vcxproj -> D:\Git\CSE-687-OOD\Proj2\x64\Debug\Dependencies.exe

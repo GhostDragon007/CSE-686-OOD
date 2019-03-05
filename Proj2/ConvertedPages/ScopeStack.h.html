@@ -63,8 +63,8 @@
   <button onclick="showHideClass(&#39;toggleCommentDisplay&#39;)" id="commentButton">Show or Hide Comment Contents</button>
 <pre>
 <pre>
-<a href="../ConvertedPages/Logger.h.html">Logger.h"</a>
-<a href="../ConvertedPages/Utilities.h.html">Utilities.h"</a>
+<a href="../ConvertedPages/Logger.h.html">Logger.h</a>
+<a href="../ConvertedPages/Utilities.h.html">Utilities.h</a>
 #ifndef SCOPESTACK_H
 #define SCOPESTACK_H
 <span class = "toggleCommentDisplay">/////////////////////////////////////////////////////////////////////////////</span>
@@ -88,7 +88,7 @@
   Public Interface:
   =================
   ScopeStack&lt;element&gt; stack;
-  <span class = "toggleCommentDisplay">// define some element type
+  <span class = "toggleCommentDisplay">// define some element type</span>
   element elem;
   stack.push(elem);
   element popped = stack.pop();
@@ -251,11 +251,11 @@ namespace CodeAnalysis
 	  if (pItem-&gt;type_ == "class") {
 		  classPos.push_back({ (int)pItem-&gt;startLineCount_, (int)pItem-&gt;endLineCount_ });
 	  }
-	  static std::string path;
+	  <span class = "toggleCommentDisplay">/*static std::string path;*/</span>
 	  static size_t indentLevel = 0;
-	  std::ostringstream out;
+	  <span class = "toggleCommentDisplay">/*std::ostringstream out;
 	  out &lt;&lt; "\n  " &lt;&lt; std::string(2 * indentLevel, ' ') &lt;&lt; pItem-&gt;show();
-	  std::cout &lt;&lt; out.str();
+	  std::cout &lt;&lt; out.str();*/</span>
 	  auto iter = pItem-&gt;children_.begin();
 	  ++indentLevel;
 	  while (iter != pItem-&gt;children_.end())

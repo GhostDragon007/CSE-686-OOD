@@ -63,19 +63,19 @@
   <button onclick="showHideClass(&#39;toggleCommentDisplay&#39;)" id="commentButton">Show or Hide Comment Contents</button>
 <pre>
 <pre>
-<a href="../ConvertedPages/CodeUtilities.h.html">CodeUtilities.h"</a>
-<a href="../ConvertedPages/StringUtilities.h.html">StringUtilities.h"</a>
-<a href="../ConvertedPages/FileSystem.h.html">FileSystem.h"</a>
-<a href="../ConvertedPages/Loader.h.html">Loader.h"</a>
-<a href="../ConvertedPages/Dependencies.h.html">Dependencies.h"</a>
-<a href="../ConvertedPages/Parser.h.html">Parser.h"</a>
-<a href="../ConvertedPages/Utilities.h.html">Utilities.h"</a>
-<a href="../ConvertedPages/Toker.h.html">Toker.h"</a>
-<a href="../ConvertedPages/Semi.h.html">Semi.h"</a>
-<a href="../ConvertedPages/ActionsAndRules.h.html">ActionsAndRules.h"</a>
-<a href="../ConvertedPages/ConfigureParser.h.html">ConfigureParser.h"</a>
-<a href="../ConvertedPages/Converter.h.html">Converter.h"</a>
-<a href="../ConvertedPages/Display.h.html">Display.h"</a>
+<a href="../ConvertedPages/CodeUtilities.h.html">CodeUtilities.h</a>
+<a href="../ConvertedPages/StringUtilities.h.html">StringUtilities.h</a>
+<a href="../ConvertedPages/FileSystem.h.html">FileSystem.h</a>
+<a href="../ConvertedPages/Loader.h.html">Loader.h</a>
+<a href="../ConvertedPages/Dependencies.h.html">Dependencies.h</a>
+<a href="../ConvertedPages/Parser.h.html">Parser.h</a>
+<a href="../ConvertedPages/Utilities.h.html">Utilities.h</a>
+<a href="../ConvertedPages/Toker.h.html">Toker.h</a>
+<a href="../ConvertedPages/Semi.h.html">Semi.h</a>
+<a href="../ConvertedPages/ActionsAndRules.h.html">ActionsAndRules.h</a>
+<a href="../ConvertedPages/ConfigureParser.h.html">ConfigureParser.h</a>
+<a href="../ConvertedPages/Converter.h.html">Converter.h</a>
+<a href="../ConvertedPages/Display.h.html">Display.h</a>
 <span class = "toggleCommentDisplay">/////////////////////////////////////////////////////////////////////</span>
 <span class = "toggleCommentDisplay">//  Executive.cpp - Starter code for Project #2                    //</span>
 <span class = "toggleCommentDisplay">//  ver 1.0                                                        //</span>
@@ -85,6 +85,40 @@
 <span class = "toggleCommentDisplay">//  Author:        Junhao Shen, Syracuse University                //</span>
 <span class = "toggleCommentDisplay">//                 jshen18@syr.edu                                 //</span>
 <span class = "toggleCommentDisplay">/////////////////////////////////////////////////////////////////////</span>
+<span class = "toggleCommentDisplay">/*
+ * Package Operations:
+ * -------------------
+ * Executive package is the starter of the Proj #2, it invokes 4 packages
+ * to get a Source Code Publisher for Projects: Loader, Dependencies,
+ * Converter and Display
+ *
+ * Required Files:
+ * ---------------
+ * Executive.h, Executive.cpp
+ * AbstrSynTree.h, AbstrSynTree.cpp
+ * ActionsAndRules.h, ActionsAndRules.cpp
+ * ConfigureParser.h, ConfigureParser.cpp
+ * CodeUtilities.h, CodeUtilities.cpp
+ * Converter.h, Converter.cpp
+ * Dependencies.h, Dependencies.cpp
+ * FileSystem.h, FileSystem.cpp
+ * GrammarHelpers.h, GrammarHelpers.cpp
+ * ITokenCollection.h
+ * Loader.h, Loader.cpp
+ * Logger.h, Logger.cpp
+ * Parser.h, Parser.cpp
+ * ScopeStack.h, ScopeStack.cpp
+ * Semi.h, Semi.cpp
+ * StringUtilities.h, StringUtilities.cpp
+ * Toker.h, Toker.cpp
+ * Utilities.h, Utilities.cpp
+ *
+ * Maintenance History:
+ * --------------------
+ * ver 1.0 : 4 Mar 2019
+ * - first release
+ *
+*/</span>
 
 #include &lt;iostream&gt;
 #include &lt;vector&gt;
@@ -114,25 +148,78 @@ using namespace CodeUtilities;
 
 int main(int argc, char** argv)
 <span class = "toggleMethodDisplay">{
+	<span class = "toggleCommentDisplay">//Prologue</span>
+	cout &lt;&lt; "<span class = "toggleCommentDisplay">/////////////////////////////////////////////////////////////////////////////\n"</span>
+		 &lt;&lt; "<span class = "toggleCommentDisplay">// CSE687 Project #2 - Source Code Publisher for Projects                  //\n"</span>
+		 &lt;&lt; "<span class = "toggleCommentDisplay">// ver 1.0                                                                 //\n"</span>
+		 &lt;&lt; "<span class = "toggleCommentDisplay">// ----------------------------------------------------------------------- //\n"</span>
+		 &lt;&lt; "<span class = "toggleCommentDisplay">// copyright @Junhao Shen, 2019                                            //\n"</span>
+		 &lt;&lt; "<span class = "toggleCommentDisplay">// All rights granted provided that this notice is retained                //\n"</span>
+		 &lt;&lt; "<span class = "toggleCommentDisplay">// ----------------------------------------------------------------------- //\n"</span>
+		 &lt;&lt; "<span class = "toggleCommentDisplay">// Language:    Visual C++, Visual Studio 2017                             //\n"</span>
+		 &lt;&lt; "<span class = "toggleCommentDisplay">// Platform:    Dell Latitude 5580, Core i7, Windows 10                    //\n"</span>
+		 &lt;&lt; "<span class = "toggleCommentDisplay">// Application: Project #2, 2019                                           //\n"</span>
+		 &lt;&lt; "<span class = "toggleCommentDisplay">// Author:      Junhao Shen                                                //\n"</span>
+		 &lt;&lt; "<span class = "toggleCommentDisplay">//              (315)480-4274, jshen18@syr.edu                             //\n"</span>
+		 &lt;&lt; "<span class = "toggleCommentDisplay">/////////////////////////////////////////////////////////////////////////////\n\n";</span>
+
+	<span class = "toggleCommentDisplay">//Executive: Starter code for Project #2</span>
+	cout &lt;&lt; "  Executive Package";
+	cout &lt;&lt; "\n=============================================================";
+	cout &lt;&lt; "\n  starter code for proj #2, will call Loader, Dependencies, Convert and Display in sequence";
+	cout &lt;&lt; "\n\n  Press key to continue \n\n";
+	getchar();
+
 	<span class = "toggleCommentDisplay">//Loader: find and load files from file system</span>
+	cout &lt;&lt; "  Loader Package";
+	cout &lt;&lt; "\n=============================================================";
+	cout &lt;&lt; "\n  accept command parameters to find files fullpath";
+	cout &lt;&lt; "\n\n  Press key to continue ";
+	getchar();
 	DirExplorerN dir;
 	vector&lt;string&gt; files = dir.loadFiles(argc, argv);
-
+	cout &lt;&lt; "\n\n  Find all *.cpp & *.h File:" &lt;&lt; endl;
+	for (auto str : files)
+		std::cout &lt;&lt; "  --  " &lt;&lt; str &lt;&lt; std::endl;
+	
 	<span class = "toggleCommentDisplay">//Dependencies: Records file dependencies for each processed file</span>
+	cout &lt;&lt; "\n\n  Dependencies Package";
+	cout &lt;&lt; "\n=============================================================";
+	cout &lt;&lt; "\n  records file dependencies for each processed file";
+	cout &lt;&lt; "\n\n  Press key to continue ";
+	getchar();
 	Dependencies depend;
 	map&lt;string, vector&lt;string&gt;&gt; dependencies = depend.findDependencies(files);
-
+	for (auto i = dependencies.begin(); i != dependencies.end(); i++) {
+		std::cout &lt;&lt; "\n  For " &lt;&lt; i-&gt;first &lt;&lt; ", Dependencies are: \n";
+		for (auto item : i-&gt;second)
+			std::cout &lt;&lt; "  " &lt;&lt; item &lt;&lt; std::endl;
+	}
+	
 	<span class = "toggleCommentDisplay">//Converter: accept filenames to convert those files to html</span>
+	cout &lt;&lt; "\n\n  Converter Package";
+	cout &lt;&lt; "\n=============================================================";
+	cout &lt;&lt; "\n  accept filenames to convert those files to html";
+	cout &lt;&lt; "\n\n  Press key to continue ";
+	getchar();
 	Convert convert;
-	std::vector&lt;std::vector&lt;std::vector&lt;int&gt;&gt;&gt; funcPos(files.size());
-	std::vector&lt;std::vector&lt;std::vector&lt;int&gt;&gt;&gt; classPos(files.size());
+	vector&lt;vector&lt;vector&lt;int&gt;&gt;&gt; funcPos(files.size());
+	vector&lt;vector&lt;vector&lt;int&gt;&gt;&gt; classPos(files.size());
+	std::cout &lt;&lt; "\n\n  1. getFuncClass: get links to all the files in the directory tree, on which it depends" &lt;&lt; std::endl;
 	convert.getFuncClass(files, funcPos, classPos);
+	std::cout &lt;&lt; "\n\n  2. convertToHtml: convert cpp/h files to html" &lt;&lt; std::endl;
 	convert.convertToHtml(files, dependencies, funcPos, classPos);
-
+	
 	<span class = "toggleCommentDisplay">//Display: display converted html pages in user's browser</span>
+	cout &lt;&lt; "\n\n  Display Package";
+	cout &lt;&lt; "\n=============================================================";
+	cout &lt;&lt; "\n  display converted html pages in user's browser";
+	cout &lt;&lt; "\n\n  Press key to continue ";
+	getchar();
 	Process process;
 	string appPath = argv[argc - 1];
 	process.pop_out(files, appPath);
+	
 
 	return 0;
 }</span>

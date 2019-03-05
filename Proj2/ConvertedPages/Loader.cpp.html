@@ -63,10 +63,10 @@
   <button onclick="showHideClass(&#39;toggleCommentDisplay&#39;)" id="commentButton">Show or Hide Comment Contents</button>
 <pre>
 <pre>
-<a href="../ConvertedPages/Loader.h.html">"Loader.h"</a>
-<a href="../ConvertedPages/CodeUtilities.h.html">CodeUtilities.h"</a>
-<a href="../ConvertedPages/StringUtilities.h.html">StringUtilities.h"</a>
-<a href="../ConvertedPages/FileSystem.h.html">FileSystem.h"</a>
+<a href="../ConvertedPages/Loader.h.html">Loader.h</a>
+<a href="../ConvertedPages/CodeUtilities.h.html">CodeUtilities.h</a>
+<a href="../ConvertedPages/StringUtilities.h.html">StringUtilities.h</a>
+<a href="../ConvertedPages/FileSystem.h.html">FileSystem.h</a>
 <span class = "toggleCommentDisplay">/////////////////////////////////////////////////////////////////////</span>
 <span class = "toggleCommentDisplay">//  Loader.cpp - finding and loading all the files for conversion  //</span>
 <span class = "toggleCommentDisplay">//  ver 1.0                                                        //</span>
@@ -248,24 +248,23 @@ std::vector&lt;std::string&gt; DirExplorerN::loadFiles(int argc, char *argv[])
 	return result;
 }</span>
 
-<span class = "toggleCommentDisplay">//----&lt; LOADER TEST STUB &gt;-------------------</span>
-#ifdef TEST_LOADER
 
+#ifdef TEST_LOADER
+<span class = "toggleCommentDisplay">//----&lt; LOADER TEST STUB &gt;-------------------</span>
+<span class = "toggleCommentDisplay">/*
+	Command line parameters:
+	argc = 7;
+	argv = {"D:\\little shen\\Syracuse\\CSE 687\\Code\\Project2Starter\\x64\\Debug\\Loader.exe",
+			"..",
+			"/s",
+			"*.cpp",
+			"*.h",
+			"^Loader*.[a-zA-Z]*$",
+			"C:/Users/47221/AppData/Local/Google/Chrome/Application/chrome.exe"};
+*/</span>
 int main(int argc, char** argv)
 <span class = "toggleMethodDisplay">{
 	Title("Test Loader: accept command parameters to find files fullpath");
-
-	<span class = "toggleCommentDisplay">/*
-		Command line parameters:
-		argc = 7;
-		argv = {"D:\\little shen\\Syracuse\\CSE 687\\Code\\Project2Starter\\x64\\Debug\\Loader.exe",
-				"..", 
-				"/s", 
-				"*.cpp", 
-				"*.h", 
-				"^Loader*.[a-zA-Z]*$",
-				"C:/Users/47221/AppData/Local/Google/Chrome/Application/chrome.exe"};
-	*/</span>
 
 	<span class = "toggleCommentDisplay">//Start to test </span>
 	DirExplorerN dir;

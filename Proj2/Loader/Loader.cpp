@@ -179,24 +179,23 @@ std::vector<std::string> DirExplorerN::loadFiles(int argc, char *argv[])
 	return result;
 }
 
-//----< LOADER TEST STUB >-------------------
-#ifdef TEST_LOADER
 
+#ifdef TEST_LOADER
+//----< LOADER TEST STUB >-------------------
+/*
+	Command line parameters:
+	argc = 7;
+	argv = {"D:\\little shen\\Syracuse\\CSE 687\\Code\\Project2Starter\\x64\\Debug\\Loader.exe",
+			"..",
+			"/s",
+			"*.cpp",
+			"*.h",
+			"^Loader*.[a-zA-Z]*$",
+			"C:/Users/47221/AppData/Local/Google/Chrome/Application/chrome.exe"};
+*/
 int main(int argc, char** argv)
 {
 	Title("Test Loader: accept command parameters to find files fullpath");
-
-	/*
-		Command line parameters:
-		argc = 7;
-		argv = {"D:\\little shen\\Syracuse\\CSE 687\\Code\\Project2Starter\\x64\\Debug\\Loader.exe",
-				"..", 
-				"/s", 
-				"*.cpp", 
-				"*.h", 
-				"^Loader*.[a-zA-Z]*$",
-				"C:/Users/47221/AppData/Local/Google/Chrome/Application/chrome.exe"};
-	*/
 
 	//Start to test 
 	DirExplorerN dir;
